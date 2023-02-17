@@ -1,0 +1,55 @@
+.title {
+  color: #2a344c;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 2px 0;
+}
+.menuItem{
+  &:hover{
+    cursor: pointer;
+    // opacity: 0.6;
+    box-shadow: 0 1px 7px 0 rgb(0 0 0 / 30%);
+  }
+}
+.img {
+  height: 48px;
+  width: 48px;
+  margin: auto 0;
+}
+
+.content{
+    color: #777777;
+}
+.menuTitle{
+  padding: 12px 12px 9px;
+  margin: 0;
+  font-size: 17px;
+}
+.menuItemTitle{
+  color:#000
+}
+.menuItemSpan{
+  color: #9b9b9b;
+}
+.menuItemPrice{
+  color: #d0021b;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.btn{
+  display: flex;
+  margin: auto;
+  background: 0 0;
+  color: #38699f;
+  font-weight: 700;
+  border: none;
+  font-size: 14px;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px 12px 12px;
+}
+.h5{
+  margin: 0;
+  padding: 2px 0;
+}

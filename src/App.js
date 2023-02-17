@@ -1,25 +1,12 @@
-import logo from './logo.svg';
+import { useSelector } from 'react-redux';
+import { useRoutes } from 'react-router-dom';
 import './App.css';
+import routes from './configs/Routes/routes';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  // const isLogin = useSelector((state) => state.auth.current);
+  
+  return useRoutes(routes());
 }
 
 export default App;
