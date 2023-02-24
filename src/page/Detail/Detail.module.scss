@@ -1,0 +1,132 @@
+.title {
+  font-size: 16px;
+  font-weight: 700;
+  //   margin-bottom: 0;
+}
+.price {
+  font-size: 16px;
+  color: #c90927;
+  font-weight: 700;
+  width: 100%;
+}
+.acreage {
+  color: #000;
+  opacity: 0.7;
+  line-height: 25px;
+  font-size: 14px;
+}
+
+.map {
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.profile {
+  margin: 0;
+  padding: 0;
+  border-radius: 20px;
+  cursor: pointer;
+  color: #ff6d25;
+  border: 1px solid #ff6d25;
+  font-size: 12px;
+  &:hover{
+    background-color: #e2e6ea;
+    transition: background-color .3s ease-in-out;
+  }
+}
+
+.profile > p {
+  margin: 0;
+  display: flex;
+}
+
+.profile > p > p {
+  margin: 0;
+  padding: 4px 0 0 12px;
+}
+
+.map > p {
+  margin: 0;
+  padding-top: 6px;
+}
+
+.detailP {
+  overflow-wrap: break-word;
+  text-align: justify;
+  white-space: pre-line;
+  font-size: 14px;
+}
+
+.contact {
+  text-decoration: underline;
+  cursor: pointer;
+  color: #33659c;
+}
+
+.avatar {
+  height: 50px;
+  width: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: inline-block;
+  border: 2px solid #e5e5e5;
+  padding: 0;
+  vertical-align: middle;
+  background: url(https://static.chotot.com/storage/default_images/default-avatar.webp)
+    no-repeat;
+  background-size: contain;
+  background-color: #fff;
+}
+
+.question > div {
+  padding: 0;
+}
+
+.btnSdt {
+  background-color: #589f39;
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  &:hover {
+    transition: background-color .3s ease-in-out;
+    background-color: #3b8122;
+  }
+  & > div {
+    margin: 0;
+  }
+  & > div span {
+    margin-left: auto;
+  }
+}
+
+.btnChat {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #589f39;
+  background-color: #fff;
+  font-weight: 700;
+  text-align: center;
+  margin: 10px 0;
+  &:hover {
+    transition: background-color .3s ease-in-out;
+    background-color: #e6e6e6;
+  }
+  & > div {
+    width: 100%;
+    margin: 0;
+  }
+  & > div > div {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
