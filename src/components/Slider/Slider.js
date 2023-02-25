@@ -1,48 +1,106 @@
 import { Box } from '@mui/system';
+import clsx from 'clsx';
 import React from 'react';
 import { useState, useRef, useEffect } from 'react';
-
-const srcImg = [
-  'https://cdn.chotot.com/admincentre/CybhBSFgAzUIlJRFFZr8CAgs-VcTFpX8UwL1a3GLVEI/preset:raw/plain/9cb61a33dccba128c9383a6956e4cb92-2805770622679927617.jpg',
-  'https://cdn.chotot.com/admincentre/fmgBiC3x0EXIJWefMK5jOWli3jEp3jDiOhwRpE5Kw48/preset:raw/plain/854024df368c8576ba057cdaed1317fc-2806793307907436243.jpg',
-  'https://cdn.chotot.com/admincentre/dd4UfbJ2VdNeLYSfUk2NoIzD1qXN2wUrGaAL7y8dP2M/preset:raw/plain/b7477f2fe6c711692fbd273315bf74c2-2805770692151326817.jpg',
-];
+import bannerApi from '~/api/BannerApi';
+import styles from './Slider.module.scss';
 
 export default function Slider() {
-  const [src, setSrc] = useState(srcImg[0]);
-  const srcRef = useRef();
-  const indexRef = useRef(0);
-  const randomSlider = () => {
-    const index = indexRef.current;
-    srcRef.current = setTimeout(() => {
-      setSrc(srcImg[index]);
-      randomSlider();
-      console.log(1);
-    }, 1000);
-    indexRef.current += 1;
-    if (index > 2) {
-      indexRef.current = 0;
-    }
-    console.log(2);
+  const [banner, setBanner] = useState([]);
+  var bannerLength = useRef();
+  var setMarginSlide = useRef();
+  var setWidthSlides = useRef();
+  var counter = useRef();
+
+  useEffect(() => {
+    const fetchBanner = async () => {
+      const bannerList = await bannerApi.getSrcBanner();
+      setBanner(bannerList.banner);
+      bannerLength.current = bannerList.banner.length;
+      setMarginSlide.current = 100 / bannerLength.current;
+    };
+    fetchBanner();
+    handleSlide();
+  }, []);
+
+  const handleSlide = () => {
+    setWidthSlides.current = document.querySelector('.slides');
+    counter.current = 1;
+    setInterval(() => {
+      document.getElementById('radio' + counter.current).checked = true;
+      setWidthSlides.current.style.width = `${bannerLength.current * 100}%`;
+
+      addDot(counter.current);
+      if (counter.current == 1) {
+        removeDot(bannerLength.current + 1);
+      } else {
+        removeDot(counter.current);
+      }
+
+      const elements = document.querySelectorAll(
+        `#radio${counter.current}:checked ~ .first`,
+      );
+      for (var element of elements) {
+        element.style = `margin-left: ${
+          0 - setMarginSlide.current * (counter.current - 1)
+        }%`;
+      }
+      counter.current++;
+      if (counter.current > bannerLength.current) counter.current = 1;
+    }, 3000);
+  };
+
+  const addDot = (dot) => {
+    document.querySelector(`.dot${dot}`).style.backgroundColor = '#40d3dc';
+  };
+
+  const removeDot = (dot) => {
+    document.querySelector(`.dot${dot - 1}`).style.backgroundColor =
+      'transparent';
   };
 
   return (
-    
-    <Box sx={{ height: '234px', backgroundColor: '#fff' }}>
-      <Box sx={{
-        maxWidth: '960px',
-        margin: ' 0 auto',
-      }}>
-      <img
-        style={{width:'100%'}}
-        alt="HB PTY JUPITER"
-        src={src || srcImg[0]}
-        ref={srcRef}
-        // onClick={randomSlider}
-        // decoding="async"
-        // class="img-item"
-        // style="position: absolute; inset: 0px; box-sizing: border-box; padding: 0px; border: none; margin: auto; display: block; width: 0px; height: 0px; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%; object-fit: cover;"
-      />
+    <Box
+      sx={{
+        backgroundColor: '#fff',
+      }}
+    >
+      <Box className={styles.slider}>
+        <Box className={clsx(styles.slides, 'slides')}>
+          {banner.map((result, index) => (
+            <input
+              key={index}
+              type="radio"
+              name="radio-btn"
+              id={`radio${index + 1}`}
+            />
+          ))}
+
+          {banner.map((result, index) => (
+            <div key={index} className={clsx(styles.slide, 'first')}>
+              <img
+                src={`assets/images/banners/${result.img}`}
+                style={{ maxWidth: '960px' }}
+                alt="HB PTY JUPITER"
+              />
+            </div>
+          ))}
+
+          <div className={styles.navigation_auto}>
+            {banner.map((result, index) => (
+              <div key={index} className={`auto-btn${index + 1}`}></div>
+            ))}
+          </div>
+        </Box>
+        <div className={styles.navigation_manual}>
+          {banner.map((result, index) => (
+            <label
+              key={index}
+              htmlFor={`radio${index + 1}`}
+              className={clsx(styles.manual_btn, `dot${index + 1}`)}
+            />
+          ))}
+        </div>
       </Box>
     </Box>
   );
