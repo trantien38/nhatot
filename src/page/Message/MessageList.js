@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import messageApi from '~/api/MessageApi';
 import MessageItem from './MessageItem';
 
 function MessageList(props) {
+  const [message, setMessage] = useState([]);
   const [loadMore, setLoadMore] = useState(true);
 
-  const avatar =
-    'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png';
+  const avatar = 'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png';
+
+  useEffect(() => {
+    const fetchMessage = async () => {
+      const messageUserList = await messageApi.getMessageUser(3);
+      setMessage(messageUserList.message);
+    };
+    fetchMessage();
+  }, []);
 
   useEffect(() => {
     const list = document.getElementById('list');
@@ -20,10 +29,7 @@ function MessageList(props) {
     } else {
       // list has auto height
       window.addEventListener('scroll', () => {
-        if (
-          window.scrollY + window.innerHeight ===
-          list.clientHeight + list.offsetTop
-        ) {
+        if (window.scrollY + window.innerHeight === list.clientHeight + list.offsetTop) {
           setLoadMore(true);
         }
       });
@@ -39,137 +45,16 @@ function MessageList(props) {
   }, [props.state]);
   return (
     <div id="list">
-      <MessageItem
-        active={false}
-        img={avatar}
-        name={'Trần Tiến'}
-        messageTime={'1 giờ trước'}
-        title={
-          'Cho thuê phòng trọ'
-        }
-        content={
-          'Phòng này còn cho thuê không ạ?'
-        }
-      />
-      <MessageItem
-        img={avatar}
-        name={'Trần Tiến'}
-        messageTime={'1 giờ trước'}
-        title={'Cho thuê phòng trọ'}
-        content={'Phòng này còn cho thuê không ạ?'}
-      />
-      <MessageItem
-        img={avatar}
-        name={'Trần Tiến'}
-        messageTime={'1 giờ trước'}
-        title={'Cho thuê phòng trọ'}
-        content={'Phòng này còn cho thuê không ạ?'}
-      />
-      <MessageItem
-        img={avatar}
-        name={'Trần Tiến'}
-        messageTime={'1 giờ trước'}
-        title={'Cho thuê phòng trọ'}
-        content={'Phòng này còn cho thuê không ạ?'}
-      />
-      <MessageItem
-        img={avatar}
-        name={'Trần Tiến'}
-        messageTime={'1 giờ trước'}
-        title={'Cho thuê phòng trọ'}
-        content={'Phòng này còn cho thuê không ạ?'}
-      />
-      <MessageItem
-        img={avatar}
-        name={'Trần Tiến'}
-        messageTime={'1 giờ trước'}
-        title={'Cho thuê phòng trọ'}
-        content={'Phòng này còn cho thuê không ạ?'}
-      />
-      <MessageItem
-        img={avatar}
-        name={'Trần Tiến'}
-        messageTime={'1 giờ trước'}
-        title={'Cho thuê phòng trọ'}
-        content={'Phòng này còn cho thuê không ạ?'}
-      />
-      <MessageItem
-        img={avatar}
-        name={'Trần Tiến'}
-        messageTime={'1 giờ trước'}
-        title={'Cho thuê phòng trọ'}
-        content={'Phòng này còn cho thuê không ạ?'}
-      />
-      <MessageItem
-        img={avatar}
-        name={'Trần Tiến'}
-        messageTime={'1 giờ trước'}
-        title={'Cho thuê phòng trọ'}
-        content={'Phòng này còn cho thuê không ạ?'}
-      />
-      <MessageItem
-        img={avatar}
-        name={'Trần Tiến'}
-        messageTime={'1 giờ trước'}
-        title={'Cho thuê phòng trọ'}
-        content={'Phòng này còn cho thuê không ạ?'}
-      />
-      <MessageItem
-        img={avatar}
-        name={'Trần Tiến'}
-        messageTime={'1 giờ trước'}
-        title={'Cho thuê phòng trọ'}
-        content={'Phòng này còn cho thuê không ạ?'}
-      />
-      <MessageItem
-        img={avatar}
-        name={'Trần Tiến'}
-        messageTime={'1 giờ trước'}
-        title={'Cho thuê phòng trọ'}
-        content={'Phòng này còn cho thuê không ạ?'}
-      />
-      <MessageItem
-        img={avatar}
-        name={'Trần Tiến'}
-        messageTime={'1 giờ trước'}
-        title={'Cho thuê phòng trọ'}
-        content={'Phòng này còn cho thuê không ạ?'}
-      />
-      <MessageItem
-        img={avatar}
-        name={'Trần Tiến'}
-        messageTime={'1 giờ trước'}
-        title={'Cho thuê phòng trọ'}
-        content={'Phòng này còn cho thuê không ạ?'}
-      />
-      <MessageItem
-        img={avatar}
-        name={'Trần Tiến'}
-        messageTime={'1 giờ trước'}
-        title={'Cho thuê phòng trọ'}
-        content={'Phòng này còn cho thuê không ạ?'}
-      />
-      <MessageItem
-        img={avatar}
-        name={'Trần Tiến'}
-        messageTime={'1 giờ trước'}
-        title={'Cho thuê phòng trọ'}
-        content={'Phòng này còn cho thuê không ạ?'}
-      />
-      <MessageItem
-        img={avatar}
-        name={'Trần Tiến'}
-        messageTime={'1 giờ trước'}
-        title={'Cho thuê phòng trọ'}
-        content={'Phòng này còn cho thuê không ạ?'}
-      />
-      <MessageItem
-        img={avatar}
-        name={'Trần Tiến'}
-        messageTime={'1 giờ trước'}
-        title={'Cho thuê phòng trọ'}
-        content={'Phòng này còn cho thuê không ạ?'}
-      />
+      {message.map((result) => (
+        <MessageItem
+          active={false}
+          img={avatar}
+          name={result.Name}
+          messageTime={'1 giờ trước'}
+          title={result.Title}
+          content={result.Content}
+        />
+      ))}
     </div>
   );
 }

@@ -1,22 +1,22 @@
 import { Box } from '@mui/material';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import questionApi from '~/api/QuestionApi';
 import styles from './Message.module.scss';
 export default function Questions() {
+  const [question, setQuestion] = useState([]);
+  useEffect(() => {
+    const fetchQuestion = async () => {
+      const questionList = await questionApi.getAll();
+      setQuestion(questionList.question);
+    };
+    fetchQuestion();
+  }, []);
   return (
-    <Box>
+    <Box sx={{ padding: '0 12px' }}>
       <ul className={styles.questionList}>
-        <li className={styles.question}>Phòng này còn cho thuê không ạ?</li>
-        <li className={styles.question}>Giờ giấc tự do đúng không ạ?</li>
-        <li className={styles.question}>Có nấu ăn trong phòng được không ạ?</li>
-        <li className={styles.question}>Phòng ở được mấy người ạ?</li>
-        <li className={styles.question}>Có ở chung với chủ nhà không ạ?</li>
-        <li className={styles.question}>Thời gian thuê tối đa là bao lâu?</li>
-        <li className={styles.question}>Phòng này còn cho thuê không ạ?</li>
-        <li className={styles.question}>Giờ giấc tự do đúng không ạ?</li>
-        <li className={styles.question}>Có nấu ăn trong phòng được không ạ?</li>
-        <li className={styles.question}>Phòng ở được mấy người ạ?</li>
-        <li className={styles.question}>Có ở chung với chủ nhà không ạ?</li>
-        <li className={styles.question}>Thời gian thuê tối đa là bao lâu?</li>
+        {question.map((result) => (
+          <li key={result.id} className={styles.question}>{result.content}</li>
+        ))}
       </ul>
     </Box>
   );
