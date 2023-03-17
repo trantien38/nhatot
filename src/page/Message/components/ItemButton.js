@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import styles from './Message.module.scss';
+import styles from '../Message.module.scss';
 
 function ItemButton({ content, active }) {
   return (

@@ -1,20 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import messageApi from '~/api/MessageApi';
+import { Box } from '@mui/material';
+import { useEffect, useState } from 'react';
+import styles from '../Message.module.scss';
 import MessageItem from './MessageItem';
 
 function MessageList(props) {
-  const [message, setMessage] = useState([]);
   const [loadMore, setLoadMore] = useState(true);
 
   const avatar = 'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png';
-
-  useEffect(() => {
-    const fetchMessage = async () => {
-      const messageUserList = await messageApi.getMessageUser(3);
-      setMessage(messageUserList.message);
-    };
-    fetchMessage();
-  }, []);
 
   useEffect(() => {
     const list = document.getElementById('list');
@@ -44,16 +36,21 @@ function MessageList(props) {
     }
   }, [props.state]);
   return (
-    <div id="list">
-      {message.map((result) => (
-        <MessageItem
-          active={false}
-          img={avatar}
-          name={result.Name}
-          messageTime={'1 giờ trước'}
-          title={result.Title}
-          content={result.Content}
-        />
+    <div id="list" className={styles.messageList}>
+      {props.messages.map((result) => (
+        <Box key={result.IdMotel}>
+          <MessageItem
+            link={`/message-${props.idUser}/${result.IdMotel}`}
+            onClick={result.IdMotel}
+            idMotel={result.IdMotel}
+            active={false}
+            img={avatar}
+            name={result.Name}
+            messageTime={'1 giờ trước'}
+            title={result.Title}
+            content={result.Content}
+          />
+        </Box>
       ))}
     </div>
   );

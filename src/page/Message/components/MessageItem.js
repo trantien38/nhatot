@@ -1,20 +1,14 @@
 import { Box, Grid } from '@mui/material';
 import React from 'react';
-import styles from './Message.module.scss';
+import styles from '../Message.module.scss';
 import clsx from 'clsx';
+import { Link } from 'react-router-dom';
 
-export default function MessageItem({
-  active,
-  img,
-  name,
-  messageTime,
-  title,
-  content,
-  stylePrice,
-}) {
+export default function MessageItem({ link, active, img, name, messageTime, title, content, stylePrice }) {
   return (
-    <Box
-      sx={{
+    <Link
+      to={link}
+      style={{
         display: 'flex',
         borderBottom: '1px solid #ececec',
         padding: '10px 7px',
@@ -30,14 +24,10 @@ export default function MessageItem({
       </Grid>
       <Grid>
         <b className={styles.name}>{name}</b>
-        <span className={styles.messageTime}>
-          {messageTime ? ` - ${messageTime}` : ''}
-        </span>
+        <span className={styles.messageTime}>{messageTime ? ` - ${messageTime}` : ''}</span>
         <p className={styles.title}>{title}</p>
-        <p className={clsx(styles.content, stylePrice ? styles.price : '')}>
-          {content}
-        </p>
+        <p className={clsx(styles.content, stylePrice ? styles.price : '')}>{content}</p>
       </Grid>
-    </Box>
+    </Link>
   );
 }

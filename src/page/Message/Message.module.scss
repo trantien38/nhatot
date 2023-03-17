@@ -8,7 +8,19 @@
   padding: 0 12px 0 5px;
 }
 
-.name {
+.messageList {
+  & a {
+    margin: 0;
+    padding: 0;
+  }
+}
+.messageHost {
+  list-style-type: none;
+  margin-bottom: 12px;
+}
+.messageRenter {
+  list-style-type: none;
+  margin-bottom: 12px;
 }
 
 .messageTime {
@@ -46,31 +58,6 @@
   font-weight: 500;
 }
 
-.questionList {
-  display: flex;
-  list-style-type: none;
-  white-space: nowrap;
-  padding: 0;
-  overflow: scroll;
-  // margin: 0;
-  width: 100%;
-}
-
-.question {
-  box-shadow: 0 0 6px rgb(0 0 0 / 15%);
-  border-radius: 40px;
-  padding: 7px;
-  margin: 0 12px 8px 0;
-  color: #333;
-  cursor: pointer;
-  white-space: nowrap;
-  font-size: 12px;
-}
-
-.question:last-child {
-  margin: 0;
-}
-
 .messageIcon {
   &:hover {
     cursor: pointer;
@@ -102,4 +89,10 @@
   background-color: transparent;
   border: none;
   transform: translateY(50%);
+}
+
+.form {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }

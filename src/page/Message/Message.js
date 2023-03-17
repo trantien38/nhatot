@@ -1,20 +1,55 @@
-import { DeleteForever } from '@mui/icons-material';
+import { DeleteForever, MoreHoriz } from '@mui/icons-material';
 import { Grid } from '@mui/material';
 import { Box } from '@mui/system';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import messageApi from '~/api/MessageApi';
 import Header from '~/components/Header';
-import ItemButton from './ItemButton';
+import ItemButton from './components/ItemButton';
 import styles from './Message.module.scss';
-import MessageItem from './MessageItem';
-import MessageList from './MessageList';
-import Questions from './Questions';
+import MessageItem from './components/MessageItem';
+import MessageList from './components/MessageList';
+import Questions from './components/Question/Questions';
+import ChatBox from './components/ChatBox';
+import InfoMotel from './components/InfoMotel';
 
 export default function Message() {
+  const [messageList, setMessageList] = useState([]);
+  const [chat, setChat] = useState([]);
+  const [idHost, setIdHost] = useState();
   const [state, setState] = useState([]);
-  const avatar = 'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png';
+  const { messageUserSlug } = useParams();
+  const [mu, idUser] = messageUserSlug.split('-');
+  const params = useParams();
+
+  const avatar =
+    'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png';
   const imgRoom =
     'https://cdn.chotot.com/5bmc0aGA85_stXnY33AWkQrDhQlp_iGRyDa1WW-NIpQ/preset:listing/plain/40489371e66627a7da396aa506eb3640-2812770810323125887.jpg';
+
+  // fetch data message list
+  useEffect(() => {
+    const fetchMessage = async () => {
+      const messageUserList = await messageApi.getListMessageUser(idUser);
+      console.log(messageUserList.message);
+      setMessageList(messageUserList.message);
+    };
+    fetchMessage();
+  }, [idUser]);
+
+  // fetch data chat box
+  useEffect(() => {
+    const fetchChat = async () => {
+      const chatList = await messageApi.getAllMessagesUserInMotel(
+        params.IdMotel,
+      );
+      setChat(chatList.chat);
+    };
+    fetchChat();
+  }, [params.IdMotel]);
+
+  // change icon
   const handleChangeIcon = () => {
     const $ = document.querySelector.bind(document);
     const $$ = document.querySelectorAll.bind(document);
@@ -33,6 +68,29 @@ export default function Message() {
       }
     }
   };
+
+  // get idHost from infomotel
+  const callBackGetIdHost = (IdHost) => {
+    console.log(IdHost);
+    setIdHost(IdHost);
+  };
+
+  // submit message
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const Content = document.chat.messages.value;
+
+    console.log(Content);
+    const messageUserList = await messageApi.add({
+      Content,
+      IdUser: idUser,
+      IdMotel: params.IdMotel,
+    });
+    document.chat.messages.value = ''
+    console.log(messageUserList);
+    setChat(messageUserList.chat);
+  };
+
   return (
     <>
       <Header />
@@ -68,7 +126,9 @@ export default function Message() {
                 alignItems: 'center',
               }}
             >
-              <h5 style={{ fontSize: '1rem', margin: 0, paddingLeft: '2px' }}>Chat</h5>
+              <h5 style={{ fontSize: '1rem', margin: 0, paddingLeft: '2px' }}>
+                Chat
+              </h5>
               <Box sx={{ display: 'flex' }}>
                 <ItemButton active content={'Tất cả'} />
                 <ItemButton content={'Tôi mua'} />
@@ -82,7 +142,12 @@ export default function Message() {
                 flex: '1 1',
               }}
             >
-              <MessageList state={state} setState={setState} />
+              <MessageList
+                idUser={idUser}
+                messages={messageList}
+                state={state}
+                setState={setState}
+              />
             </Box>
             <Box
               sx={{
@@ -102,59 +167,82 @@ export default function Message() {
               <p>Xóa cuộc trò chuyện</p>
             </Box>
           </Grid>
-          <Grid item md={8} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <Box>
-              <MessageItem img={avatar} name={'Trần tiến'} content={'Hoạt động 2 giờ trước'} />
-              <MessageItem img={imgRoom} name={'Phòng trọ cho thuê'} content={'800.000 đ/tháng'} stylePrice={'price'} />
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                flexDirection: 'column',
-                overflowX: 'hidden',
-                overflowY: 'auto',
-                flex: '1 1',
-              }}
-            >
-              <Box sx={{ overflowX: 'hidden' }}></Box>
-              <Box sx={{}}>
-                <Questions />
-                <Box
-                  sx={{
-                    display: 'flex',
-                    backgroundColor: '#fff',
-                    padding: ' 0 12px 8px 0',
-                  }}
-                >
-                  <input type="file" style={{ display: 'none' }} />
+          <Grid
+            item
+            md={8}
+            sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+          >
+            <InfoMotel
+              idUser={idUser}
+              avatar={avatar}
+              imgRoom={imgRoom}
+              idMotel={params.IdMotel}
+              callBackGetIdHost={callBackGetIdHost}
+            />
+            {params.IdMotel && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  flexDirection: 'column',
+                  overflowX: 'hidden',
+                  overflowY: 'auto',
+                  flex: '1 1',
+                }}
+              >
+                <ChatBox chat={chat} state={state} setState={setState} />
 
-                  <img
-                    className={clsx(styles.messageIcon, 'addIcon')}
-                    onClick={handleChangeIcon}
-                    alt="open"
-                    src="https://chat.chotot.com/icons/plusCircle.svg"
-                  />
-                  <img
-                    style={{ display: 'none' }}
-                    className={clsx(styles.messageIcon, 'threeIcon')}
-                    src="https://chat.chotot.com/icons/message.svg"
-                  />
-                  <img
-                    style={{ display: 'none' }}
-                    className={clsx(styles.messageIcon, 'threeIcon')}
-                    src="https://chat.chotot.com/icons/gallery.svg"
-                  />
-                  <img
-                    style={{ display: 'none' }}
-                    className={clsx(styles.messageIcon, 'threeIcon')}
-                    src="https://chat.chotot.com/icons/location.svg"
-                  />
-                  <textarea className={styles.inputMessage} placeholder="Nhập tin nhắn..." rows="1" />
-                  <div className={styles.messageSubmit}></div>
+                <Box sx={{}}>
+                  <Questions onSubmit={handleSubmit} />
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      backgroundColor: '#fff',
+                      padding: ' 0 12px 8px 0',
+                    }}
+                  >
+                    <input type="file" style={{ display: 'none' }} />
+                    <form
+                      name="chat"
+                      onSubmit={handleSubmit}
+                      className={styles.form}
+                    >
+                      <img
+                        className={clsx(styles.messageIcon, 'addIcon')}
+                        onClick={handleChangeIcon}
+                        alt="open"
+                        src="https://chat.chotot.com/icons/plusCircle.svg"
+                      />
+                      <img
+                        style={{ display: 'none' }}
+                        className={clsx(styles.messageIcon, 'threeIcon')}
+                        src="https://chat.chotot.com/icons/message.svg"
+                      />
+                      <img
+                        style={{ display: 'none' }}
+                        className={clsx(styles.messageIcon, 'threeIcon')}
+                        src="https://chat.chotot.com/icons/gallery.svg"
+                      />
+                      <img
+                        style={{ display: 'none' }}
+                        className={clsx(styles.messageIcon, 'threeIcon')}
+                        src="https://chat.chotot.com/icons/location.svg"
+                      />
+                      <input
+                        className={styles.inputMessage}
+                        placeholder="Nhập tin nhắn..."
+                        rows="1"
+                        name="messages"
+                      />
+                      <button
+                        type="submit"
+                        className={styles.messageSubmit}
+                      ></button>
+                    </form>
+                  </Box>
                 </Box>
               </Box>
-            </Box>
+            )}
           </Grid>
         </Grid>
       </Box>
