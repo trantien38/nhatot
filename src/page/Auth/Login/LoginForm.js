@@ -1,29 +1,39 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button } from '@mui/material';
-import React from 'react';
-import * as yup from 'yup';
-
-import { Link } from 'react-router-dom';
-import { FormInput } from '~/components/HookForm/InputForm';
 import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
+import * as yup from 'yup';
+import InputField from '~/components/HookForm/InputField';
 
-export default function Register() {
-  const initialValues = { name: '', phone: '', password: '' };
+function LoginForm(props) {
+  const phoneRegExp =
+    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
   const schema = yup.object().shape({
-    name: yup.string().required('Please enter name and try again.'),
-    phone: yup.string().required('Please enter phone number and try again.').min(10),
-    password: yup.string().required('Please enter password and try again.').min(8),
+    phoneNumber: yup
+      .string()
+      .required('Please enter your phone number')
+      .matches(phoneRegExp, 'Phone number is not valid')
+      .min(10, 'to short')
+      .max(10, 'to long'),
+    password: yup.string().required('Please enter your password').min(6),
   });
   const {
     control,
+    handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({
-    defaultValues: initialValues,
+    defaultValues: {
+      phoneNumber: '',
+      password: '',
+    },
     resolver: yupResolver(schema),
   });
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(e.target);
+  const handleOnSubmit = async (values) => {
+    console.log('handleOnSubmit in login form');
+    const { onSubmit } = props;
+    if (onSubmit) {
+      await onSubmit(values);
+    }
   };
   return (
     <Box
@@ -42,7 +52,8 @@ export default function Register() {
       >
         <section
           style={{
-            backgroundImage: 'url(https://static.chotot.com/storage/assets/LOGIN/login_background.webp)',
+            backgroundImage:
+              'url(https://static.chotot.com/storage/assets/LOGIN/login_background.webp)',
             position: 'absolute',
             zIndex: 1,
             top: 0,
@@ -68,7 +79,7 @@ export default function Register() {
           }}
         >
           <Box sx={{ margin: 'auto' }}>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(handleOnSubmit)}>
               <Box
                 sx={{
                   display: 'flex',
@@ -84,8 +95,8 @@ export default function Register() {
                 }}
               >
                 <Box>
-                  <h3>Đăng ký</h3>
-                  <p>Tạo tài khoản ngay</p>
+                  <h3>Đăng nhập</h3>
+                  <p>Chào bạn quay lại</p>
                 </Box>
                 <Box
                   sx={{
@@ -94,31 +105,11 @@ export default function Register() {
                     },
                   }}
                 >
-                  <img src="https://static.chotot.com/storage/assets/LOGIN/logo_register.png" />
+                  <img src="https://static.chotot.com/storage/assets/LOGIN/logo.svg" />
                 </Box>
               </Box>
               <Box>
-                <FormInput
-                  sx={{
-                    fontSize: 2,
-                    color: 'red',
-                    '& label': {
-                      fontSize: 14,
-                    },
-                    '& svg': {
-                      fontSize: 18,
-                    },
-                  }}
-                  label="name"
-                  placeholder="Nhập tên của bạn"
-                  name="name"
-                  type="text"
-                  required
-                  control={control}
-                />
-              </Box>
-              <Box>
-                <FormInput
+                <InputField
                   sx={{
                     fontSize: 2,
                     color: 'red',
@@ -131,14 +122,15 @@ export default function Register() {
                   }}
                   label="phone"
                   placeholder="Nhập SĐT của bạn"
-                  name="phone"
+                  name="phoneNumber"
                   type="text"
+                  errors={errors}
                   required
                   control={control}
                 />
               </Box>
               <Box>
-                <FormInput
+                <InputField
                   sx={{
                     fontSize: 2,
                     color: 'red',
@@ -149,10 +141,11 @@ export default function Register() {
                       fontSize: 18,
                     },
                   }}
-                  label="password"
-                  placeholder="Tạo mật khẩu có ít nhất 6 ký tự"
-                  name="password"
+                  label="Password"
+                  placeholder="Nhập mật khẩu của bạn"
                   type="password"
+                  name="password"
+                  errors={errors}
                   required
                   control={control}
                 />
@@ -173,13 +166,14 @@ export default function Register() {
                   lineHeight: '1',
                   fontWeight: '400',
                   '&:hover': {
+                    cursor: 'pointer',
                     backgroundColor: '#ffb057',
                     opacity: 0.5,
-                    cursor: 'pointer',
                   },
                 }}
+                type="submit"
               >
-                Đăng ký
+                Đăng nhập
               </Button>
             </form>
           </Box>
@@ -189,21 +183,20 @@ export default function Register() {
                 textAlign: 'center',
                 paddingTop: '16px',
                 fontSize: '.875rem',
-
                 '& a': {
                   color: '#2a70df',
-                  margin: 0,
                 },
                 '& a:hover': {
                   color: '#4e8bef',
                 },
               }}
             >
-              Bằng việc đăng ký, bạn đã đồng ý với<Link to={'/forget-password'}>Điều khoản sử dụng</Link>của chúng tôi
+              <Link to={'/forget-password'}>Bạn quên mật khẩu</Link>
             </Box>
             <Box>
               <p
                 style={{
+                  marginTop: '40px',
                   color: '#8c8c8c',
                   textAlign: 'center',
                 }}
@@ -217,7 +210,7 @@ export default function Register() {
                 justifyContent: 'center',
                 '& a': {
                   padding: 0,
-                  marginBottom: '6px',
+                  marginBottom: '40px',
                 },
                 '& img': {
                   cursor: 'pointer',
@@ -252,7 +245,7 @@ export default function Register() {
                 },
               }}
             >
-              Ban đã có tài khoản?<Link to={'/login'}>Đăng nhập</Link>
+              Ban chưa có tài khoản?<Link to={'/register'}>Đăng ký ngay</Link>
             </Box>
           </Box>
         </Box>
@@ -260,3 +253,5 @@ export default function Register() {
     </Box>
   );
 }
+
+export default LoginForm;

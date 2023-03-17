@@ -3,24 +3,49 @@ import { Box, Button } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import * as yup from 'yup';
-import { FormInput } from '~/components/HookForm/InputForm';
+import InputField from '~/components/HookForm/InputField';
 
-export default function Login() {
-  const initialValues = { phone: '', password: '' };
+function RegisterForm(props) {
+  const phoneRegExp =
+    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+
   const schema = yup.object().shape({
-    phone: yup.string().required('Please enter phone number and try again.').min(10),
-    password: yup.string().required('Please enter password and try again.').min(8),
+    fullName: yup
+      .string()
+      .required('Please enter your name')
+      .test(
+        'should has at least two words',
+        'Please enter at least two words',
+        (value) => {
+          return value.split(' ').length >= 2;
+        },
+      ),
+    phoneNumber: yup
+      .string()
+      .required('Please enter your phone number')
+      .matches(phoneRegExp, 'Phone number is not valid')
+      .min(10, 'to short')
+      .max(10, 'to long'),
+    password: yup.string().required('Please enter your password').min(6),
   });
   const {
     control,
+    handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({
-    defaultValues: initialValues,
+    defaultValues: {
+      fullName: '',
+      phoneNumber: '',
+      password: '',
+    },
     resolver: yupResolver(schema),
   });
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(e.target);
+  const handleOnSubmit = async (values) => {
+    console.log('handleOnSubmit in register form');
+    const { onSubmit } = props;
+    if (onSubmit) {
+      await onSubmit(values);
+    }
   };
   return (
     <Box
@@ -39,7 +64,8 @@ export default function Login() {
       >
         <section
           style={{
-            backgroundImage: 'url(https://static.chotot.com/storage/assets/LOGIN/login_background.webp)',
+            backgroundImage:
+              'url(https://static.chotot.com/storage/assets/LOGIN/login_background.webp)',
             position: 'absolute',
             zIndex: 1,
             top: 0,
@@ -65,7 +91,7 @@ export default function Login() {
           }}
         >
           <Box sx={{ margin: 'auto' }}>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(handleOnSubmit)}>
               <Box
                 sx={{
                   display: 'flex',
@@ -81,8 +107,8 @@ export default function Login() {
                 }}
               >
                 <Box>
-                  <h3>Đăng nhập</h3>
-                  <p>Chào bạn quay lại</p>
+                  <h3>Đăng ký</h3>
+                  <p>Tạo tài khoản ngay</p>
                 </Box>
                 <Box
                   sx={{
@@ -91,11 +117,11 @@ export default function Login() {
                     },
                   }}
                 >
-                  <img src="https://static.chotot.com/storage/assets/LOGIN/logo.svg" />
+                  <img src="https://static.chotot.com/storage/assets/LOGIN/logo_register.png" />
                 </Box>
               </Box>
               <Box>
-                <FormInput
+                <InputField
                   sx={{
                     fontSize: 2,
                     color: 'red',
@@ -106,16 +132,17 @@ export default function Login() {
                       fontSize: 18,
                     },
                   }}
-                  label="phone"
-                  placeholder="Nhập SĐT của bạn"
-                  name="phone"
+                  label="Full name"
+                  placeholder="Nhập tên của bạn"
+                  name="fullName"
                   type="text"
+                  errors={errors}
                   required
                   control={control}
                 />
               </Box>
               <Box>
-                <FormInput
+                <InputField
                   sx={{
                     fontSize: 2,
                     color: 'red',
@@ -126,10 +153,32 @@ export default function Login() {
                       fontSize: 18,
                     },
                   }}
-                  label="Password"
-                  placeholder="Nhập mật khẩu của bạn"
-                  type="password"
+                  label="phoneNumber"
+                  placeholder="Nhập SĐT của bạn"
+                  name="phoneNumber"
+                  type="text"
+                  errors={errors}
+                  required
+                  control={control}
+                />
+              </Box>
+              <Box>
+                <InputField
+                  sx={{
+                    fontSize: 2,
+                    color: 'red',
+                    '& label': {
+                      fontSize: 14,
+                    },
+                    '& svg': {
+                      fontSize: 18,
+                    },
+                  }}
+                  label="password"
+                  placeholder="Tạo mật khẩu có ít nhất 6 ký tự"
                   name="password"
+                  type="password"
+                  errors={errors}
                   required
                   control={control}
                 />
@@ -150,19 +199,19 @@ export default function Login() {
                   lineHeight: '1',
                   fontWeight: '400',
                   '&:hover': {
-                    cursor: 'pointer',
                     backgroundColor: '#ffb057',
                     opacity: 0.5,
+                    cursor: 'pointer',
                   },
                 }}
+                type="submit"
               >
-                Đăng nhập
+                Đăng ký
               </Button>
             </form>
           </Box>
           <Box>
             <Box
-              // <p
               sx={{
                 textAlign: 'center',
                 paddingTop: '16px',
@@ -170,19 +219,20 @@ export default function Login() {
 
                 '& a': {
                   color: '#2a70df',
+                  margin: 0,
                 },
                 '& a:hover': {
                   color: '#4e8bef',
                 },
               }}
             >
-              <Link to={'/forget-password'}>Bạn quên mật khẩu</Link>
-              {/* </p> */}
+              Bằng việc đăng ký, bạn đã đồng ý với
+              <Link to={'/forget-password'}>Điều khoản sử dụng</Link>của chúng
+              tôi
             </Box>
             <Box>
               <p
                 style={{
-                  marginTop: '40px',
                   color: '#8c8c8c',
                   textAlign: 'center',
                 }}
@@ -196,7 +246,7 @@ export default function Login() {
                 justifyContent: 'center',
                 '& a': {
                   padding: 0,
-                  marginBottom: '40px',
+                  marginBottom: '6px',
                 },
                 '& img': {
                   cursor: 'pointer',
@@ -231,7 +281,7 @@ export default function Login() {
                 },
               }}
             >
-              Ban chưa có tài khoản?<Link to={'/register'}>Đăng ký ngay</Link>
+              Ban đã có tài khoản?<Link to={'/login'}>Đăng nhập</Link>
             </Box>
           </Box>
         </Box>
@@ -239,3 +289,5 @@ export default function Login() {
     </Box>
   );
 }
+
+export default RegisterForm;
