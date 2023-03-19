@@ -1,16 +1,16 @@
 import { Box } from '@mui/material';
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import motelApi from '~/api/MotelApi';
 import MessageItem from './MessageItem';
 
-function InfoMotel({ avatar, imgRoom, idUser, idMotel, callBackGetIdHost }) {
+function InfoMotel({ idMotel, callBackGetIdHost }) {
   const [infoMotel, setInfoMotel] = useState([]);
-  const [infoUser, setInfoUser] = useState([]);
+  const imgRoom =
+    'https://cdn.chotot.com/5bmc0aGA85_stXnY33AWkQrDhQlp_iGRyDa1WW-NIpQ/preset:listing/plain/40489371e66627a7da396aa506eb3640-2812770810323125887.jpg';
 
   useEffect(() => {
     const fetchInfoMotel = async () => {
-      const InfoMotels = await motelApi.getMotel(idMotel);
+      const InfoMotels = await motelApi.getInfoMotel(idMotel);
       console.log(idMotel);
       console.log(InfoMotels.motel);
       setInfoMotel(InfoMotels.motel);
@@ -20,31 +20,15 @@ function InfoMotel({ avatar, imgRoom, idUser, idMotel, callBackGetIdHost }) {
     return;
   }, [idMotel]);
 
-  useEffect(() => {
-    const fetchInfoUser = async () => {
-      const infoUsers = await motelApi.getUser();
-      console.log(infoUsers.user);
-      setInfoUser(infoUsers.user);
-    };
-    fetchInfoUser();
-  }, []);
   if (idMotel)
     return (
-      <Box>
-        <MessageItem
-          link={`/`}
-          img={avatar}
-          name={infoMotel[0]?.Name}
-          content={'Hoạt động 2 giờ trước'}
-        />
-        <MessageItem
-          link={`/detail/${infoMotel[0]?.IdMotel}`}
-          img={imgRoom}
-          name={infoMotel[0]?.Title}
-          content={`${infoMotel[0]?.Price} triệu/tháng`}
-          stylePrice={'price'}
-        />
-      </Box>
+      <MessageItem
+        link={`/detail/${infoMotel[0]?.IdMotel}`}
+        img={imgRoom}
+        name={infoMotel[0]?.Title}
+        content={`${infoMotel[0]?.Price} triệu/tháng`}
+        stylePrice={'price'}
+      />
     );
   return (
     <Box>

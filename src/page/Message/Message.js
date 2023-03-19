@@ -1,18 +1,18 @@
-import { DeleteForever, MoreHoriz } from '@mui/icons-material';
+import { DeleteForever } from '@mui/icons-material';
 import { Grid } from '@mui/material';
 import { Box } from '@mui/system';
 import clsx from 'clsx';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import messageApi from '~/api/MessageApi';
 import Header from '~/components/Header';
-import ItemButton from './components/ItemButton';
-import styles from './Message.module.scss';
-import MessageItem from './components/MessageItem';
-import MessageList from './components/MessageList';
-import Questions from './components/Question/Questions';
 import ChatBox from './components/ChatBox';
 import InfoMotel from './components/InfoMotel';
+import InfoUser from './components/InfoUser';
+import ItemButton from './components/ItemButton';
+import MessageList from './components/MessageList';
+import Questions from './components/Question/Questions';
+import styles from './Message.module.scss';
 
 export default function Message() {
   const [messageList, setMessageList] = useState([]);
@@ -23,17 +23,13 @@ export default function Message() {
   const [mu, idUser] = messageUserSlug.split('-');
   const params = useParams();
 
-  const avatar =
-    'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png';
-  const imgRoom =
-    'https://cdn.chotot.com/5bmc0aGA85_stXnY33AWkQrDhQlp_iGRyDa1WW-NIpQ/preset:listing/plain/40489371e66627a7da396aa506eb3640-2812770810323125887.jpg';
 
   // fetch data message list
   useEffect(() => {
     const fetchMessage = async () => {
       const messageUserList = await messageApi.getListMessageUser(idUser);
-      console.log(messageUserList.message);
       setMessageList(messageUserList.message);
+      console.log(messageUserList.message);
     };
     fetchMessage();
   }, [idUser]);
@@ -71,7 +67,6 @@ export default function Message() {
 
   // get idHost from infomotel
   const callBackGetIdHost = (IdHost) => {
-    console.log(IdHost);
     setIdHost(IdHost);
   };
 
@@ -86,9 +81,9 @@ export default function Message() {
       IdUser: idUser,
       IdMotel: params.IdMotel,
     });
-    document.chat.messages.value = ''
+    document.chat.messages.value = '';
     console.log(messageUserList);
-    setChat(messageUserList.chat);
+    await setChat(messageUserList.chat);
   };
 
   return (
@@ -172,13 +167,17 @@ export default function Message() {
             md={8}
             sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
           >
-            <InfoMotel
-              idUser={idUser}
-              avatar={avatar}
-              imgRoom={imgRoom}
-              idMotel={params.IdMotel}
-              callBackGetIdHost={callBackGetIdHost}
-            />
+            <Box>
+              <InfoUser
+                IdUser={idUser}
+                IdMotel={params.IdMotel}
+                callBackGetIdHost={callBackGetIdHost}
+              />
+              <InfoMotel
+                idMotel={params.IdMotel}
+                callBackGetIdHost={callBackGetIdHost}
+              />
+            </Box>
             {params.IdMotel && (
               <Box
                 sx={{
@@ -190,7 +189,12 @@ export default function Message() {
                   flex: '1 1',
                 }}
               >
-                <ChatBox chat={chat} state={state} setState={setState} />
+                <ChatBox
+                  chat={chat}
+                  IdUser={idUser}
+                  state={state}
+                  setState={setState}
+                />
 
                 <Box sx={{}}>
                   <Questions onSubmit={handleSubmit} />

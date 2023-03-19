@@ -5,13 +5,12 @@ import { useParams } from 'react-router-dom';
 import messageApi from '~/api/MessageApi';
 import styles from '../Message.module.scss';
 
-function ChatBox({chat}) {
-
+function ChatBox({ chat, IdUser }) {
   return (
     <Box sx={{ overflowX: 'hidden', '& ul': { padding: '13px' } }}>
       <ul>
         {chat.map((result) => {
-          if (result.IdAuthority == 3) {
+          if (result.IdUser == IdUser) {
             return (
               <li key={result.IdMessage} className={styles.messageRenter}>
                 <Box
