@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import userApi from '~/api/UserApi';
 import MessageItem from './MessageItem';
 
-function InfoUser({ IdMotel, IdUser, callBackGetIdHost }) {
+function InfoUser(props) {
+  const { IdMotel, data, IdUser, callBackGetIdHost } = props;
   const [infoUser, setInfoUser] = useState([]);
+
   const avatar =
     'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png';
 
@@ -12,11 +14,13 @@ function InfoUser({ IdMotel, IdUser, callBackGetIdHost }) {
       const infoUsers = await userApi.getInfoUser({ IdMotel, IdUser });
       console.log(infoUsers.user);
       setInfoUser(infoUsers.user);
+      // setInfoUser(data);
       callBackGetIdHost(infoUsers.user[0].IdUser);
     };
     fetchInfoUser();
   }, [IdMotel]);
-  if (IdMotel)
+
+  if (IdMotel) {
     return (
       <MessageItem
         link={`/`}
@@ -25,6 +29,7 @@ function InfoUser({ IdMotel, IdUser, callBackGetIdHost }) {
         content={'Hoạt động 2 giờ trước'}
       />
     );
+  }
 }
 
 export default InfoUser;

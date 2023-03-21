@@ -1,8 +1,8 @@
 import axiosClient from './axiosClient';
 
 const messageApi = {
-  getAllMessagesUserInMotel(id) {
-    const url = `/chat/${id}`;
+  getAllMessagesUserInMotel(idMotel) {
+    const url = `/chat/${idMotel}`;
     return axiosClient.get(url);
   },
 

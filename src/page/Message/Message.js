@@ -171,6 +171,7 @@ export default function Message() {
               <InfoUser
                 IdUser={idUser}
                 IdMotel={params.IdMotel}
+                data={messageList}
                 callBackGetIdHost={callBackGetIdHost}
               />
               <InfoMotel

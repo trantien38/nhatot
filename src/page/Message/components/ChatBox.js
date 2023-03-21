@@ -1,8 +1,5 @@
 import { MoreHoriz } from '@mui/icons-material';
 import { Box } from '@mui/material';
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import messageApi from '~/api/MessageApi';
 import styles from '../Message.module.scss';
 
 function ChatBox({ chat, IdUser }) {
@@ -32,19 +29,29 @@ function ChatBox({ chat, IdUser }) {
                   </Box>
                   <Box
                     sx={{
-                      '& p': {
-                        margin: 0,
-                        textAlign: 'right',
-                        color: '#bdc1c9',
-                      },
+                      position: 'relative',
                       backgroundColor: '#fff4d6',
                       color: '#000',
                       padding: '6px 12px',
                       borderRadius: '8px',
+                      '& p': { margin: 0 },
+                      '& strong': {
+                        margin: 0,
+                        textAlign: 'right',
+                        color: '#bdc1c9',
+                        fontWeight: 380,
+                        display: 'none',
+                        position: 'absolute',
+                        top: '20%',
+                        right: '108%',
+                      },
+                      '& p:hover ~ strong': {
+                        display: 'block',
+                      },
                     }}
                   >
-                    {result.Content}
-                    <p>8:43</p>
+                    <p>{result.Content}</p>
+                    <strong>{`${result?.hour}:${result?.minute}`}</strong>
                   </Box>
                 </Box>
                 <Box></Box>
@@ -62,15 +69,31 @@ function ChatBox({ chat, IdUser }) {
                 >
                   <Box
                     sx={{
-                      '& p': { margin: 0, textAlign: 'left', color: '#bdc1c9' },
+                      position: 'relative',
                       backgroundColor: '#f4f4f4',
                       color: '#000',
                       padding: '6px 12px',
                       borderRadius: '8px',
+                      '& strong': {
+                        margin: 0,
+                        textAlign: 'left',
+                        color: '#bdc1c9',
+                        display: 'none',
+                        position: 'absolute',
+                        fontWeight: 380,
+                        top: '20%',
+                        left: '102%',
+                      },
+                      '& p': {
+                        margin: 0,
+                      },
+                      '& p:hover ~ strong': {
+                        display: 'block',
+                      },
                     }}
                   >
-                    {result.Content}
-                    <p>8:43</p>
+                    <p>{result.Content}</p>
+                    <strong>{`${result?.hour}:${result?.minute}`}</strong>
                   </Box>
                   <Box
                     sx={{
