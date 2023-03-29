@@ -1,0 +1,28 @@
+.ul {
+  margin: 0;
+  padding: 0;
+}
+
+.district {
+  list-style-type: none;
+  transition: opacity 0.5s ease-in;
+  border-bottom: 1px solid #cacaca;
+  position: relative;
+  height: 45px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f9f9f9;
+  }
+  & > a {
+    color: inherit;
+    display: flex;
+    align-items: center;
+    text-decoration: inherit;
+    width: 88%;
+    font-size: 14px;
+    position: absolute;
+    line-height: 45px;
+    padding: 0 25px;
+    margin: 0;
+  }
+}
