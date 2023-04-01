@@ -1,5 +1,6 @@
-import styles from './Profile.module.scss';
+import styles from '../Profile.module.scss';
 import { Box } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 function ProfileItem(props) {
   const { title, content, connect, edit } = props;
@@ -15,10 +16,14 @@ function ProfileItem(props) {
       <Box className={styles.content_icon}>
         <span>{content}</span>
         {edit && (
-          <img src="https://st.chotot.com/storage/chotot-icons/svg/edit.svg" />
+          <Link to="/settings/profile">
+            <img src="https://st.chotot.com/storage/chotot-icons/svg/edit.svg" />
+          </Link>
         )}
-        {connect&&(
+        {connect && (
+          <Link to="/settings/social">
             <button>{connect}</button>
+          </Link>
         )}
       </Box>
     </Box>

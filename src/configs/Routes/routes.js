@@ -2,6 +2,10 @@ import LayoutAdmin from '~/admin/components/LayoutAdmin';
 import Layout from '~/components/Layout';
 import ForgetPassword from '~/page/Auth/ForgetPassword/ForgetPassword';
 import Login from '~/page/Auth/Login/Login';
+import EditAccount from '~/page/Auth/Profile/components/EditAccount';
+import EditProfile from '~/page/Auth/Profile/components/EditProfile';
+import EditSocial from '~/page/Auth/Profile/components/EditSocial';
+import Profile from '~/page/Auth/Profile/Profile';
 import Register from '~/page/Auth/Register/Register';
 import Categories from '~/page/Categories/Categories';
 import Detail from '~/page/Detail/Detail';
@@ -26,10 +30,6 @@ let routes = () => [
         path: 'detail/:IdMotel',
         element: <Detail />,
       },
-      // {
-      //   path: '/:motelSlug',
-      //   element: <Detail />,
-      // },
       {
         path: 'cho-thue-phong-tro',
         element: <Categories />,
@@ -49,6 +49,22 @@ let routes = () => [
       { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },
       { path: 'forget-password', element: <ForgetPassword /> },
+      {
+        path: '/profile',
+        element: <Profile />,
+      },
+      {
+        path: '/settings/profile',
+        element: <EditProfile />,
+      },
+      {
+        path: '/settings/social',
+        element: <EditSocial />,
+      },
+      {
+        path: '/settings/account',
+        element: <EditAccount />,
+      },
     ],
   },
   {
@@ -73,6 +89,24 @@ let routes = () => [
     children: [
       {
         path: 'user',
+        element: <LayoutAdmin />,
+        children: [
+          {
+            path: 'edit',
+            element: <></>,
+          },
+          {
+            path: 'add',
+            element: <></>,
+          },
+          {
+            path: 'list',
+            element: <></>,
+          },
+        ],
+      },
+      {
+        path: 'question',
         element: <></>,
         children: [
           {
@@ -90,7 +124,7 @@ let routes = () => [
         ],
       },
       {
-        path: 'user',
+        path: 'banner',
         element: <></>,
         children: [
           {

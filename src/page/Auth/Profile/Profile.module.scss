@@ -52,7 +52,31 @@
     border-radius: 4px;
     max-height: 24px;
     line-height: 2;
-    transform: translateY(5px);
+    transform: translateY(-6px);
     cursor: pointer;
   }
+  & a {
+    margin: 0;
+  }
+}
+
+.sidebar {
+  list-style-type: none;
+  background-color: #fff;
+  padding: 0px;
+  margin: 0;
+  margin-right: 30px;
+  & > li:hover {
+    background-color: var(--btn_color_orange);
+  }
+  & > li > a {
+    width: 100%;
+    display: block;
+    margin: 0;
+    padding: 12px 0px 12px 12px;
+  }
+}
+
+.btn_back {
+  cursor: pointer;
 }

@@ -1,147 +1,112 @@
 import { Box } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import styles from './Profile.module.scss';
-import ProfileItem from './ProfileItem';
+import ProfileItem from './components/ProfileItem';
+import StorageKeys from '~/constants/storage-keys';
 
 function Profile() {
-  return (
-    <Box
-      sx={{
-        maxWidth: '960px',
-        margin: 'auto',
-        background: '#fff',
-      }}
-    >
+  const [authenticated, setauthenticated] = useState({});
+  useEffect(() => {
+    const loggedInUser = JSON.parse(localStorage.getItem(StorageKeys.USER));
+    // if (loggedInUser) {
+    console.log(loggedInUser);
+    setauthenticated(loggedInUser);
+    // }
+  }, []);
+  if (!authenticated) {
+    return <Navigate replace to="/login" />;
+  } else {
+    return (
       <Box
         sx={{
-          padding: '0 10px',
-          '& ol': {
-            padding: '8px 0',
-            margin: 0,
-          },
-          '& ol>li': {
-            display: 'inline-block',
-            color: '#33659c',
-          },
-          '& ol>li+li:before': {
-            content: '"\\BB"',
-            fontSize: '18px',
-            position: 'relative',
-            bottom: '1px',
-            color: '#33659c',
-          },
-          '& ol a': {
-            margin: 0,
-            padding: 0,
-          },
+          maxWidth: '960px',
+          margin: 'auto',
+          background: '#fff',
         }}
       >
-        <ol>
-          <li>
-            <Link to="/">nhatot.vn</Link>
-            &nbsp;
-          </li>
-          <li>&nbsp;Thông tin cá nhân</li>
-        </ol>
-        <h3>Thông tin cá nhân</h3>
-      </Box>
-      <hr />
-      <Box>
         <Box
           sx={{
-            position: 'relative',
-            display: 'flex',
-            justifyContent: 'center',
+            padding: '0 10px',
+            '& ol': {
+              padding: '8px 0',
+              margin: 0,
+            },
+            '& ol>li': {
+              display: 'inline-block',
+              color: '#33659c',
+            },
+            '& ol>li+li:before': {
+              content: '"\\BB"',
+              fontSize: '18px',
+              position: 'relative',
+              bottom: '1px',
+              color: '#33659c',
+            },
+            '& ol a': {
+              margin: 0,
+              padding: 0,
+            },
           }}
         >
-          <img src="https://static.chotot.com/storage/CT_WEB_UNI_PRIVATE_DASHBOARD/a37e405294c593b0493765d71c6b78df682f66b3/dist/32ea486819346b666d9e012fea3f5be0.png" />
-          <Box className={styles.changeAvatar}>
-            <i></i>
-            <input type="file" />
-          </Box>
+          <ol>
+            <li>
+              <Link to="/">nhatot.vn</Link>
+              &nbsp;
+            </li>
+            <li>&nbsp;Thông tin cá nhân</li>
+          </ol>
+          <h3>Thông tin cá nhân</h3>
         </Box>
-        <Box sx={{ padding: '12px 28px' }}>
-          <Box>
-            <ProfileItem
-              title="Họ và tên"
-              content="Tên chưa cung cấp"
-              edit={true}
+        <hr />
+        <Box>
+          <Box
+            sx={{
+              position: 'relative',
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <img
+              style={{
+                width: '140px',
+                borderRadius: '50%',
+              }}
+              src={
+                authenticated.Avatar ||
+                'https://static.chotot.com/storage/CT_WEB_UNI_PRIVATE_DASHBOARD/a37e405294c593b0493765d71c6b78df682f66b3/dist/32ea486819346b666d9e012fea3f5be0.png'
+              }
             />
-            <ProfileItem
-              title="Số điện thoại"
-              content="Tên chưa cung cấp"
-              edit={true}
-            />
-            <ProfileItem
-              title="Facebook"
-              content="Chưa kết nối Facebook"
-              connect="Kết nối"
-            />
-            <ProfileItem
-              title="Google"
-              content="Chưa kết nối Google"
-              connect="Kết nối"
-            />
-            <ProfileItem
-              title="Apple"
-              content="Chưa kết nối Apple"
-              connect="Kết nối"
-            />
-            <ProfileItem
-              title="Email"
-              content="Chưa có thông tin"
-              edit={true}
-            />
-            <ProfileItem
-              title="Địa chỉ"
-              content="Chưa có thông tin"
-              edit={true}
-            />
-            <ProfileItem
-              title="CMND/CCCD/Hộ chiếu"
-              content="Chưa có thông tin"
-              edit={true}
-            />
-            <ProfileItem
-              title="Ngày cấp"
-              content="Chưa có thông tin"
-              edit={true}
-            />
-            <ProfileItem
-              title="Nơi cấp"
-              content="Chưa có thông tin"
-              edit={true}
-            />
-            <ProfileItem
-              title="Giới tính"
-              content="Chưa có thông tin"
-              edit={true}
-            />
-            <ProfileItem
-              title="Ngày sinh"
-              content="Chưa có thông tin"
-              edit={true}
-            />
-            <ProfileItem
-              title="Mã số thuế"
-              content="Chưa có thông tin"
-              edit={true}
-            />
-            <ProfileItem
-              title="Danh mục yêu thích"
-              content="Chưa có thông tin"
-              edit={true}
-            />
-            <ProfileItem
-              title="Mật khẩu"
-              content="Chưa có thông tin"
-              edit={true}
-            />
+            <label htmlFor="avatar">
+              <Box className={styles.changeAvatar}>
+                <i></i>
+                <input type="file" id="avatar" />
+              </Box>
+            </label>
+          </Box>
+          <Box sx={{ padding: '12px 28px' }}>
+            <Box>
+              <ProfileItem title="Họ và tên" content={`${authenticated?.Name}` || 'Tên chưa cung cấp'} edit={true} />
+              <ProfileItem title="Số điện thoại" content={`${authenticated?.PhoneNumber}` || 'Tên chưa cung cấp'} edit={true} />
+              <ProfileItem title="Facebook" content="Chưa kết nối Facebook" connect="Kết nối" />
+              <ProfileItem title="Google" content="Chưa kết nối Google" connect="Kết nối" />
+              <ProfileItem title="Apple" content="Chưa kết nối Apple" connect="Kết nối" />
+              <ProfileItem title="Email" content={`${authenticated?.Email}` || 'Chưa có thông tin'} edit={true} />
+              <ProfileItem title="Địa chỉ" content={`${authenticated?.Address}` || 'Chưa có thông tin'} edit={true} />
+              <ProfileItem title="CMND/CCCD/Hộ chiếu" content="Chưa có thông tin" edit={true} />
+              <ProfileItem title="Ngày cấp" content="Chưa có thông tin" edit={true} />
+              <ProfileItem title="Nơi cấp" content="Chưa có thông tin" edit={true} />
+              <ProfileItem title="Giới tính" content={`${authenticated?.Gender}` || 'Chưa có thông tin'} edit={true} />
+              <ProfileItem title="Ngày sinh" content={authenticated?.BirthDay || 'Chưa có thông tin'} edit={true} />
+              <ProfileItem title="Mã số thuế" content="Chưa có thông tin" edit={true} />
+              <ProfileItem title="Danh mục yêu thích" content={authenticated.favorites || 'Chưa có thông tin'} edit={true} />
+              <ProfileItem title="Mật khẩu" content={authenticated.password || '********'} edit={true} />
+            </Box>
           </Box>
         </Box>
       </Box>
-    </Box>
-  );
+    );
+  }
 }
 
 export default Profile;
