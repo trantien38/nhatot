@@ -1,0 +1,15 @@
+.navbar {
+  padding: 0 15px 0 30px;
+  min-height: 73px;
+  position: fixed;
+  top: 0;
+  left: auto;
+  right: 0;
+  width: calc(100% - 300px);
+  display: inline-block;
+  // z-index: 99;
+  background: var(--iq-body-bg);
+  margin: 0;
+  transition: all 0.45s ease 0s;
+  box-sizing: border-box;
+}
