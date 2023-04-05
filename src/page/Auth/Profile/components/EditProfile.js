@@ -1,6 +1,7 @@
 import { Box, FormControl, Grid, InputLabel, MenuItem, Select, Slide, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import userApi from '~/api/UserApi';
 import Button from '~/components/Button/Button';
 import StorageKeys from '~/constants/storage-keys';
 
@@ -11,7 +12,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
 });
 
-function EditProfile() {
+export const EditProfile = () => {
   const infoUser = JSON.parse(localStorage.getItem(StorageKeys.USER));
   console.log(infoUser);
   const {
@@ -23,18 +24,21 @@ function EditProfile() {
     Address,
     WardPrefix,
     WardName,
+    IdUser,
     DistrictPrefix,
     DistrictName,
     ProvinceName,
   } = infoUser;
-  const [gender, setGender] = useState(Gender);
+  const [ward, setWard] = useState('');
+  const [province, setProvince] = useState('');
   const [name, setName] = useState(Name);
   const [email, setEmail] = useState(Email);
   const [phoneNumber, setPhoneNumber] = useState(PhoneNumber);
   const detailedAddress = `${Address}, ${WardPrefix} ${WardName}, ${DistrictPrefix} ${DistrictName}, ${ProvinceName}`;
+  const [road, setRoad] = useState('');
   const [address, setAddress] = useState(detailedAddress);
+  const [gender, setGender] = useState(Gender);
   const [birthDay, setBirthDay] = useState(BirthDay);
-  const [idWardAddress, setIdWardAddress] = useState({});
   const [openAddress, setOpenAddress] = useState(false);
 
   const handleChangeGender = (event) => {
@@ -54,7 +58,6 @@ function EditProfile() {
   };
   const handleChangeBirthDat = (event) => {
     const birthDay = event.target.value;
-    console.log(birthDay);
     setBirthDay(birthDay);
   };
 
@@ -71,6 +74,27 @@ function EditProfile() {
     let day = arr[2];
     return day + '-' + month + '-' + year;
   };
+
+  const callbackParent = (value) => {
+    console.log(value);
+    setRoad(value.detailAddress);
+    setWard(value.ward);
+    setProvince(value.province);
+    setAddress(`${value.detailAddress}, ${value.ward}, ${value.district}, ${value.province}`);
+  };
+  const handleSubmit = () => {
+    // console.log(name);
+    // console.log(email);
+    // console.log(phoneNumber);
+    // console.log(road);
+    // console.log(gender);
+    // console.log(birthDay);
+    // console.log(ward);
+    // console.log(province);
+    
+    userApi.changeInfoUser({ IdUser, name, email, phoneNumber, road, gender, birthDay, ward, province });
+  };
+
   return (
     <Box sx={{ maxWidth: '960px', margin: 'auto' }}>
       <h2>Chỉnh sửa trang cá nhân</h2>
@@ -159,6 +183,7 @@ function EditProfile() {
             open={openAddress}
             Transition={Transition}
             handleClose={handleCloseAddress}
+            callbackParent={callbackParent}
           />
           <Grid item md={12} sm={12} xs={12}>
             <FormControl fullWidth>
@@ -198,13 +223,11 @@ function EditProfile() {
           >
             <input type="date" name="" id="customday" value={birthDay} onChange={handleChangeBirthDat} />
           </Grid>
-          <Grid item md={12} sm={12} xs={12}>
+          <Grid item md={12} sm={12} xs={12} onClick={handleSubmit}>
             <Button orange text={'Lưu thay đổi'} />
           </Grid>
         </Grid>
       </Grid>
     </Box>
   );
-}
-
-export default EditProfile;
+};

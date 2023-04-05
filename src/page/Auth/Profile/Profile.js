@@ -4,16 +4,29 @@ import { useState, useEffect } from 'react';
 import styles from './Profile.module.scss';
 import ProfileItem from './components/ProfileItem';
 import StorageKeys from '~/constants/storage-keys';
+import userApi from '~/api/UserApi';
 
-function Profile() {
+export const Profile = () => {
   const [authenticated, setauthenticated] = useState({});
+  const [avatar, setAvatar] = useState('');
   useEffect(() => {
     const loggedInUser = JSON.parse(localStorage.getItem(StorageKeys.USER));
     // if (loggedInUser) {
     console.log(loggedInUser);
+    setAvatar(loggedInUser.Avatar);
     setauthenticated(loggedInUser);
     // }
   }, []);
+
+  const handleChangeAvatar = (e) => {
+    console.log(e.target.files[0].name);
+    console.log(123);
+    setAvatar(e.target.files[0].name);
+    userApi.changeAvatar({ srcImg: e.target.files[0].name, IdUser: authenticated.IdUser });
+    localStorage.removeItem(StorageKeys.USER);
+    localStorage.setItem(StorageKeys.USER, JSON.stringify({ ...authenticated, Avatar: e.target.files[0].name }));
+  };
+
   if (!authenticated) {
     return <Navigate replace to="/login" />;
   } else {
@@ -70,17 +83,19 @@ function Profile() {
             <img
               style={{
                 width: '140px',
+                height: '140px',
                 borderRadius: '50%',
               }}
               src={
-                authenticated.Avatar ||
-                'https://static.chotot.com/storage/CT_WEB_UNI_PRIVATE_DASHBOARD/a37e405294c593b0493765d71c6b78df682f66b3/dist/32ea486819346b666d9e012fea3f5be0.png'
+                avatar
+                  ? `assets/images/avatars/${avatar}`
+                  : 'https://static.chotot.com/storage/CT_WEB_UNI_PRIVATE_DASHBOARD/a37e405294c593b0493765d71c6b78df682f66b3/dist/32ea486819346b666d9e012fea3f5be0.png'
               }
             />
             <label htmlFor="avatar">
               <Box className={styles.changeAvatar}>
                 <i></i>
-                <input type="file" id="avatar" />
+                <input type="file" id="avatar" onChange={handleChangeAvatar} />
               </Box>
             </label>
           </Box>
@@ -107,6 +122,4 @@ function Profile() {
       </Box>
     );
   }
-}
-
-export default Profile;
+};

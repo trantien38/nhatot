@@ -3,8 +3,9 @@ import { Box, Dialog, FormControl, Grid, InputLabel, MenuItem, Select, TextField
 import { Link } from 'react-router-dom';
 import styles from '../Profile.module.scss';
 import addressApi from '~/api/AddressApi';
+import Button from '~/components/Button/Button';
 
-function DialogDetailAddress({ open, Transition, handleClose, Address, WardName, DistrictName, ProvinceName }) {
+function DialogDetailAddress({ open, Transition, handleClose, Address, WardName, DistrictName, ProvinceName, callbackParent }) {
   const [detailAddress, setDetailAddress] = useState(Address);
   const [provinces, setProvinces] = useState([]);
   const [province, setProvince] = useState(ProvinceName);
@@ -15,6 +16,7 @@ function DialogDetailAddress({ open, Transition, handleClose, Address, WardName,
 
   const handleChangeProvince = (event) => {
     setProvince(event.target.value);
+    console.log(event.target.value);
     setDistrict('');
     setDetailAddress('');
   };
@@ -25,6 +27,7 @@ function DialogDetailAddress({ open, Transition, handleClose, Address, WardName,
   };
   const handleChangeWard = (event) => {
     setWard(event.target.value);
+    console.log(event);
     setDetailAddress('');
   };
   const handleChangeDetailAddress = (event) => {
@@ -40,6 +43,7 @@ function DialogDetailAddress({ open, Transition, handleClose, Address, WardName,
   }, []);
   useEffect(() => {
     const fetchDistrict = async () => {
+      console.log(province);
       const districtList = await addressApi.getDistrictByProvinceName({ ProvinceName: province });
       setDistricts(districtList.district);
     };
@@ -52,6 +56,16 @@ function DialogDetailAddress({ open, Transition, handleClose, Address, WardName,
     };
     fetchWard();
   }, [district]);
+
+  const handleSubmit = () => {
+    callbackParent({
+      detailAddress,
+      ward,
+      district,
+      province,
+    });
+    handleClose();
+  };
 
   return (
     <Dialog
@@ -69,8 +83,12 @@ function DialogDetailAddress({ open, Transition, handleClose, Address, WardName,
           display: 'flex',
         }}
       >
-        <Link to={''}>
-          <img className={styles.btn_back} src="https://static.chotot.com/storage/chotot-icons/svg/back.svg" />
+        <Link to="">
+          <img
+            onClick={handleClose}
+            className={styles.btn_back}
+            src="https://static.chotot.com/storage/chotot-icons/svg/back.svg"
+          />
         </Link>
         <Box
           sx={{
@@ -92,6 +110,7 @@ function DialogDetailAddress({ open, Transition, handleClose, Address, WardName,
       </Box>
       <Grid
         container
+        item
         spacing={2}
         sx={{
           width: '600px',
@@ -109,7 +128,9 @@ function DialogDetailAddress({ open, Transition, handleClose, Address, WardName,
               onChange={handleChangeProvince}
             >
               {provinces.map((result) => (
-                <MenuItem value={result.ProvinceName}>{result.ProvinceName}</MenuItem>
+                <MenuItem key={result.IdProvince} value={result.ProvinceName}>
+                  {result.ProvinceName}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -125,7 +146,9 @@ function DialogDetailAddress({ open, Transition, handleClose, Address, WardName,
               onChange={handleChangeDistrict}
             >
               {districts.map((result) => (
-                <MenuItem value={result.DistrictName}>{result.DistrictName}</MenuItem>
+                <MenuItem key={result.IdDistrict} value={result.DistrictName}>
+                  {result.DistrictName}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -141,14 +164,15 @@ function DialogDetailAddress({ open, Transition, handleClose, Address, WardName,
               onChange={handleChangeWard}
             >
               {wards.map((result) => (
-                <MenuItem value={result.WardName}>{result.WardName}</MenuItem>
+                <MenuItem key={result.IdWard} value={result.WardName}>
+                  {result.WardName}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
         </Grid>
         <Grid item md={12} sm={12} xs={12}>
           <TextField
-            item
             label="Địa chỉ cụ thể"
             id="outlined-basic"
             onChange={handleChangeDetailAddress}
@@ -156,6 +180,9 @@ function DialogDetailAddress({ open, Transition, handleClose, Address, WardName,
             variant="outlined"
             fullWidth
           />
+        </Grid>
+        <Grid item md={12} sm={12} xs={12} onClick={handleSubmit}>
+          <Button orange text="Xong" />
         </Grid>
       </Grid>
     </Dialog>

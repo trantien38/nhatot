@@ -13,9 +13,9 @@ function LoginForm(props) {
       .string()
       .required('Please enter your phone number')
       .matches(phoneRegExp, 'Phone number is not valid')
-      .min(10, 'to short')
-      .max(10, 'to long'),
-    password: yup.string().required('Please enter your password').min(6),
+      .min(10, 'Phone number is too short')
+      .max(10, 'Phone number is too long'),
+    password: yup.string().required('Please enter your password').min(6, 'Password is too short'),
   });
   const {
     control,
@@ -52,8 +52,7 @@ function LoginForm(props) {
       >
         <section
           style={{
-            backgroundImage:
-              'url(https://static.chotot.com/storage/assets/LOGIN/login_background.webp)',
+            backgroundImage: 'url(https://static.chotot.com/storage/assets/LOGIN/login_background.webp)',
             position: 'absolute',
             zIndex: 1,
             top: 0,

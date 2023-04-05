@@ -2,7 +2,7 @@ import { Box, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from 
 import { Link } from 'react-router-dom';
 import styles from '../Profile.module.scss';
 
-function EditSocial() {
+export const EditSocial = () => {
   return (
     <Box sx={{ maxWidth: '960px', margin: 'auto' }}>
       <h2>Chỉnh sửa trang cá nhân</h2>
@@ -26,7 +26,7 @@ function EditSocial() {
             marginTop: '0px',
             marginBottom: '12px',
             paddingRight: '16px',
-            paddingBottom:'16px',
+            paddingBottom: '16px',
             '& h3': {
               margin: 0,
             },
@@ -131,6 +131,6 @@ function EditSocial() {
       </Grid>
     </Box>
   );
-}
+};
 
 export default EditSocial;

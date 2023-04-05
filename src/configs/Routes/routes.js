@@ -1,17 +1,17 @@
 import LayoutAdmin from '~/admin/components/LayoutAdmin';
+import { AddBanner, EditBanner, ListBanner } from '~/admin/pages/banner';
+import { AddQuestion, EditQuestion, ListQuestion } from '~/admin/pages/question';
+import { AddUser, EditUser, ListUser } from '~/admin/pages/user';
+
 import Layout from '~/components/Layout';
-import ForgetPassword from '~/page/Auth/ForgetPassword/ForgetPassword';
-import Login from '~/page/Auth/Login/Login';
-import EditAccount from '~/page/Auth/Profile/components/EditAccount';
-import EditProfile from '~/page/Auth/Profile/components/EditProfile';
-import EditSocial from '~/page/Auth/Profile/components/EditSocial';
-import Profile from '~/page/Auth/Profile/Profile';
-import Register from '~/page/Auth/Register/Register';
+import { ForgetPassword, Login, Profile, Register } from '~/page/Auth';
+import { EditAccount, EditProfile, EditSocial } from '~/page/Auth/Profile/components';
 import Categories from '~/page/Categories/Categories';
 import Detail from '~/page/Detail/Detail';
 import Home from '~/page/Home/Home';
 import Message from '~/page/Message/Message';
 import News from '~/page/News/News';
+import Post from '~/page/Post/Post';
 
 let routes = () => [
   {
@@ -50,6 +50,10 @@ let routes = () => [
       { path: 'register', element: <Register /> },
       { path: 'forget-password', element: <ForgetPassword /> },
       {
+        path: '/post',
+        element: <Post />,
+      },
+      {
         path: '/profile',
         element: <Profile />,
       },
@@ -69,83 +73,65 @@ let routes = () => [
   },
   {
     path: '/:messageUserSlug',
-    element: (
-      // <ProtectedRoute isLogin={isLogin}>
-      <Message />
-      // </ProtectedRoute>
-    ),
+    element: <Message />,
   },
   {
     path: '/:messageUserSlug/:IdMotel',
-    element: (
-      // <ProtectedRoute isLogin={isLogin}>
-      <Message />
-      // </ProtectedRoute>
-    ),
+    element: <Message />,
   },
+
   {
-    path: '/admin',
+    path: 'admin',
     element: <LayoutAdmin />,
     children: [
       {
         path: 'user',
-        element: <LayoutAdmin />,
-        children: [
-          {
-            path: 'edit',
-            element: <></>,
-          },
-          {
-            path: 'add',
-            element: <></>,
-          },
-          {
-            path: 'list',
-            element: <></>,
-          },
-        ],
+        element: <ListUser />,
+      },
+      {
+        path: 'user/list',
+        element: <ListUser />,
+      },
+      {
+        path: 'user/add',
+        element: <AddUser />,
+      },
+      {
+        path: 'user/:editSlug',
+        element: <EditUser />,
       },
       {
         path: 'question',
-        element: <></>,
-        children: [
-          {
-            path: 'edit',
-            element: <></>,
-          },
-          {
-            path: 'add',
-            element: <></>,
-          },
-          {
-            path: 'list',
-            element: <></>,
-          },
-        ],
+        element: <ListQuestion />,
+      },
+      {
+        path: 'question/:editSlug',
+        element: <EditQuestion />,
+      },
+      {
+        path: 'question/add',
+        element: <AddQuestion />,
+      },
+      {
+        path: 'question/list',
+        element: <ListQuestion />,
       },
       {
         path: 'banner',
-        element: <></>,
-        children: [
-          {
-            path: 'edit',
-            element: <></>,
-          },
-          {
-            path: 'add',
-            element: <></>,
-          },
-          {
-            path: 'list',
-            element: <></>,
-          },
-        ],
+        element: <ListBanner />,
       },
-      // {path:'',element:},
-      // {path:'',element:},
-      // {path:'',element:},
-      // {path:'',element:},
-      // {path:'',element:},
+      {
+        path: 'banner/:editSlug',
+        element: <EditBanner />,
+      },
+      {
+        path: 'banner/add',
+        element: <AddBanner />,
+      },
+      {
+        path: 'banner/list',
+        element: <ListBanner />,
+      },
     ],
   },
 ];

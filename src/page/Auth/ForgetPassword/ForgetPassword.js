@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 import { FormInput } from '~/components/HookForm/InputForm';
 
-function ForgetPassword() {
+export const ForgetPassword = () => {
   const initialValues = { phone: '' };
   const schema = yup.object().shape({
     phone: yup.string().required('Please enter phone number and try again.').min(10),
@@ -130,6 +130,4 @@ function ForgetPassword() {
       </Box>
     </Box>
   );
-}
-
-export default ForgetPassword;
+};
