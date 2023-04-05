@@ -12,14 +12,13 @@ function InfoUser(props) {
   useEffect(() => {
     const fetchInfoUser = async () => {
       const infoUsers = await userApi.getInfoUser({ IdMotel, IdUser });
-      console.log(infoUsers.user);
+      console.log(infoUsers.user[0].Name);
       setInfoUser(infoUsers.user);
-      // setInfoUser(data);
-      callBackGetIdHost(infoUsers.user[0].IdUser);
+      callBackGetIdHost(infoUsers.user[0].IdMotel);
     };
     fetchInfoUser();
   }, [IdMotel]);
-
+  
   if (IdMotel) {
     return (
       <MessageItem

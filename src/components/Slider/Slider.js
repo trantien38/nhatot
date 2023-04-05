@@ -2,6 +2,7 @@ import { Box } from '@mui/system';
 import clsx from 'clsx';
 import React from 'react';
 import { useState, useRef, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import bannerApi from '~/api/BannerApi';
 import styles from './Slider.module.scss';
 
@@ -12,6 +13,8 @@ export default function Slider() {
   var setWidthSlides = useRef();
   var counter = useRef();
 
+  const { SliderSlug } = useParams();
+
   useEffect(() => {
     const fetchBanner = async () => {
       const bannerList = await bannerApi.getSrcBanner();
@@ -20,13 +23,13 @@ export default function Slider() {
       setMarginSlide.current = 100 / bannerLength.current;
     };
     fetchBanner();
-    handleSlide();
+    // handleSlide();
   }, []);
 
   const handleSlide = () => {
     setWidthSlides.current = document.querySelector('.slides');
     counter.current = 1;
-    setInterval(() => {
+    let intervalId = setInterval(() => {
       document.getElementById('radio' + counter.current).checked = true;
       setWidthSlides.current.style.width = `${bannerLength.current * 100}%`;
 
@@ -37,17 +40,16 @@ export default function Slider() {
         removeDot(counter.current);
       }
 
-      const elements = document.querySelectorAll(
-        `#radio${counter.current}:checked ~ .first`,
-      );
+      const elements = document.querySelectorAll(`#radio${counter.current}:checked ~ .first`);
       for (var element of elements) {
-        element.style = `margin-left: ${
-          0 - setMarginSlide.current * (counter.current - 1)
-        }%`;
+        element.style = `margin-left: ${0 - setMarginSlide.current * (counter.current - 1)}%`;
       }
       counter.current++;
       if (counter.current > bannerLength.current) counter.current = 1;
     }, 3000);
+    if (SliderSlug) {
+      clearInterval(intervalId);
+    }
   };
 
   const addDot = (dot) => {
@@ -55,8 +57,7 @@ export default function Slider() {
   };
 
   const removeDot = (dot) => {
-    document.querySelector(`.dot${dot - 1}`).style.backgroundColor =
-      'transparent';
+    document.querySelector(`.dot${dot - 1}`).style.backgroundColor = 'transparent';
   };
 
   return (
@@ -68,21 +69,12 @@ export default function Slider() {
       <Box className={styles.slider}>
         <Box className={clsx(styles.slides, 'slides')}>
           {banner.map((result, index) => (
-            <input
-              key={index}
-              type="radio"
-              name="radio-btn"
-              id={`radio${index + 1}`}
-            />
+            <input key={index} type="radio" name="radio-btn" id={`radio${index + 1}`} />
           ))}
 
           {banner.map((result, index) => (
             <div key={index} className={clsx(styles.slide, 'first')}>
-              <img
-                src={`assets/images/banners/${result.img}`}
-                style={{ maxWidth: '960px' }}
-                alt="HB PTY JUPITER"
-              />
+              <img src={`assets/images/banners/${result.img}`} style={{ maxWidth: '960px' }} alt="HB PTY JUPITER" />
             </div>
           ))}
 
@@ -94,11 +86,7 @@ export default function Slider() {
         </Box>
         <div className={styles.navigation_manual}>
           {banner.map((result, index) => (
-            <label
-              key={index}
-              htmlFor={`radio${index + 1}`}
-              className={clsx(styles.manual_btn, `dot${index + 1}`)}
-            />
+            <label key={index} htmlFor={`radio${index + 1}`} className={clsx(styles.manual_btn, `dot${index + 1}`)} />
           ))}
         </div>
       </Box>

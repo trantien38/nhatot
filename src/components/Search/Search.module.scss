@@ -1,16 +1,16 @@
 .search {
-  background-color: aqua;
   padding: 8px 0;
   display: flex;
-  justify-content: center;
-
+  justify-content: space-between;
+  height: 38px;
+  max-width: 960px;
+  margin: auto;
 }
 
 .input {
-  height: 36px;
   width: calc(100% - 52px);
   padding-left: 8px;
-  margin-top: 6px;
+  margin-top: 5px;
   background-color: var(--color_gray);
   border-radius: 4px;
   border: none;
@@ -18,9 +18,7 @@
 }
 
 .drop_down {
-  // &:hover{
-  //     background-color: var(--color_gray);
-  // }
   background-color: var(--color_gray) !important;
+  font-size: 1rem !important;
   border-radius: 4px 0 0 4px !important;
 }

@@ -6,12 +6,22 @@ const bannerApi = {
     const url = '/banner:active';
     return axiosClient.get(url, { params });
   },
-  get(id){
+  getAll(params) {
+    const url = '/banners';
+    return axiosClient.get(url, { params });
+  },
+  get(id) {
     const url = `/banner/${id}`;
     return axiosClient.get(url);
   },
   add(data) {
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    };
     const url = '/banner';
+    console.log(data.get('file'));
     return axiosClient.post(url, data);
   },
   update(data) {

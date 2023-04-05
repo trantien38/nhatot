@@ -1,95 +1,123 @@
-.btn_primary{
-    &:hover{
-        opacity: 0.8;
-    }
-    cursor: pointer;
-    color: #fff;
-    background-color: #007bff;
-    border-color: #007bff;
+.btn_primary {
+  &:hover {
+    opacity: 0.8;
+  }
+  cursor: pointer;
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
 }
 
 .btn_secondary {
-    &:hover{
-        opacity: 0.8;
-    }
-    cursor: pointer;
-    color: #fff;
-    background-color: #6c757d;
-    border-color: #6c757d;
+  &:hover {
+    opacity: 0.8;
+  }
+  cursor: pointer;
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
 }
 
 .btn_success {
-    &:hover{
-        opacity: 0.8;
-    }
-    cursor: pointer;
-    color: #fff;
-    background-color: #28a745;
-    border-color: #28a745;
+  &:hover {
+    opacity: 0.8;
+  }
+  cursor: pointer;
+  color: #fff;
+  background-color: #28a745;
+  border-color: #28a745;
 }
 
 .btn_danger {
-    &:hover{
-        opacity: 0.8;
-    }
-    cursor: pointer;
-    color: #fff;
-    background-color: #dc3545;
-    border-color: #dc3545;
+  &:hover {
+    opacity: 0.8;
+  }
+  cursor: pointer;
+  color: #fff;
+  line-height: 45px !important;
+  font-weight: 400;
+  font-size: 14px;
+  border: none;
+  width: 100%;
+  background-color: #dc3545;
+  border-color: #dc3545;
 }
 
 .btn_warning {
-    &:hover{
-        opacity: 0.8;
-    }
-    cursor: pointer;
-    color: #212529;
-    background-color: #ffc107;
-    border-color: #ffc107;
+  &:hover {
+    opacity: 0.8;
+  }
+  cursor: pointer;
+  color: #212529;
+  background-color: #ffc107;
+  border-color: #ffc107;
 }
 
 .btn_info {
-    &:hover{
-        opacity: 0.8;
-    }
-    cursor: pointer;
-    color: #fff;
-    background-color: #17a2b8;
-    border-color: #17a2b8;
+  &:hover {
+    opacity: 0.8;
+  }
+  cursor: pointer;
+  color: #fff;
+  background-color: #17a2b8;
+  border-color: #17a2b8;
 }
 
 .btn_light {
-    &:hover{
-        opacity: 0.8;
-    }
-    cursor: pointer;
-    color: #212529;
-    background-color: #f8f9fa;
-    border-color: #f8f9fa;
+  &:hover {
+    opacity: 0.8;
+  }
+  cursor: pointer;
+  color: #212529;
+  background-color: #f8f9fa;
+  border-color: #f8f9fa;
 }
 
 .btn_dark {
-    &:hover{
-        opacity: 0.8;
-    }
-    cursor: pointer;
-    color: #fff;
-    background-color: #343a40;
-    border-color: #343a40;
+  &:hover {
+    opacity: 0.8;
+  }
+  cursor: pointer;
+  color: #fff;
+  background-color: #343a40;
+  border-color: #343a40;
 }
 
 .btn_link {
-    &:hover{
-        opacity: 0.8;
-    }
-    cursor: pointer;
-    font-weight: 400;
-    color: #007bff;
-    background-color: transparent;
+  &:hover {
+    opacity: 0.8;
+  }
+  cursor: pointer;
+  font-weight: 400;
+  color: #007bff;
+  background-color: transparent;
 }
 
-.btn_disabled{
-    opacity: 0.5;
-    pointer-events: none;
-    // cursor:no-drop;
+.btn_disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  // cursor:no-drop;
+}
+
+.btn_filter {
+  background-color: #f4f4f4;
+  cursor: pointer;
+  border-radius: 4px;
+  border: none;
+  padding: 0 8px;
+  height: 100%;
+}
+
+.btn_orange {
+  background-color: #fd9827;
+  color: #fff;
+  line-height: 45px !important;
+  font-weight: 400;
+  font-size: 14px;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+  }
 }

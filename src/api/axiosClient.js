@@ -1,4 +1,17 @@
 import axios from 'axios';
+
+export const getClientToken = () => {
+  return axios.defaults.headers.common['Authorization'];
+};
+
+export const setClientToken = (token) => {
+  if (token) {
+    axios.defaults.headers.common.Authorization = token;
+  } else {
+    delete axios.defaults.headers.common.Authorization;
+  }
+};
+
 const axiosClient = axios.create({
   baseURL: 'http://localhost:8000/',
   headers: {

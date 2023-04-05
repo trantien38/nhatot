@@ -1,11 +1,13 @@
 import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import StorageKeys from '~/constants/storage-keys';
 import styles from '../Message.module.scss';
 import MessageItem from './MessageItem';
 
 function MessageList(props) {
   const [loadMore, setLoadMore] = useState(true);
-
+  const navigate = useNavigate();
   const avatar =
     'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png';
 
@@ -34,30 +36,36 @@ function MessageList(props) {
 
   useEffect(() => {
     const list = document.getElementById('list');
-
     if (list.clientHeight <= window.innerHeight && list.clientHeight) {
       setLoadMore(true);
     }
   }, [props.state]);
-  return (
-    <div id="list" className={styles.messageList}>
-      {props.messages.map((result) => (
-        <Box key={result.IdMotel}>
-          <MessageItem
-            link={`/message-${props.idUser}/${result.IdMotel}`}
-            onClick={result.IdMotel}
-            idMotel={result.IdMotel}
-            active={false}
-            img={result.Avatar || avatar}
-            name={result.Name}
-            messageTime={'1 giờ trước'}
-            title={result.Title}
-            content={result.Content}
-          />
-        </Box>
-      ))}
-    </div>
-  );
+  if (
+    JSON.parse(localStorage.getItem(StorageKeys.USER))?.activeStatus === 1 &&
+    JSON.parse(localStorage.getItem(StorageKeys.USER))?.IdUser == props.idUser
+  ) {
+    return (
+      <div id="list" className={styles.messageList}>
+        {props.messages.map((result) => (
+          <Box key={result.IdMotel}>
+            <MessageItem
+              link={`/message-${props.idUser}/${result.IdMotel}`}
+              onClick={result.IdMotel}
+              idMotel={result.IdMotel}
+              active={false}
+              img={result.Avatar || avatar}
+              name={result.Name}
+              messageTime={'1 giờ trước'}
+              title={result.Title}
+              content={result.Content}
+            />
+          </Box>
+        ))}
+      </div>
+    );
+  } else {
+    return navigate('/login');
+  }
 }
 
 export default MessageList;

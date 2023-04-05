@@ -1,9 +1,8 @@
 import { Box } from '@mui/material';
-import { display } from '@mui/system';
 
 function DetailItem({ icon, title, sdt }) {
   return (
-    <Box sx={{ display: 'flex', marginBottom: '8px' }}>
+    <Box sx={{ display: 'flex', margin: ' 0 20px 10px 0' }}>
       <img width={'18px'} height={'18px'} src={icon} />
       <Box
         sx={{

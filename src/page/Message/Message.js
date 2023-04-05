@@ -23,7 +23,6 @@ export default function Message() {
   const [mu, idUser] = messageUserSlug.split('-');
   const params = useParams();
 
-
   // fetch data message list
   useEffect(() => {
     const fetchMessage = async () => {
@@ -37,9 +36,7 @@ export default function Message() {
   // fetch data chat box
   useEffect(() => {
     const fetchChat = async () => {
-      const chatList = await messageApi.getAllMessagesUserInMotel(
-        params.IdMotel,
-      );
+      const chatList = await messageApi.getAllMessagesUserInMotel(params.IdMotel);
       setChat(chatList.chat);
     };
     fetchChat();
@@ -50,7 +47,7 @@ export default function Message() {
     const $ = document.querySelector.bind(document);
     const $$ = document.querySelectorAll.bind(document);
     const iconElements = $$('.threeIcon');
-    if ($('.addIcon').alt == 'open') {
+    if ($('.addIcon').alt === 'open') {
       $('.addIcon').alt = 'close';
       $('.addIcon').style = 'transform: rotate(45deg)';
       for (var i = 0; i < iconElements.length; i++) {
@@ -59,8 +56,8 @@ export default function Message() {
     } else {
       $('.addIcon').alt = 'open';
       $('.addIcon').style = 'transform: rotate(0deg)';
-      for (var i = 0; i < iconElements.length; i++) {
-        iconElements[i].style = 'display: none';
+      for (var j = 0; j < iconElements.length; j++) {
+        iconElements[j].style = 'display: none';
       }
     }
   };
@@ -86,6 +83,18 @@ export default function Message() {
     await setChat(messageUserList.chat);
   };
 
+  // submit question
+  const handleSubmitQuestion = async (Content) => {
+    console.log(Content);
+    const messageUserList = await messageApi.add({
+      Content,
+      IdUser: idUser,
+      IdMotel: params.IdMotel,
+    });
+    document.chat.messages.value = '';
+    console.log(messageUserList);
+    await setChat(messageUserList.chat);
+  };
   return (
     <>
       <Header />
@@ -121,9 +130,7 @@ export default function Message() {
                 alignItems: 'center',
               }}
             >
-              <h5 style={{ fontSize: '1rem', margin: 0, paddingLeft: '2px' }}>
-                Chat
-              </h5>
+              <h5 style={{ fontSize: '1rem', margin: 0, paddingLeft: '2px' }}>Chat</h5>
               <Box sx={{ display: 'flex' }}>
                 <ItemButton active content={'Tất cả'} />
                 <ItemButton content={'Tôi mua'} />
@@ -137,12 +144,7 @@ export default function Message() {
                 flex: '1 1',
               }}
             >
-              <MessageList
-                idUser={idUser}
-                messages={messageList}
-                state={state}
-                setState={setState}
-              />
+              <MessageList idUser={idUser} messages={messageList} state={state} setState={setState} />
             </Box>
             <Box
               sx={{
@@ -162,22 +164,10 @@ export default function Message() {
               <p>Xóa cuộc trò chuyện</p>
             </Box>
           </Grid>
-          <Grid
-            item
-            md={8}
-            sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-          >
+          <Grid item md={8} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
             <Box>
-              <InfoUser
-                IdUser={idUser}
-                IdMotel={params.IdMotel}
-                data={messageList}
-                callBackGetIdHost={callBackGetIdHost}
-              />
-              <InfoMotel
-                idMotel={params.IdMotel}
-                callBackGetIdHost={callBackGetIdHost}
-              />
+              <InfoUser IdUser={idUser} IdMotel={params.IdMotel} data={messageList} callBackGetIdHost={callBackGetIdHost} />
+              <InfoMotel idMotel={params.IdMotel} callBackGetIdHost={callBackGetIdHost} />
             </Box>
             {params.IdMotel && (
               <Box
@@ -190,15 +180,10 @@ export default function Message() {
                   flex: '1 1',
                 }}
               >
-                <ChatBox
-                  chat={chat}
-                  IdUser={idUser}
-                  state={state}
-                  setState={setState}
-                />
+                <ChatBox chat={chat} IdUser={idUser} state={state} setState={setState} />
 
                 <Box sx={{}}>
-                  <Questions onSubmit={handleSubmit} />
+                  <Questions onSubmit={handleSubmitQuestion} />
                   <Box
                     sx={{
                       display: 'flex',
@@ -207,11 +192,7 @@ export default function Message() {
                     }}
                   >
                     <input type="file" style={{ display: 'none' }} />
-                    <form
-                      name="chat"
-                      onSubmit={handleSubmit}
-                      className={styles.form}
-                    >
+                    <form name="chat" onSubmit={handleSubmit} className={styles.form}>
                       <img
                         className={clsx(styles.messageIcon, 'addIcon')}
                         onClick={handleChangeIcon}
@@ -233,16 +214,8 @@ export default function Message() {
                         className={clsx(styles.messageIcon, 'threeIcon')}
                         src="https://chat.chotot.com/icons/location.svg"
                       />
-                      <input
-                        className={styles.inputMessage}
-                        placeholder="Nhập tin nhắn..."
-                        rows="1"
-                        name="messages"
-                      />
-                      <button
-                        type="submit"
-                        className={styles.messageSubmit}
-                      ></button>
+                      <input className={styles.inputMessage} placeholder="Nhập tin nhắn..." rows="1" name="messages" />
+                      <button type="submit" className={styles.messageSubmit}></button>
                     </form>
                   </Box>
                 </Box>

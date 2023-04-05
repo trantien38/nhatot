@@ -24,9 +24,11 @@ function ChatBox({ chat, IdUser }) {
                       '& svg': { opacity: 0, paddingRight: '10px' },
                       '& svg:hover': { opacity: 1, cursor: 'pointer' },
                     }}
+                    
                   >
                     <MoreHoriz />
                   </Box>
+                  <Box></Box>
                   <Box
                     sx={{
                       position: 'relative',

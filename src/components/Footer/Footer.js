@@ -17,25 +17,25 @@ export default function Footer() {
       }}
     >
       <div className={styles.footer}>
-        <Grid container sx={{padding: '8px'}}>
-          <Grid md={3}>
+        <Grid container sx={{ padding: '8px' }}>
+          <Grid item md={3}>
             <p style={{ padding: 0 }}>TẢI ỨNG DỤNG NHÀ TỐT</p>
             <Box>
               <Grid container>
-                <Grid md={6}>
+                <Grid item md={6}>
                   <source
                     type="image/webp"
-                    srcset="https://static.chotot.com/storage/default/group-qr.webp"
+                    srcSet="https://static.chotot.com/storage/default/group-qr.webp"
                   ></source>
                   <img
                     alt="Chợ Tốt"
-                    class="aw__ifuk1ky"
+                    className="aw__ifuk1ky"
                     src="https://static.chotot.com/storage/default/group-qr.jpeg"
                     width="100"
                     height="100"
                   />
                 </Grid>
-                <Grid md={6}>
+                <Grid item md={6}>
                   <img
                     alt="App Store"
                     src="https://static.chotot.com/storage/default/ios.svg"
@@ -55,7 +55,7 @@ export default function Footer() {
               </Grid>
             </Box>
           </Grid>
-          <Grid md={3}>
+          <Grid item md={3}>
             <p>HỖ TRỢ KHÁCH HÀNG</p>
             <List
               sx={{
@@ -86,7 +86,7 @@ export default function Footer() {
               </ListItem>
             </List>
           </Grid>
-          <Grid md={3}>
+          <Grid item md={3}>
             <p>VỀ NHÀ TỐT</p>
             <List
               sx={{
@@ -117,7 +117,7 @@ export default function Footer() {
               </ListItem>
             </List>
           </Grid>
-          <Grid md={3}>
+          <Grid item md={3}>
             <p style={{ paddingLeft: '8px' }}>LIÊN KẾT</p>
             <List
               sx={{
@@ -182,10 +182,11 @@ export default function Footer() {
               padding: '8px',
             }}
           >
-            CÔNG TY TNHH NHÀ TỐT - Người đại diện theo pháp luật: Trần Y Tiến; GPDKKD: 0312120782 do sở KH & ĐT TP.Đà Nẵng cấp ngày 11/01/2023;
+            CÔNG TY TNHH NHÀ TỐT - Người đại diện theo pháp luật: Trần Y Tiến;
+            GPDKKD: 0312120782 do sở KH & ĐT TP.Đà Nẵng cấp ngày 11/01/2023;
             <br />
-            Địa chỉ: 96 Bùi Giáng, Hòa An, Cẩm Lệ, Đà Nẵng, Việt Nam; Email: trantien01ht@gmail.com - Tổng đài CSKH: 19001007
-            (100đ/phút)
+            Địa chỉ: 96 Bùi Giáng, Hòa An, Cẩm Lệ, Đà Nẵng, Việt Nam; Email:
+            trantien01ht@gmail.com - Tổng đài CSKH: 19001007 (100đ/phút)
           </span>
         </Grid>
       </div>

@@ -7,7 +7,7 @@ import styles from './Categories.module.scss';
 import Filter from './components/Filter/Filter';
 import MotelItem from './components/MotelItem/MotelItem';
 
-const pageSize = 2;
+const pageSize = 8;
 
 function Categories() {
   const [opacity, setOpacity] = useState(0);

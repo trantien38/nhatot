@@ -12,3 +12,59 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  /* box-shadow: inset 0 0 5px grey;  */
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--btn_color_orange);
+  border-radius: 10px;
+}
+
+/* Handle on hover
+::-webkit-scrollbar-thumb:hover {
+  background: #b30000; 
+} */
+
+/* Slider */
+
+#radio1:checked ~ .first {
+  margin-left: 0;
+}
+#radio2:checked ~ .first {
+  margin-left: 0%;
+}
+#radio3:checked ~ .first {
+  margin-left: 0%;
+}
+#radio4:checked ~ .first {
+  margin-left: 0%;
+}
+#radio5:checked ~ .first {
+  margin-left: 0%;
+}
+#radio6:checked ~ .first {
+  margin-left: 0%;
+}
+#radio7:checked ~ .first {
+  margin-left: 0%;
+}
+#radio8:checked ~ .first {
+  margin-left: 0%;
+}
+#radio9:checked ~ .first {
+  margin-left: 0%;
+}
+#radio10:checked ~ .first {
+  margin-left: 0%;
+}

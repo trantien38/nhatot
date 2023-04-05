@@ -13,11 +13,11 @@ export default function Questions(props) {
     fetchQuestion();
   }, []);
 
-  const handleSubmit = async (values) => {
-    console.log(values);
+  const handleSubmit = async (e) => {
+    console.log(e.target.innerText);
     const { onSubmit } = props;
     if (onSubmit) {
-      await onSubmit(values);
+      await onSubmit(e.target.innerText);
     }
   };
 
@@ -25,11 +25,7 @@ export default function Questions(props) {
     <Box sx={{ padding: '0 12px' }}>
       <ul className={styles.questionList}>
         {question.map((result) => (
-          <li
-            key={result.id}
-            className={styles.question}
-            onClick={handleSubmit}
-          >
+          <li key={result.id} className={styles.question} onClick={handleSubmit}>
             {result.content}
           </li>
         ))}

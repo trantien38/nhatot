@@ -3,7 +3,7 @@ import axiosClient from './axiosClient';
 
 const questionApi = {
   getAll(params) {
-    const url = '/question';
+    const url = '/questions';
     return axiosClient.get(url, { params });
   },
   get(id){

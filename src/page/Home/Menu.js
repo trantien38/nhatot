@@ -5,7 +5,12 @@ import MenuItem from './MenuItem';
 import styles from './Home.module.scss';
 export default function Menu({ title, count }) {
   return (
-    <Box sx={{ backgroundColor: '#fff', marginTop:'12px' }}>
+    <Box
+      sx={{
+        backgroundColor: '#fff',
+        marginTop: '12px',
+      }}
+    >
       <h2 className={styles.menuTitle}>{title}</h2>
       <Grid sx={{}} container>
         <MenuItem
@@ -54,9 +59,7 @@ export default function Menu({ title, count }) {
           price={'2 tỷ'}
         />
       </Grid>
-      <Box
-        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-      >
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <button className={styles.btn} type="button">
           <h5 className={styles.h5}>{`Xem thêm ${count} tin khác`}</h5>
           <KeyboardArrowRight />
