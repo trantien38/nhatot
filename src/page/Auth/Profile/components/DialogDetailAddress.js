@@ -43,7 +43,6 @@ function DialogDetailAddress({ open, Transition, handleClose, Address, WardName,
   }, []);
   useEffect(() => {
     const fetchDistrict = async () => {
-      console.log(province);
       const districtList = await addressApi.getDistrictByProvinceName({ ProvinceName: province });
       setDistricts(districtList.district);
     };

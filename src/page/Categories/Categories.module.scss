@@ -1,5 +1,5 @@
 .motelList {
-  max-width: 960px;
+  max-width: var(--width-browser);
   margin: auto !important;
 }
 .motelList a {

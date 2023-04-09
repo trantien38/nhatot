@@ -1,9 +1,10 @@
 import { Box, FormControl, Grid, InputLabel, MenuItem, Select, Slide, TextField } from '@mui/material';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import userApi from '~/api/UserApi';
 import Button from '~/components/Button/Button';
 import StorageKeys from '~/constants/storage-keys';
+import { toastMessage } from '~/utils/toast';
 
 import styles from '../Profile.module.scss';
 import DialogDetailAddress from './DialogDetailAddress';
@@ -14,7 +15,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export const EditProfile = () => {
   const infoUser = JSON.parse(localStorage.getItem(StorageKeys.USER));
-  console.log(infoUser);
   const {
     Name,
     Gender,
@@ -29,13 +29,14 @@ export const EditProfile = () => {
     DistrictName,
     ProvinceName,
   } = infoUser;
-  const [ward, setWard] = useState('');
-  const [province, setProvince] = useState('');
+  const navigate = useNavigate();
+  const [ward, setWard] = useState(WardName);
+  const [province, setProvince] = useState(ProvinceName);
   const [name, setName] = useState(Name);
   const [email, setEmail] = useState(Email);
   const [phoneNumber, setPhoneNumber] = useState(PhoneNumber);
   const detailedAddress = `${Address}, ${WardPrefix} ${WardName}, ${DistrictPrefix} ${DistrictName}, ${ProvinceName}`;
-  const [road, setRoad] = useState('');
+  const [road, setRoad] = useState(Address);
   const [address, setAddress] = useState(detailedAddress);
   const [gender, setGender] = useState(Gender);
   const [birthDay, setBirthDay] = useState(BirthDay);
@@ -67,13 +68,6 @@ export const EditProfile = () => {
   const handleCloseAddress = () => {
     setOpenAddress(false);
   };
-  const formatBirthDay = (value) => {
-    const arr = value.split('-');
-    let year = arr[0];
-    let month = arr[1];
-    let day = arr[2];
-    return day + '-' + month + '-' + year;
-  };
 
   const callbackParent = (value) => {
     console.log(value);
@@ -82,17 +76,15 @@ export const EditProfile = () => {
     setProvince(value.province);
     setAddress(`${value.detailAddress}, ${value.ward}, ${value.district}, ${value.province}`);
   };
-  const handleSubmit = () => {
-    // console.log(name);
-    // console.log(email);
-    // console.log(phoneNumber);
-    // console.log(road);
-    // console.log(gender);
-    // console.log(birthDay);
-    // console.log(ward);
-    // console.log(province);
-    
-    userApi.changeInfoUser({ IdUser, name, email, phoneNumber, road, gender, birthDay, ward, province });
+  const handleSubmit = async () => {
+    const result = await userApi.changeInfoUser({ IdUser, name, email, phoneNumber, road, gender, birthDay, ward, province });
+    console.log(result.users);
+    localStorage.removeItem(StorageKeys.USER);
+    localStorage.setItem(StorageKeys.USER, JSON.stringify(result.users));
+    toastMessage.success('Cập nhật thông tin cá nhân thành công');
+    setTimeout(() => {
+      navigate('/profile');
+    }, 2000);
   };
 
   return (

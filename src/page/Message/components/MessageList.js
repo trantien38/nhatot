@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { STATIC_HOST } from '~/constants';
 import StorageKeys from '~/constants/storage-keys';
 import styles from '../Message.module.scss';
 import MessageItem from './MessageItem';
@@ -53,7 +54,7 @@ function MessageList(props) {
               onClick={result.IdMotel}
               idMotel={result.IdMotel}
               active={false}
-              img={result.Avatar || avatar}
+              img={`${STATIC_HOST}${result.Avatar}` || avatar}
               name={result.Name}
               messageTime={'1 giờ trước'}
               title={result.Title}

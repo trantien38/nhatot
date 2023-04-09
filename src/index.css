@@ -27,7 +27,7 @@ code {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: var(--btn_color_orange);
+  background: var(--scroll);
   border-radius: 10px;
 }
 

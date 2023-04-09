@@ -14,7 +14,13 @@ import MessageList from './components/MessageList';
 import Questions from './components/Question/Questions';
 import styles from './Message.module.scss';
 
+import {io} from 'socket.io-client';
+import { STATIC_HOST } from '~/constants';
+
 export default function Message() {
+  const socket = io(STATIC_HOST || 'http://localhost:8000');
+  // const socket = io;
+
   const [messageList, setMessageList] = useState([]);
   const [chat, setChat] = useState([]);
   const [idHost, setIdHost] = useState();
@@ -28,7 +34,7 @@ export default function Message() {
     const fetchMessage = async () => {
       const messageUserList = await messageApi.getListMessageUser(idUser);
       setMessageList(messageUserList.message);
-      console.log(messageUserList.message);
+      // console.log(messageUserList.message);
     };
     fetchMessage();
   }, [idUser]);
@@ -71,30 +77,63 @@ export default function Message() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const Content = document.chat.messages.value;
-
-    console.log(Content);
     const messageUserList = await messageApi.add({
       Content,
       IdUser: idUser,
       IdMotel: params.IdMotel,
     });
+    socket.emit('on-chat', { Content });
+    // console.log(socket.emit());
     document.chat.messages.value = '';
+
     console.log(messageUserList);
-    await setChat(messageUserList.chat);
+    // await setChat(messageUserList.chat);
   };
 
   // submit question
   const handleSubmitQuestion = async (Content) => {
-    console.log(Content);
-    const messageUserList = await messageApi.add({
+    const newMessage = {
       Content,
       IdUser: idUser,
       IdMotel: params.IdMotel,
-    });
+    };
+    socket.emit('send_message', newMessage);
+    const messageUserList = await messageApi.add(newMessage);
     document.chat.messages.value = '';
-    console.log(messageUserList);
+    // console.log(messageUserList.chat);
     await setChat(messageUserList.chat);
+    // await setChat((list)=>[...list, newMessage]);
   };
+
+  // thiên
+  const setListSend = (newMessage) => {
+    const { id_parent } = newMessage;
+    setChat((prev) => {
+      const newArr = [...prev];
+      if (id_parent != 0) {
+        const index = prev.findIndex((item) => item.id_comment == id_parent);
+        newArr[index].collapsed = true;
+        Array.isArray(newArr[index]?.children)
+          ? newArr[index].children?.push(newMessage)
+          : (newArr[index].children = [newMessage]);
+      } else {
+        newArr.push(newMessage);
+      }
+      return newArr;
+    });
+  };
+  useEffect(() => {
+
+  socket.on('receive_message', (result) => {
+    setChat(result);
+    console.log(result);
+  });
+  // return () => {
+  //   socket.off('send_message');
+  // };
+  }, []);
+  // thiên
+
   return (
     <>
       <Header />
@@ -214,7 +253,13 @@ export default function Message() {
                         className={clsx(styles.messageIcon, 'threeIcon')}
                         src="https://chat.chotot.com/icons/location.svg"
                       />
-                      <input className={styles.inputMessage} placeholder="Nhập tin nhắn..." rows="1" name="messages" />
+                      <input
+                        className={styles.inputMessage}
+                        placeholder="Nhập tin nhắn..."
+                        rows="1"
+                        name="messages"
+                        id="message"
+                      />
                       <button type="submit" className={styles.messageSubmit}></button>
                     </form>
                   </Box>

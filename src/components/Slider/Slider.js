@@ -4,6 +4,7 @@ import React from 'react';
 import { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import bannerApi from '~/api/BannerApi';
+import theme from '~/theme';
 import styles from './Slider.module.scss';
 
 export default function Slider() {
@@ -74,7 +75,7 @@ export default function Slider() {
 
           {banner.map((result, index) => (
             <div key={index} className={clsx(styles.slide, 'first')}>
-              <img src={`assets/images/banners/${result.img}`} style={{ maxWidth: '960px' }} alt="HB PTY JUPITER" />
+              <img src={`assets/images/banners/${result.img}`} style={{ maxWidth: theme.size.browser }} alt="HB PTY JUPITER" />
             </div>
           ))}
 

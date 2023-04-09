@@ -19,6 +19,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function Detail() {
+  console.log(123);
   const [motel, setMotel] = useState([]);
   const [image, setImage] = useState([]);
   const [openMap, setOpenMap] = useState(false);
@@ -26,6 +27,7 @@ function Detail() {
   const user = JSON.parse(localStorage?.getItem(StorageKeys.USER));
   const avatar = 'https://static.chotot.com/storage/default_images/default-avatar.webp';
   const activeStatus = JSON.parse(localStorage.getItem(StorageKeys?.USER))?.activeStatus == 1;
+  const [address, setAddress] = useState('');
   const handleOpenMap = () => {
     setOpenMap(true);
   };
@@ -37,9 +39,12 @@ function Detail() {
       const motelItem = await motelApi.getInfoMotel(params.IdMotel);
       console.log(motelItem.motel);
       setMotel(motelItem.motel);
+      setAddress(
+        `${motelItem?.motel[0]?.Address}, ${motelItem?.motel[0]?.WardPrefix} ${motelItem?.motel[0]?.WardName}, ${motelItem?.motel[0]?.DistrictPrefix} ${motelItem?.motel[0]?.DistrictName}, Tp.${motelItem?.motel[0]?.ProvinceName}`,
+      );
     };
     fetchMotel();
-  }, []);
+  }, [params.IdMotel]);
 
   useEffect(() => {
     const fetchImage = async () => {
@@ -48,12 +53,11 @@ function Detail() {
       console.log(images.image);
     };
     fetchImage();
-  }, []);
+  }, [params.IdMotel]);
 
   const handleChangeImage = (src) => () => {
     const element = document.querySelector('.srcimage');
     element.src = src;
-    console.log(element, src);
   };
   return (
     <Grid container>
@@ -96,21 +100,29 @@ function Detail() {
             </Box>
             <Box display={'flex'}>
               <DetailItem icon="https://static.chotot.com/storage/icons/svg/share-new.svg" title="Chia sẻ" />
-              <DetailItem icon="https://static.chotot.com/storage/icons/saveAd/save-ad.svg" title="Lưu tin" />
+              <DetailItem
+                sx={{ '&:hover': { cursor: 'pointer' } }}
+                icon="https://static.chotot.com/storage/icons/saveAd/save-ad.svg"
+                title="Lưu tin"
+              />
             </Box>
           </Box>
           <Box sx={{ display: 'flex' }}>
             <img width={'20px'} src="https://static.chotot.com/storage/icons/logos/ad-param/location.svg" />
             <Box sx={{ marginLeft: '8px' }}>
-              <span>{`${motel[0]?.Address}, ${motel[0]?.WardPrefix} ${motel[0]?.WardName}, ${motel[0]?.DistrictPrefix} ${motel[0]?.DistrictName}, Tp.${motel[0]?.ProvinceName}`}</span>
+              <span>{address}</span>
               <br />
               <Link className={styles.map}>
                 <p onClick={handleOpenMap}>Xem bản đồ</p>
                 <DialogMap
+                  sx={{
+                    width: '990px !important',
+                    maxWidth: '900px',
+                  }}
                   open={openMap}
                   Transition={Transition}
                   handleClose={handleCloseMap}
-                  address={`${motel[0]?.Address}, ${motel[0]?.WardPrefix} ${motel[0]?.WardName}, ${motel[0]?.DistrictPrefix} ${motel[0]?.DistrictName}, Tp.${motel[0]?.ProvinceName}`}
+                  address={address}
                 />
                 <p>
                   <NavigateNext />
@@ -150,16 +162,10 @@ function Detail() {
           <h1 className={styles.title}>Đặc điểm bất động sản</h1>
           <Grid container sx={{ marginTop: '12px' }}>
             <Grid item md={7}>
-              <DetailItem
-                icon={'https://static.chotot.com/storage/icons/logos/ad-param/ad_type.png'}
-                title={'Cho thuê'}
-              />
+              <DetailItem icon={'https://static.chotot.com/storage/icons/logos/ad-param/ad_type.png'} title={'Cho thuê'} />
             </Grid>
             <Grid item md={5}>
-              <DetailItem
-                icon={'https://static.chotot.com/storage/icons/logos/ad-param/size.png'}
-                title={'Diện tích: 25m2'}
-              />
+              <DetailItem icon={'https://static.chotot.com/storage/icons/logos/ad-param/size.png'} title={'Diện tích: 25m2'} />
             </Grid>
             <Grid item md={7}>
               <DetailItem
@@ -178,16 +184,6 @@ function Detail() {
         >
           <h1 className={styles.title}>Mô tả chi tiết</h1>
           {motel[0]?.Description}
-          {/* <p className={styles.detailP} itemprop="description">
-                  Cho thuê nhà <br />
-                  Lối đi riêng <br />
-                  Điện nước riêng <br />
-                  Cho người thuê có việc làm hoặc gia đình ở, nhà nhỏ ko quá 4
-                  người
-                </p>
-                <span className={styles.contact}>
-                  Nhấn để hiện số: 093838 ****
-                </span> */}
         </Box>
       </Grid>
       <Grid item md={4} sx={{}}>
@@ -224,10 +220,7 @@ function Detail() {
               </Link>
             </Box>
             <Box>
-              <DetailItem
-                icon={'https://static.chotot.com/storage/default_images/pty/private-pty-icon.svg'}
-                title={'Cá nhân'}
-              />
+              <DetailItem icon={'https://static.chotot.com/storage/default_images/pty/private-pty-icon.svg'} title={'Cá nhân'} />
             </Box>
             <Box>
               <DetailItem
@@ -276,12 +269,7 @@ function Detail() {
                 title={'BẤM ĐỂ HIỆN SỐ'}
               />
             </Box>
-            <Link
-              className={styles.btnChat}
-              to={activeStatus ? `/message-${user?.IdUser}/${motel[0]?.IdMotel}` : '/login'}
-            >
-              {' '}
-              {/*/${IdUser}*/}
+            <Link className={styles.btnChat} to={activeStatus ? `/message-${user?.IdUser}/${motel[0]?.IdMotel}` : '/login'}>
               <DetailItem
                 icon={'https://static.chotot.com.vn/storage/chotot-icons/png/chat_green.png'}
                 title={'CHAT VỚI NGƯỜI BÁN'}

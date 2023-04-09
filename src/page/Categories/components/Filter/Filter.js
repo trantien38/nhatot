@@ -6,6 +6,7 @@ import DialogAddress from './Dialog/DialogAddress';
 import styles from './Filter.module.scss';
 import React from 'react';
 import DialogPrice from './Dialog/DialogPrice';
+import theme from '~/theme';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
@@ -36,7 +37,7 @@ function Filter({ address }) {
       <Box
         sx={{
           margin: 'auto',
-          maxWidth: '960px',
+          maxWidth: theme.size.browser,
           display: 'flex',
           justifyContent: 'space-between',
         }}
@@ -57,6 +58,7 @@ function Filter({ address }) {
           open={openAddress}
           Transition={Transition}
           handleClose={handleCloseAddress}
+          
         />
         <Box className={styles.filter}>
           <span className={styles.filter_span}></span>

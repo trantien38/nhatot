@@ -14,7 +14,7 @@ function Categories() {
   const [motels, setMotels] = useState([]);
   const [pagination, setPagination] = useState({
     count: 0,
-    begin: 0,
+    start: 0,
     quantity: pageSize,
   });
   const { IdProvince, IdDistrict, IdWard } = useParams();
@@ -37,9 +37,9 @@ function Categories() {
 
   const handlePageChange = (event, page) => {
     console.log(page);
-    const begin = (page - 1) * pageSize;
+    const start = (page - 1) * pageSize;
     // const quantity = (page - 1) * pageSize + pageSize;
-    setPagination({ ...pagination, begin });
+    setPagination({ ...pagination, start });
   };
 
   useEffect(() => {
@@ -47,7 +47,7 @@ function Categories() {
       const fetchMotels = async () => {
         const motelList = await motelApi.getMotelsByIdWard({
           IdWard,
-          begin: pagination.begin,
+          start: pagination.start,
           quantity: pagination.quantity,
         });
         setPagination({ ...pagination, count: motelList.count });
@@ -59,7 +59,7 @@ function Categories() {
       const fetchMotels = async () => {
         const motelList = await motelApi.getMotelsByIdDistrict({
           IdDistrict,
-          begin: pagination.begin,
+          start: pagination.start,
           quantity: pagination.quantity,
         });
         setPagination({ ...pagination, count: motelList.count });
@@ -72,7 +72,7 @@ function Categories() {
       const fetchMotels = async () => {
         const motelList = await motelApi.getMotelsByIdProvince({
           IdProvince,
-          begin: pagination.begin,
+          start: pagination.start,
           quantity: pagination.quantity,
         });
         console.log(motelList.motel);
@@ -84,29 +84,21 @@ function Categories() {
     } else {
       console.log('getAllMotels');
       const fetchMotels = async () => {
-        console.log(pagination.begin, pagination.quantity);
-        const motelList = await motelApi.getAllMotels({ begin: pagination.begin, quantity: pagination.quantity });
+        console.log(pagination.start, pagination.quantity);
+        const motelList = await motelApi.getAllMotels({ start: pagination.start, quantity: pagination.quantity });
         console.log(motelList.motel);
         setPagination({ ...pagination, count: motelList.count });
         setMotels(motelList.motel);
       };
       fetchMotels();
     }
-  }, [IdWard, IdDistrict, IdProvince, pagination.begin]);
+  }, [IdWard, IdDistrict, IdProvince, pagination.start]);
 
   window.addEventListener('scroll', toggleopacity);
   return (
     <Box>
       <Filter
-        address={
-          IdWard
-            ? motels[0]?.WardName
-            : IdDistrict
-            ? motels[0]?.DistrictName
-            : IdProvince
-            ? motels[0]?.ProvinceName
-            : ''
-        }
+        address={IdWard ? motels[0]?.WardName : IdDistrict ? motels[0]?.DistrictName : IdProvince ? motels[0]?.ProvinceName : ''}
       />
       <Grid container className={styles.motelList}>
         <Grid item md={9}>

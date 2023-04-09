@@ -4,8 +4,16 @@ import Map from './Map';
 import styles from '../Detail.module.scss';
 
 function DialogMap({ open, Transition, handleClose, address }) {
+  console.log(address);
   return (
     <Dialog
+      sx={{
+        '& .MuiPaper-root': {
+          maxWidth: '900px',
+        },
+
+        margin: '0 auto',
+      }}
       open={open}
       TransitionComponent={Transition}
       keepMounted
@@ -19,15 +27,7 @@ function DialogMap({ open, Transition, handleClose, address }) {
         </span>
       </div>
 
-      {/* <Map address={address} /> */}
-
-      <iframe
-        width="600"
-        height="660"
-        loading="lazy"
-        allowfullscreen=""
-        src={`https://maps.google.com/maps?&q=${address}&output=embed`}
-      />
+      {address && <Map address={address} />}
     </Dialog>
   );
 }

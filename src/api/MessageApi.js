@@ -28,7 +28,7 @@ const messageApi = {
 
   add(data) {
     const url = '/message';
-    console.log(data);
+    // console.log(data);
     return axiosClient.post(url, data);
   },
   update(data) {

@@ -1,3 +1,4 @@
+import { ThemeProvider } from '@mui/material';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
@@ -6,13 +7,17 @@ import App from './App';
 import { store } from './app/store';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+import theme from 'src/theme';
+// import { theme } from '~/theme';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
   <BrowserRouter>
     <Provider store={store}>
-      <App />
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
     </Provider>
   </BrowserRouter>,
   // </React.StrictMode>

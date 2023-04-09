@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import userApi from '~/api/UserApi';
+import { STATIC_HOST } from '~/constants';
 import MessageItem from './MessageItem';
 
 function InfoUser(props) {
@@ -23,7 +24,7 @@ function InfoUser(props) {
     return (
       <MessageItem
         link={`/`}
-        img={infoUser[0]?.Avatar || avatar}
+        img={`${STATIC_HOST}${infoUser[0]?.Avatar}` || avatar}
         name={infoUser[0]?.Name}
         content={'Hoạt động 2 giờ trước'}
       />

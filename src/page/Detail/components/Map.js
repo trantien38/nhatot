@@ -1,25 +1,24 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { FaLocationArrow, FaTimes } from 'react-icons/fa';
 import { useJsApiLoader, GoogleMap, Marker, Autocomplete, DirectionsRenderer } from '@react-google-maps/api';
 import { Box, Button, ButtonGroup, Flex, HStack, IconButton, Input, SkeletonText, Text } from '@chakra-ui/react';
 import StorageKeys from '~/constants/storage-keys';
+import Geocode from 'react-geocode';
 
-const center = { lat: 16.047199, lng: 108.219955 };
+// const center = { lat: 16.047199, lng: 108.219955 };
 
 function Map({ address }) {
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: StorageKeys.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-    libraries: ['places'],
-  });
+  // const { isLoaded } = useJsApiLoader({
+  //   googleMapsApiKey: StorageKeys.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+  //   libraries: ['places'],
+  // });
   const infoUser = JSON.parse(localStorage.getItem(StorageKeys?.USER));
-  const addressUser = `${infoUser.Address}, ${infoUser.WardName}, ${infoUser.DistrictName}, ${infoUser.ProvinceName}`;
-
-  console.log(address);
+  const addressUser = `${infoUser?.Address}, ${infoUser?.WardName}, ${infoUser?.DistrictName}, ${infoUser?.ProvinceName}`;
   const [map, setMap] = useState(/** @type google.maps.Map */ (null));
   const [directionsResponse, setDirectionsResponse] = useState(null);
   const [distance, setDistance] = useState('');
   const [duration, setDuration] = useState('');
-  const [origin, setOrigin] = useState(addressUser);
+  const [origin, setOrigin] = useState(infoUser ? addressUser : '');
   const [destination, setDestination] = useState(address);
 
   /** @type React.MutableRefObject<HTMLInputElement> */
@@ -31,11 +30,37 @@ function Map({ address }) {
   //   return <SkeletonText />;
   // }
 
+  // convert address to lat, lng
+  const [coordinates, setCoordinates] = useState(null);
+  // Geocode.setRegion('au');
+  // Geocode.setLocationType('ROOFTOP');
+  // const findLatAndLng = () => {
+  Geocode.setApiKey(StorageKeys.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
+  useEffect(() => {
+    Geocode.fromAddress(address).then(
+      (response) => {
+        setCoordinates(response.results[0].geometry.location);
+        console.log(response.results[0].geometry.location);
+      },
+      (error) => {
+        console.error(error);
+      },
+    );
+  }, [address]);
+
+  // };
+
+  // useEffect(() => {
+  //   findLatAndLng();
+  // }, [address]);
+  // convert address to lat, lng
+
+  // setDestination(address);
   async function calculateRoute() {
     if (originRef.current.value === '' || destiantionRef.current.value === '') {
       return;
     }
-    console.log('tinhs tians')
+    console.log('tinhs tians');
     // eslint-disable-next-line no-undef
     const directionsService = new google.maps.DirectionsService();
     const results = await directionsService.route({
@@ -46,8 +71,6 @@ function Map({ address }) {
     });
     console.log(123, results);
     setDirectionsResponse(results);
-    // setDistance(results.rows[0].element[0].distance.text);
-    // setDuration(results.rows[0].element[0].duration.text);
     setDistance(results.routes[0].legs[0].distance.text);
     setDuration(results.routes[0].legs[0].duration.text);
   }
@@ -65,11 +88,19 @@ function Map({ address }) {
     // destiantionRef.current.value = '';
   }
 
+  const handleChangeOrigin = (e) => {
+    setOrigin(e.target.value);
+  };
+
+  const handleChangeDestination = (e) => {
+    setDestination(e.target.value);
+  };
+
   return (
-    <Flex position="relative" flexDirection="column" alignItems="center" h="600px" w="600px">
+    <Flex position="relative" flexDirection="column" alignItems="center" h="600px" w="900px">
       <Box position="absolute" left={0} top={0} h="100%" w="100%">
         <GoogleMap
-          center={center}
+          center={coordinates}
           zoom={15}
           mapContainerStyle={{ width: '100%', height: '100%' }}
           options={{
@@ -80,7 +111,7 @@ function Map({ address }) {
           }}
           onLoad={(map) => setMap(map)}
         >
-          <Marker position={center} />
+          <Marker position={coordinates} />
           {directionsResponse && <DirectionsRenderer directions={directionsResponse} />}
         </GoogleMap>
       </Box>
@@ -88,12 +119,18 @@ function Map({ address }) {
         <HStack spacing={2} justifyContent="space-between">
           <Box flexGrow={1}>
             <Autocomplete>
-              <Input type="text" value={origin} placeholder="Điểm đi" ref={originRef} />
+              <Input type="text" onChange={handleChangeOrigin} value={origin} placeholder="Điểm đi" ref={originRef} />
             </Autocomplete>
           </Box>
           <Box flexGrow={1}>
             <Autocomplete>
-              <Input type="text" value={destination} placeholder="Điểm đến" ref={destiantionRef} />
+              <Input
+                type="text"
+                onChange={handleChangeDestination}
+                value={destination}
+                placeholder="Điểm đến"
+                ref={destiantionRef}
+              />
             </Autocomplete>
           </Box>
 
@@ -112,8 +149,9 @@ function Map({ address }) {
             icon={<FaLocationArrow />}
             isRound
             onClick={() => {
-              map.panTo(center);
+              map.panTo(coordinates);
               map.setZoom(15);
+              setDestination(address);
             }}
             sx={{ cursor: 'pointer' }}
           />
@@ -121,12 +159,6 @@ function Map({ address }) {
       </Box>
     </Flex>
   );
-
-  // return (
-  //   <GoogleMap zoom={10} center={center} mapContainerClassName="map-container">
-  //     <Marker position={{ lat: 44, lng: -80 }} />
-  //   </GoogleMap>
-  // );
 }
 
 export default Map;

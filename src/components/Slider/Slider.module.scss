@@ -1,5 +1,5 @@
 .slider {
-  max-width: 960px;
+  max-width: var(--width-browser);
   border-radius: 10px;
   margin: 0 auto;
   overflow: hidden;
@@ -26,19 +26,21 @@
 
 .navigation_manual {
   position: absolute;
-  width: 800px;
+  width: var(--width-browser);
   margin-top: -40px;
   display: flex;
   justify-content: center;
 }
 .manual_btn {
-  border: 2px solid #40d3dc;
+  border: 1px solid var(--bgDot);
+  background-color: var(--white);
+  
   padding: 5px;
   border-radius: 10px;
   cursor: pointer;
   transition: 1s;
   &:hover {
-    background-color: #40d3dc;
+    background-color: var(--bgDot);
   }
 }
 

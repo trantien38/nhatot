@@ -2,37 +2,35 @@ import axiosClient from './axiosClient';
 const userApi = {
   register(data) {
     const url = './user/register';
-    console.log('userApi: ', data);
     return axiosClient.post(url, data);
   },
   login(data) {
     const url = './user/login';
-    console.log(data);
     return axiosClient.post(url, data);
   },
   changePassword(data) {
     const url = '/user/changePassword';
-    console.log(data);
     return axiosClient.post(url, data);
   },
-  changeAvatar(data) {
+  changeAvatar(formData) {
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    };
     const url = '/user/changeAvatar';
-    console.log(data);
-    return axiosClient.post(url, data);
+    return axiosClient.post(url, formData, config);
   },
   changeInfoUser(data) {
     const url = '/user/changeInfoUser';
-    console.log(data);
     return axiosClient.post(url, data);
   },
   logout(data) {
     const url = './user/logout';
-    console.log(data);
     return axiosClient.post(url, data);
   },
   getInfoUser(data) {
     const url = '/infoUser';
-    console.log(data);
     return axiosClient.post(url, data);
   },
 

@@ -14,7 +14,7 @@ export default function Questions(props) {
   }, []);
 
   const handleSubmit = async (e) => {
-    console.log(e.target.innerText);
+    // console.log(e.target.innerText);
     const { onSubmit } = props;
     if (onSubmit) {
       await onSubmit(e.target.innerText);

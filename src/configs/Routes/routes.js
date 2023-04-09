@@ -12,6 +12,7 @@ import Home from '~/page/Home/Home';
 import Message from '~/page/Message/Message';
 import News from '~/page/News/News';
 import Post from '~/page/Post/Post';
+import UserProfile from '~/page/UserProfile/UserProfile';
 
 let routes = () => [
   {
@@ -56,6 +57,10 @@ let routes = () => [
       {
         path: '/profile',
         element: <Profile />,
+      },
+      {
+        path: '/user/:IdUser',
+        element: <UserProfile />,
       },
       {
         path: '/settings/profile',

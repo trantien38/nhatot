@@ -58,13 +58,13 @@ export default function Home() {
         />
       </Box>
 
-      <Box sx={{ maxWidth: '960px', margin: 'auto' }}>
+      <Box>
         <Menu title={'Mua bán bất động sản'} count={99.999} />
         <Menu title={'Cho thuê bất động sản'} count={28.286} />
         <Menu title={'Dụ án được quan tâm'} count={86.868} />
       </Box>
 
-      <Box sx={{ maxWidth: '960px', margin: 'auto' }}>
+      <Box>
         <Box sx={{ padding: '8px' }}>
           <h2>
             MUA BÁN VÀ CHO THUÊ BẤT ĐỘNG SẢN UY TÍN, NHANH CHÓNG TRÊN NHÀ TỐT

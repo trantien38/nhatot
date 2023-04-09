@@ -5,7 +5,7 @@ import Face4Icon from '@mui/icons-material/Face4';
 import MarkUnreadChatAltIcon from '@mui/icons-material/MarkUnreadChatAlt';
 import { Box } from '@mui/system';
 import Grid from '@mui/system/Unstable_Grid/Grid';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { TabContext, TabList, TabPanel } from '@mui/lab';
@@ -171,15 +171,19 @@ export default function Header() {
                 </MenuItem>
               </>
             )}
-            <MenuItem>
-              <Link to={activeStatus ? '/profile' : '/login'}>Trang cá nhân</Link>
-            </MenuItem>
-            <MenuItem>
-              <Link to="/">Cài đặt</Link>
-            </MenuItem>
-            <MenuItem onClick={logout}>
-              <Link to="/">Đăng xuất</Link>
-            </MenuItem>
+            {user && (
+              <div>
+                <MenuItem>
+                  <Link to={activeStatus ? '/profile' : '/login'}>Trang cá nhân</Link>
+                </MenuItem>
+                <MenuItem>
+                  <Link to="/settings/account">Thay đổi mật khẩu</Link>
+                </MenuItem>
+                <MenuItem onClick={logout}>
+                  <Link to="/">Đăng xuất</Link>
+                </MenuItem>
+              </div>
+            )}
           </Menu>
         </Grid>
       </Grid>

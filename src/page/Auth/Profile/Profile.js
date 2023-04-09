@@ -5,26 +5,37 @@ import styles from './Profile.module.scss';
 import ProfileItem from './components/ProfileItem';
 import StorageKeys from '~/constants/storage-keys';
 import userApi from '~/api/UserApi';
+import { STATIC_HOST } from '~/constants';
 
 export const Profile = () => {
   const [authenticated, setauthenticated] = useState({});
   const [avatar, setAvatar] = useState('');
   useEffect(() => {
-    const loggedInUser = JSON.parse(localStorage.getItem(StorageKeys.USER));
+    const loggedInUser = JSON.parse(localStorage.getItem(StorageKeys?.USER));
     // if (loggedInUser) {
-    console.log(loggedInUser);
     setAvatar(loggedInUser.Avatar);
     setauthenticated(loggedInUser);
     // }
   }, []);
+  const formatBirthDay = (value) => {
+    if (value) {
+      const arr = value?.split('-');
+      let year = arr[0];
+      let month = arr[1];
+      let day = arr[2];
+      return day + '-' + month + '-' + year;
+    }
+  };
 
-  const handleChangeAvatar = (e) => {
-    console.log(e.target.files[0].name);
-    console.log(123);
-    setAvatar(e.target.files[0].name);
-    userApi.changeAvatar({ srcImg: e.target.files[0].name, IdUser: authenticated.IdUser });
+  const handleChangeAvatar = async (e) => {
+    const formData = new FormData();
+    formData.append('avatar', e.target.files[0], e.target.files[0].name);
+    formData.append('IdUser', authenticated.IdUser);
+    //{ srcImg: e.target.files[0].name, IdUser: authenticated.IdUser }
+    const { file } = await userApi.changeAvatar(formData);
+    setAvatar(file);
     localStorage.removeItem(StorageKeys.USER);
-    localStorage.setItem(StorageKeys.USER, JSON.stringify({ ...authenticated, Avatar: e.target.files[0].name }));
+    localStorage.setItem(StorageKeys.USER, JSON.stringify({ ...authenticated, Avatar: file }));
   };
 
   if (!authenticated) {
@@ -88,14 +99,14 @@ export const Profile = () => {
               }}
               src={
                 avatar
-                  ? `assets/images/avatars/${avatar}`
+                  ? `${STATIC_HOST}${avatar}`
                   : 'https://static.chotot.com/storage/CT_WEB_UNI_PRIVATE_DASHBOARD/a37e405294c593b0493765d71c6b78df682f66b3/dist/32ea486819346b666d9e012fea3f5be0.png'
               }
             />
             <label htmlFor="avatar">
               <Box className={styles.changeAvatar}>
                 <i></i>
-                <input type="file" id="avatar" onChange={handleChangeAvatar} />
+                <input type="file" name="avatar" id="avatar" onChange={handleChangeAvatar} />
               </Box>
             </label>
           </Box>
@@ -112,7 +123,11 @@ export const Profile = () => {
               <ProfileItem title="Ngày cấp" content="Chưa có thông tin" edit={true} />
               <ProfileItem title="Nơi cấp" content="Chưa có thông tin" edit={true} />
               <ProfileItem title="Giới tính" content={`${authenticated?.Gender}` || 'Chưa có thông tin'} edit={true} />
-              <ProfileItem title="Ngày sinh" content={authenticated?.BirthDay || 'Chưa có thông tin'} edit={true} />
+              <ProfileItem
+                title="Ngày sinh"
+                content={formatBirthDay(authenticated?.BirthDay) || 'Chưa có thông tin'}
+                edit={true}
+              />
               <ProfileItem title="Mã số thuế" content="Chưa có thông tin" edit={true} />
               <ProfileItem title="Danh mục yêu thích" content={authenticated.favorites || 'Chưa có thông tin'} edit={true} />
               <ProfileItem title="Mật khẩu" content={authenticated.password || '********'} edit={true} />
