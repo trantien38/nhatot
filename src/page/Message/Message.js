@@ -1,4 +1,4 @@
-import { DeleteForever } from '@mui/icons-material';
+import { ConstructionOutlined, DeleteForever } from '@mui/icons-material';
 import { Grid } from '@mui/material';
 import { Box } from '@mui/system';
 import clsx from 'clsx';
@@ -14,11 +14,18 @@ import MessageList from './components/MessageList';
 import Questions from './components/Question/Questions';
 import styles from './Message.module.scss';
 
-import {io} from 'socket.io-client';
+import io from 'socket.io-client';
 import { STATIC_HOST } from '~/constants';
 
 export default function Message() {
   const socket = io(STATIC_HOST || 'http://localhost:8000');
+  socket.on('connect', () => {
+    console.log('connected to server');
+  });
+
+  socket.on('disconnect', () => {
+    console.log('disconnected from server');
+  });
   // const socket = io;
 
   const [messageList, setMessageList] = useState([]);
@@ -40,11 +47,11 @@ export default function Message() {
   }, [idUser]);
 
   // fetch data chat box
+  const fetchChat = async () => {
+    const chatList = await messageApi.getAllMessagesUserInMotel(params.IdMotel);
+    setChat(chatList.chat);
+  };
   useEffect(() => {
-    const fetchChat = async () => {
-      const chatList = await messageApi.getAllMessagesUserInMotel(params.IdMotel);
-      setChat(chatList.chat);
-    };
     fetchChat();
   }, [params.IdMotel]);
 
@@ -97,42 +104,23 @@ export default function Message() {
       IdUser: idUser,
       IdMotel: params.IdMotel,
     };
-    socket.emit('send_message', newMessage);
-    const messageUserList = await messageApi.add(newMessage);
-    document.chat.messages.value = '';
-    // console.log(messageUserList.chat);
-    await setChat(messageUserList.chat);
-    // await setChat((list)=>[...list, newMessage]);
-  };
-
-  // thiên
-  const setListSend = (newMessage) => {
-    const { id_parent } = newMessage;
-    setChat((prev) => {
-      const newArr = [...prev];
-      if (id_parent != 0) {
-        const index = prev.findIndex((item) => item.id_comment == id_parent);
-        newArr[index].collapsed = true;
-        Array.isArray(newArr[index]?.children)
-          ? newArr[index].children?.push(newMessage)
-          : (newArr[index].children = [newMessage]);
-      } else {
-        newArr.push(newMessage);
-      }
-      return newArr;
+    socket.on('connect', () => {
+      console.log('Connected to server!');
     });
-  };
-  useEffect(() => {
 
-  socket.on('receive_message', (result) => {
-    setChat(result);
-    console.log(result);
-  });
-  // return () => {
-  //   socket.off('send_message');
-  // };
-  }, []);
-  // thiên
+    socket.emit('new_message', newMessage);
+
+    socket.on('re-render message', (data) => {
+      console.log('received message from server:', data);
+      console.log(idUser, data.IdUser);
+      if (data.IdUser != idUser) {
+        fetchChat();
+      }
+    });
+    const messageUserList = await messageApi.add(newMessage);
+    setChat(messageUserList.chat);
+    document.chat.messages.value = '';
+  };
 
   return (
     <>

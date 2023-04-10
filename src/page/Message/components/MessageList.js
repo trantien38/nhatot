@@ -9,8 +9,7 @@ import MessageItem from './MessageItem';
 function MessageList(props) {
   const [loadMore, setLoadMore] = useState(true);
   const navigate = useNavigate();
-  const avatar =
-    'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png';
+  const avatar = 'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png';
 
   useEffect(() => {
     const list = document.getElementById('list');
@@ -25,10 +24,7 @@ function MessageList(props) {
     } else {
       // list has auto height
       window.addEventListener('scroll', () => {
-        if (
-          window.scrollY + window.innerHeight ===
-          list.clientHeight + list.offsetTop
-        ) {
+        if (window.scrollY + window.innerHeight === list.clientHeight + list.offsetTop) {
           setLoadMore(true);
         }
       });
@@ -54,7 +50,7 @@ function MessageList(props) {
               onClick={result.IdMotel}
               idMotel={result.IdMotel}
               active={false}
-              img={`${STATIC_HOST}${result.Avatar}` || avatar}
+              img={result.Avatar ? `${STATIC_HOST}${result?.Avatar}` : avatar}
               name={result.Name}
               messageTime={'1 giờ trước'}
               title={result.Title}
