@@ -4,15 +4,15 @@ import './news.css';
 import { Graph } from 'node-dijkstra';
 
 export default function News() {
-  const edges = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  const handleClick = (e) => {
-    console.log(e.target.value);
-  };
+  // const edges = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  // const handleClick = (e) => {
+  //   console.log(e.target.value);
+  // };
   return (
     <ul>
-      {edges.map((result) => (
+      {/* {edges.map((result) => (
         <li onClick={handleClick}>{result}</li>
-      ))}
+      ))} */}
     </ul>
   );
   // const nodes = ['A', 'B', 'C', 'D'];

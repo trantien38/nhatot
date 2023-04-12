@@ -33,7 +33,7 @@ function MessageList(props) {
 
   useEffect(() => {
     const list = document.getElementById('list');
-    if (list.clientHeight <= window.innerHeight && list.clientHeight) {
+    if (list?.clientHeight <= window.innerHeight && list?.clientHeight) {
       setLoadMore(true);
     }
   }, [props.state]);

@@ -6,27 +6,22 @@ import * as yup from 'yup';
 import InputField from '~/components/HookForm/InputField';
 
 function RegisterForm(props) {
-  const phoneRegExp =
-    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+  const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
   const schema = yup.object().shape({
     fullName: yup
       .string()
-      .required('Please enter your name')
-      .test(
-        'should has at least two words',
-        'Please enter at least two words',
-        (value) => {
-          return value.split(' ').length >= 2;
-        },
-      ),
+      .required('Vui lòng nhập họ và tên')
+      .test('Họ và tên nên có ít nhất 2 tư', 'Vui lòng nhập ít nhất hai từ', (value) => {
+        return value.split(' ').length >= 2;
+      }),
     phoneNumber: yup
       .string()
-      .required('Please enter your phone number')
-      .matches(phoneRegExp, 'Phone number is not valid')
-      .min(10, 'Phone number is too short')
-      .max(10, 'Phone number is too long'),
-    password: yup.string().required('Please enter your password').min(6, 'Password is too short'),
+      .required('Vui lòng nhập số điện thoại')
+      .matches(phoneRegExp, 'Số điện thoại không hợp lệ')
+      .min(10, 'Số điện thoại phải đủ 10 số')
+      .max(10, 'Số điện thoại phải đủ 10 số'),
+    password: yup.string().required('Vui lòng nhập mật khẩu').min(6, 'Mật khẩu tối thiểu 6 ký tự'),
   });
   const {
     control,
@@ -64,8 +59,7 @@ function RegisterForm(props) {
       >
         <section
           style={{
-            backgroundImage:
-              'url(https://static.chotot.com/storage/assets/LOGIN/login_background.webp)',
+            backgroundImage: 'url(https://static.chotot.com/storage/assets/LOGIN/login_background.webp)',
             position: 'absolute',
             zIndex: 1,
             top: 0,
@@ -132,8 +126,7 @@ function RegisterForm(props) {
                       fontSize: 18,
                     },
                   }}
-                  label="Full name"
-                  placeholder="Nhập tên của bạn"
+                  label="Họ và tên"
                   name="fullName"
                   type="text"
                   errors={errors}
@@ -153,8 +146,7 @@ function RegisterForm(props) {
                       fontSize: 18,
                     },
                   }}
-                  label="phoneNumber"
-                  placeholder="Nhập SĐT của bạn"
+                  label="Số điện thoại"
                   name="phoneNumber"
                   type="text"
                   errors={errors}
@@ -174,8 +166,7 @@ function RegisterForm(props) {
                       fontSize: 18,
                     },
                   }}
-                  label="password"
-                  placeholder="Tạo mật khẩu có ít nhất 6 ký tự"
+                  label="Mật khẩu"
                   name="password"
                   type="password"
                   errors={errors}
@@ -227,8 +218,7 @@ function RegisterForm(props) {
               }}
             >
               Bằng việc đăng ký, bạn đã đồng ý với
-              <Link to={'/forget-password'}>Điều khoản sử dụng</Link>của chúng
-              tôi
+              <Link to={'/forget-password'}>Điều khoản sử dụng</Link>của chúng tôi
             </Box>
             <Box>
               <p

@@ -99,7 +99,7 @@ export const Profile = () => {
               }}
               src={
                 avatar
-                  ? `${STATIC_HOST}${avatar}`
+                  ? `${STATIC_HOST}/avatars/${avatar}`
                   : 'https://static.chotot.com/storage/CT_WEB_UNI_PRIVATE_DASHBOARD/a37e405294c593b0493765d71c6b78df682f66b3/dist/32ea486819346b666d9e012fea3f5be0.png'
               }
             />

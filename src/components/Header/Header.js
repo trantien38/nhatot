@@ -15,6 +15,7 @@ import Search from '../Search/Search';
 import styles from './Header.module.scss';
 import Item from './Item';
 import userApi from '~/api/UserApi';
+import { socket } from '~/page/Message/Message';
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -43,10 +44,12 @@ export default function Header() {
     setAnchorElNotifi(null);
   };
 
-  const logout = () => {
+  const logout = async () => {
+    // socket.emit('logout');
+
     const phoneNumber = JSON.parse(localStorage.getItem(StorageKeys.USER))?.PhoneNumber;
     if (phoneNumber) {
-      userApi.logout({ phoneNumber });
+      await userApi.logout({ phoneNumber });
       localStorage.removeItem(StorageKeys.USER);
       localStorage.removeItem(StorageKeys.TOKEN);
     }

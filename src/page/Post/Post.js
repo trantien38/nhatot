@@ -2,9 +2,13 @@ import { Box, Grid, Slide, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '~/components/Button/Button';
+import InputField from '~/components/HookForm/InputField';
 import DialogDetailAddress from '../Auth/Profile/components/DialogDetailAddress';
 import UploadItem from './components/UploadItem';
 import styles from './Post.module.scss';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
 });
@@ -15,13 +19,34 @@ function Post() {
   const [ward, setWard] = useState('');
   const [district, setDistrict] = useState('');
   const [province, setProvince] = useState('');
-  const [interiorStatus, setInteriorStatus] = useState('');
-  const [acreage, setAcreage] = useState('');
-  const [price, setPrice] = useState('');
-  const [deposits, setDeposits] = useState('');
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
 
+  const schema = yup.object().shape({
+    interiorStatus: yup.string().required('Vui lòng nhập tình trạng nội thất'),
+    description: yup.string().required('Vui lòng nhập mô tả').min(6, 'Password is too short'),
+    acreage: yup.string().required('Vui lòng nhập diện tích phòng trọ'),
+    price: yup.string().required('Vui lòng nhập giá'),
+    deposits: yup.string().required('Vui lòng nhập số tiền cọc'),
+    title: yup.string().required('Vui lòng nhập tiêu đề'),
+  });
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    defaultValues: {
+      interiorStatus: '',
+      acreage: '',
+      price: '',
+      deposits: '',
+      title: '',
+      description: '',
+    },
+    resolver: yupResolver(schema),
+  });
+
+  const handleOnSubmit = async (values) => {
+    console.log({ ...values, ward, province });
+  };
   const handleClickOpenAddress = () => {
     setOpenAddress(true);
   };
@@ -37,35 +62,8 @@ function Post() {
     setAddressDetail(`${dataChild.detailAddress}, ${dataChild.ward}, ${dataChild.district}, ${dataChild.province}`);
   };
 
-  const handleChangeInteriorStatus = (event) => {
-    setInteriorStatus(event.target.value);
-  };
-  const handleChangeAcreage = (event) => {
-    setAcreage(event.target.value);
-  };
-  const handleChangePrice = (event) => {
-    setPrice(event.target.value);
-  };
-  const handleChangeDeposits = (event) => {
-    setDeposits(event.target.value);
-  };
-  const handleChangeTitle = (event) => {
-    setTitle(event.target.value);
-  };
-  const handleChangeDescription = (event) => {
-    setDescription(event.target.value);
-  };
-  const handleSubmit = () => {
-    console.log(addressDetail);
-    console.log(interiorStatus);
-    console.log(acreage);
-    console.log(price);
-    console.log(deposits);
-    console.log(title);
-    console.log(description);
-  };
   return (
-    <Grid container>
+    <Grid container component="form" onSubmit={handleSubmit(handleOnSubmit)}>
       <Grid item md={3} sx={{ padding: '0 20px' }}>
         <h3>Ảnh/video nhà trọ</h3>
         <p>
@@ -77,7 +75,27 @@ function Post() {
       </Grid>
       <Grid item md={9}>
         <Grid item container spacing={2} sx={{ margin: '16px', width: 'calc(100% - 48px)' }}>
-          <Grid item md={12} sm={12} xs={12} onClick={handleClickOpenAddress}>
+          <Grid sx={{ '& input': {} }} item md={12} sm={12} xs={12} onClick={handleClickOpenAddress}>
+            {/* <InputField
+              sx={{
+                fontSize: 2,
+                color: 'red',
+                '& label': {
+                  fontSize: 14,
+                },
+                '& svg': {
+                  fontSize: 18,
+                },
+                
+              }}
+              value={addressDetail}
+              label="Địa chỉ"
+              type="addres"
+              name="address"
+              errors={errors}
+              required
+              control={control}
+            /> */}
             <TextField
               label="Địa chỉ"
               id="outlined-basic"
@@ -97,69 +115,134 @@ function Post() {
             handleClose={handleCloseAddress}
             callbackParent={handleChangAddress}
           />
-
           <Grid item md={12} sm={12} xs={12}>
-            <TextField
+            <InputField
+              sx={{
+                fontSize: 2,
+                color: 'red',
+                '& label': {
+                  fontSize: 14,
+                },
+                '& svg': {
+                  fontSize: 18,
+                },
+                
+              }}
               label="Tình trạng nội thất"
-              id="outlined-basic"
-              onChange={handleChangeInteriorStatus}
-              value={interiorStatus}
-              variant="outlined"
-              fullWidth
+              type="interiorStatus"
+              name="interiorStatus"
+              errors={errors}
+              required
+              control={control}
             />
           </Grid>
           <Grid item md={12} sm={12} xs={12}>
-            <TextField
-              label="Diện tích"
-              id="outlined-basic"
-              onChange={handleChangeAcreage}
-              value={acreage}
-              variant="outlined"
-              fullWidth
-            />
-          </Grid>
-          <Grid item md={12} sm={12} xs={12}>
-            <TextField
+            <InputField
+              sx={{
+                fontSize: 2,
+                color: 'red',
+                '& label': {
+                  fontSize: 14,
+                },
+                '& svg': {
+                  fontSize: 18,
+                },
+                
+              }}
               label="Giá"
-              id="outlined-basic"
-              onChange={handleChangePrice}
-              value={price}
-              variant="outlined"
-              fullWidth
+              type="price"
+              name="price"
+              errors={errors}
+              required
+              control={control}
             />
           </Grid>
           <Grid item md={12} sm={12} xs={12}>
-            <TextField
-              label="Số tiền cọc"
-              id="outlined-basic"
-              onChange={handleChangeDeposits}
-              value={deposits}
-              variant="outlined"
-              fullWidth
+            <InputField
+              sx={{
+                fontSize: 2,
+                color: 'red',
+                '& label': {
+                  fontSize: 14,
+                },
+                '& svg': {
+                  fontSize: 18,
+                },
+                
+              }}
+              label="Diện tích"
+              type="acreage"
+              name="acreage"
+              errors={errors}
+              required
+              control={control}
             />
           </Grid>
           <Grid item md={12} sm={12} xs={12}>
-            <TextField
-              label="Tiêu đề bài đăng"
-              id="outlined-basic"
-              onChange={handleChangeTitle}
-              value={title}
-              variant="outlined"
-              fullWidth
+            <InputField
+              sx={{
+                fontSize: 2,
+                color: 'red',
+                '& label': {
+                  fontSize: 14,
+                },
+                '& svg': {
+                  fontSize: 18,
+                },
+                
+              }}
+              label="Tiền cọc"
+              type="deposits"
+              name="deposits"
+              errors={errors}
+              required
+              control={control}
             />
           </Grid>
           <Grid item md={12} sm={12} xs={12}>
-            <TextField
-              label="Mô tả chi tiết"
-              id="outlined-basic"
-              onChange={handleChangeDescription}
-              value={description}
-              variant="outlined"
-              fullWidth
+            <InputField
+              sx={{
+                fontSize: 2,
+                color: 'red',
+                '& label': {
+                  fontSize: 14,
+                },
+                '& svg': {
+                  fontSize: 18,
+                },
+                
+              }}
+              label="Mô tả"
+              type="description"
+              name="description"
+              errors={errors}
+              required
+              control={control}
             />
           </Grid>
-          <Grid item md={12} sm={12} xs={12} onClick={handleSubmit}>
-            <Button orange text={'Đăng tin'} />
+          <Grid item md={12} sm={12} xs={12}>
+            <InputField
+              sx={{
+                fontSize: 2,
+                color: 'red',
+                '& label': {
+                  fontSize: 14,
+                },
+                '& svg': {
+                  fontSize: 18,
+                },
+                
+              }}
+              label="Tiêu đề"
+              type="title"
+              name="title"
+              errors={errors}
+              required
+              control={control}
+            />
+          </Grid>
+          <Grid item md={12} sm={12} xs={12}>
+            <Button type="submit" orange text={'Đăng tin'} />
           </Grid>
         </Grid>
       </Grid>

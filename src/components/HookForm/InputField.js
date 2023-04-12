@@ -3,17 +3,11 @@ import { useState } from 'react';
 import { Controller } from 'react-hook-form';
 
 function InputField(props) {
-  const {
-    placeholder,
-    label,
-    control,
-    name,
-    errors,
-    size = 'small',
-    type = 'text',
-    sx,
-  } = props;
+  const { placeholder, label, control, name, errors, size = 'small', type = 'text', sx } = props;
   const hasError = errors[name];
+  // console.log(hasError);
+  // console.log(errors);
+  // console.log(name);
 
   const [isShowPassword, setIsShowPassword] = useState(false);
 
@@ -30,16 +24,17 @@ function InputField(props) {
       name={name}
       control={control}
       render={({ field }) => (
-        <FormControl required={require} fullWidth size={size} sx={sx}>
+        <FormControl  fullWidth size={size} sx={sx}>
           <TextField
             {...field}
-            // variant="outlined"
+            variant="outlined"
             margin="normal"
             fullWidth
+            label={label}
             size={size}
             type={isShowPassword ? 'text' : type}
             placeholder={placeholder}
-            required
+            
             error={!!hasError}
             helperText={hasError?.message}
           />

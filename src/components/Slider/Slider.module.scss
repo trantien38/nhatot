@@ -5,45 +5,46 @@
   overflow: hidden;
 }
 
-.slides {
-  width: 2000%;
-  display: flex;
-}
+// .slides {
+//   width: 2000%;
+//   display: flex;
+// }
 
-.slides input {
-  display: none;
-}
+// .slides input {
+//   display: none;
+// }
 
 .slide {
   width: 100%;
   transition: 2s;
 }
 
-.slide img {
-  height: 234px;
-  width: 100%;
-}
+// .slide img {
+//   height: 234px;
+//   width: 100%;
+// }
 
-.navigation_manual {
-  position: absolute;
-  width: var(--width-browser);
-  margin-top: -40px;
-  display: flex;
-  justify-content: center;
-}
-.manual_btn {
-  border: 1px solid var(--bgDot);
-  background-color: var(--white);
-  
-  padding: 5px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 1s;
-  &:hover {
-    background-color: var(--bgDot);
-  }
-}
+// .navigation_manual {
+//   position: absolute;
+//   width: var(--width-browser);
+//   margin-top: -40px;
+//   display: flex;
+//   justify-content: center;
+// }
+// .manual_btn {
+//   border: 1px solid var(--bgDot);
+//   background-color: var(--white);
 
-.manual_btn:not(:last-child) {
-  margin-right: 40px;
-}
+//   padding: 5px;
+//   border-radius: 10px;
+//   cursor: pointer;
+//   transition: 1s;
+//   &:hover {
+//     background-color: var(--bgDot);
+//   }
+// }
+
+// .manual_btn:not(:last-child) {
+//   margin-right: 40px;
+// }
+

@@ -6,16 +6,15 @@ import * as yup from 'yup';
 import InputField from '~/components/HookForm/InputField';
 
 function LoginForm(props) {
-  const phoneRegExp =
-    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+  const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
   const schema = yup.object().shape({
     phoneNumber: yup
       .string()
-      .required('Please enter your phone number')
-      .matches(phoneRegExp, 'Phone number is not valid')
-      .min(10, 'Phone number is too short')
-      .max(10, 'Phone number is too long'),
-    password: yup.string().required('Please enter your password').min(6, 'Password is too short'),
+      .required('Vui lòng nhập số điện thoại')
+      .matches(phoneRegExp, 'Số điện thoại không hợp lệ')
+      .min(10, 'Số điện thoại phải đủ 10 số')
+      .max(10, 'Số điện thoại phải đủ 10 số'),
+    password: yup.string().required('Vui lòng nhập mật khẩu').min(6, 'Mật khẩu tối thiểu 6 ký tự'),
   });
   const {
     control,
@@ -119,8 +118,7 @@ function LoginForm(props) {
                       fontSize: 18,
                     },
                   }}
-                  label="phone"
-                  placeholder="Nhập SĐT của bạn"
+                  label="Số điện thoại"
                   name="phoneNumber"
                   type="text"
                   errors={errors}
@@ -140,8 +138,7 @@ function LoginForm(props) {
                       fontSize: 18,
                     },
                   }}
-                  label="Password"
-                  placeholder="Nhập mật khẩu của bạn"
+                  label="Mật khẩu"
                   type="password"
                   name="password"
                   errors={errors}

@@ -1,6 +1,10 @@
 import axiosClient from './axiosClient';
 
 const motelApi = {
+  getAllMotelByIdUser(IdUser) {
+    const url = `/getMotelByIdUser/${IdUser}`;
+    return axiosClient.get(url);
+  },
   getMotelsByIdWard(data) {
     const url = `/motelsInWard/${data.IdWard}`;
     console.log(data);
@@ -19,7 +23,7 @@ const motelApi = {
     const url = `/motelsInProvince/${data.IdProvince}`;
     console.log(data);
 
-    return axiosClient.post(url,data );
+    return axiosClient.post(url, data);
   },
 
   getAllMotels(data) {

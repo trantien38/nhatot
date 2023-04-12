@@ -33,6 +33,10 @@ const userApi = {
     const url = '/infoUser';
     return axiosClient.post(url, data);
   },
+  getUser(IdUser) {
+    const url = `/user/${IdUser}`;
+    return axiosClient.get(url);
+  },
 
   // ADMIN
   getAllUser() {

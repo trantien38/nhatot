@@ -16,18 +16,10 @@ import styles from './Message.module.scss';
 
 import io from 'socket.io-client';
 import { STATIC_HOST } from '~/constants';
+import theme from '~/theme';
+export const socket = io(STATIC_HOST);
 
 export default function Message() {
-  const socket = io(STATIC_HOST || 'http://localhost:8000');
-  socket.on('connect', () => {
-    console.log('connected to server');
-  });
-
-  socket.on('disconnect', () => {
-    console.log('disconnected from server');
-  });
-  // const socket = io;
-
   const [messageList, setMessageList] = useState([]);
   const [chat, setChat] = useState([]);
   const [idHost, setIdHost] = useState();
@@ -41,7 +33,7 @@ export default function Message() {
     const fetchMessage = async () => {
       const messageUserList = await messageApi.getListMessageUser(idUser);
       setMessageList(messageUserList.message);
-      // console.log(messageUserList.message);
+      console.log(messageUserList.message);
     };
     fetchMessage();
   }, [idUser]);
@@ -84,26 +76,14 @@ export default function Message() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const Content = document.chat.messages.value;
-    const messageUserList = await messageApi.add({
-      Content,
-      IdUser: idUser,
-      IdMotel: params.IdMotel,
-    });
-    socket.emit('on-chat', { Content });
-    // console.log(socket.emit());
-    document.chat.messages.value = '';
-
-    console.log(messageUserList);
-    // await setChat(messageUserList.chat);
-  };
-
-  // submit question
-  const handleSubmitQuestion = async (Content) => {
     const newMessage = {
       Content,
       IdUser: idUser,
       IdMotel: params.IdMotel,
     };
+    handleChangeMessage(newMessage);
+  };
+  const handleChangeMessage = async (newMessage) => {
     socket.on('connect', () => {
       console.log('Connected to server!');
     });
@@ -121,16 +101,25 @@ export default function Message() {
     setChat(messageUserList.chat);
     document.chat.messages.value = '';
   };
+  // submit question
+  const handleSubmitQuestion = (Content) => {
+    const newMessage = {
+      Content,
+      IdUser: idUser,
+      IdMotel: params.IdMotel,
+    };
+    handleChangeMessage(newMessage);
+  };
 
   return (
     <>
       <Header />
-      <Box sx={{ maxWidth: '960px', margin: 'auto' }}>
+      <Box sx={{ maxWidth: theme.size.browser, margin: 'auto' }}>
         <Grid
           container
           sx={{
             backgroundColor: '#fff',
-            maxWidth: '960px',
+            maxWidth: theme.size.browser,
             position: 'absolute',
             bottom: 0,
             top: '112px',

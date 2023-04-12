@@ -4,8 +4,10 @@ import { useJsApiLoader, GoogleMap, Marker, Autocomplete, DirectionsRenderer } f
 import { Box, Button, ButtonGroup, Flex, HStack, IconButton, Input, SkeletonText, Text } from '@chakra-ui/react';
 import StorageKeys from '~/constants/storage-keys';
 import Geocode from 'react-geocode';
+// import iconMarker from './markerMotel.jpg';
+import iconMarker from '~/assets/images/markerIcon.jpg';
 
-// const center = { lat: 16.047199, lng: 108.219955 };
+const center = { lat: 16.047199, lng: 108.219955 };
 
 function Map({ address }) {
   // const { isLoaded } = useJsApiLoader({
@@ -96,6 +98,8 @@ function Map({ address }) {
     setDestination(e.target.value);
   };
 
+  const handleClick = () => {};
+
   return (
     <Flex position="relative" flexDirection="column" alignItems="center" h="600px" w="900px">
       <Box position="absolute" left={0} top={0} h="100%" w="100%">
@@ -111,7 +115,8 @@ function Map({ address }) {
           }}
           onLoad={(map) => setMap(map)}
         >
-          <Marker position={coordinates} />
+          <Marker position={coordinates} icon={iconMarker} onClick={() => handleClick()} />
+          <Marker position={center} icon={iconMarker} />
           {directionsResponse && <DirectionsRenderer directions={directionsResponse} />}
         </GoogleMap>
       </Box>

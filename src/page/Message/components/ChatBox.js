@@ -24,7 +24,6 @@ function ChatBox({ chat, IdUser }) {
                       '& svg': { opacity: 0, paddingRight: '10px' },
                       '& svg:hover': { opacity: 1, cursor: 'pointer' },
                     }}
-                    
                   >
                     <MoreHoriz />
                   </Box>
@@ -76,6 +75,7 @@ function ChatBox({ chat, IdUser }) {
                       color: '#000',
                       padding: '6px 12px',
                       borderRadius: '8px',
+                      maxWidth: '68%',
                       '& strong': {
                         margin: 0,
                         textAlign: 'left',

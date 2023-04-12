@@ -7,26 +7,38 @@ function InfoUser(props) {
   const { IdMotel, data, IdUser, callBackGetIdHost } = props;
   const [infoUser, setInfoUser] = useState([]);
 
-  const avatar =
-    'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png';
-
+  const avatar = 'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png';
   useEffect(() => {
     const fetchInfoUser = async () => {
       const infoUsers = await userApi.getInfoUser({ IdMotel, IdUser });
-      console.log(infoUsers.user[0].Name);
+      console.log(infoUsers.user);
       setInfoUser(infoUsers.user);
       callBackGetIdHost(infoUsers.user[0].IdMotel);
     };
     fetchInfoUser();
   }, [IdMotel]);
-  
+
   if (IdMotel) {
     return (
       <MessageItem
         link={`/`}
         img={`${STATIC_HOST}${infoUser[0]?.Avatar}` || avatar}
         name={infoUser[0]?.Name}
-        content={'Hoạt động 2 giờ trước'}
+        content={
+          infoUser[0]?.activeStatus == 1
+            ? 'Đang hoạt động'
+            : infoUser[0]?.monthOperatingTime
+            ? `Hoạt động ${infoUser[0]?.monthOperatingTime} tháng trước`
+            : infoUser[0]?.weekOperatingTime
+            ? `Hoạt động ${infoUser[0]?.weekOperatingTime} tuần trước`
+            : infoUser[0]?.dayOperatingTime
+            ? `Hoạt động ${infoUser[0]?.dayOperatingTime} ngày trước`
+            : infoUser[0]?.hourOperatingTime
+            ? `Hoạt động ${infoUser[0]?.hourOperatingTime} giờ trước`
+            : infoUser[0]?.minuteOperatingTime
+            ? `Hoạt động ${infoUser[0]?.minuteOperatingTime} phút trước`
+            : `Hoạt động ${infoUser[0]?.secondOperatingTime} giây trước`
+        }
       />
     );
   }
