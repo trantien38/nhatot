@@ -1,8 +1,10 @@
 import { Box, Grid, TextField } from '@mui/material';
 import { useState, useEffect } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import userApi from '~/api/UserApi';
 import Button from '~/components/Button/Button';
+import InputField from '~/components/HookForm/InputField';
 import StorageKeys from '~/constants/storage-keys';
 import { toastMessage } from '~/utils/toast';
 import styles from '../Profile.module.scss';
@@ -26,15 +28,15 @@ export const EditAccount = () => {
     if (newPassword == confirmPassword) {
       const result = await userApi.changePassword({ IdUser, oldPassword, newPassword });
       console.log(result);
-      toastMessage.success(result.message);
+      toastMessage.success(result.msg);
       setTimeout(() => {
         navigate('/profile');
       }, 2000);
-      console.log(result.message);
     }
   };
   return (
     <Box sx={{ maxWidth: '960px', margin: 'auto' }}>
+      <Toaster />
       <h2>Chỉnh sửa trang cá nhân</h2>
       <Grid container>
         <Grid item md={4}>
@@ -46,7 +48,7 @@ export const EditAccount = () => {
               <Link to="/settings/social">Liên kết mạng xã hội</Link>
             </li>
             <li>
-              <Link to="/settings/account">Cài đặt tài khoản</Link>
+              <Link to="/settings/account">Thay đổi mật khẩu</Link>
             </li>
           </ul>
         </Grid>
@@ -74,6 +76,24 @@ export const EditAccount = () => {
             <h3>Thay đổi mật khẩu</h3>
           </Grid>
           <Grid item md={12} sm={12} xs={12}>
+            {/* <InputField
+              sx={{
+                fontSize: 2,
+                color: 'red',
+                '& label': {
+                  fontSize: 14,
+                },
+                '& svg': {
+                  fontSize: 18,
+                },
+              }}
+              label="Mật khẩu hiện tại"
+              name="password"
+              type="password"
+              // errors={errors}
+              required
+              // control={control}
+            /> */}
             <TextField
               item
               id="outlined-basic"
@@ -84,7 +104,7 @@ export const EditAccount = () => {
               fullWidth
               value={oldPassword}
               onChange={handleChangePassword}
-              helperText={oldPassword.split('').length < 6 ? 'Mật khẩu tối thiểu 6 ký tự' : ''}
+              // helperText={oldPassword.split('').length < 6 ? 'Mật khẩu tối thiểu 6 ký tự' : ''}
             />
           </Grid>
           <Grid item md={12} sm={12} xs={12}>
@@ -98,7 +118,7 @@ export const EditAccount = () => {
               fullWidth
               value={newPassword}
               onChange={handleChangeNewPassword}
-              helperText={newPassword.split('').length < 6 ? 'Mật khẩu tối thiểu 6 ký tự' : ''}
+              // helperText={newPassword.split('').length < 6 ? 'Mật khẩu tối thiểu 6 ký tự' : ''}
             />
           </Grid>
           <Grid item md={12} sm={12} xs={12}>

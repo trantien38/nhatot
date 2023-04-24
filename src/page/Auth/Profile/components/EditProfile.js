@@ -1,5 +1,6 @@
 import { Box, FormControl, Grid, InputLabel, MenuItem, Select, Slide, TextField } from '@mui/material';
 import React, { useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import userApi from '~/api/UserApi';
 import Button from '~/components/Button/Button';
@@ -82,6 +83,8 @@ export const EditProfile = () => {
     localStorage.removeItem(StorageKeys.USER);
     localStorage.setItem(StorageKeys.USER, JSON.stringify(result.users));
     toastMessage.success('Cập nhật thông tin cá nhân thành công');
+    // alert(123)
+
     setTimeout(() => {
       navigate('/profile');
     }, 2000);
@@ -89,6 +92,7 @@ export const EditProfile = () => {
 
   return (
     <Box sx={{ maxWidth: '960px', margin: 'auto' }}>
+      <Toaster />
       <h2>Chỉnh sửa trang cá nhân</h2>
       <Grid container>
         <Grid item md={4}>
@@ -100,7 +104,7 @@ export const EditProfile = () => {
               <Link to="/settings/social">Liên kết mạng xã hội</Link>
             </li>
             <li>
-              <Link to="/settings/account">Cài đặt tài khoản</Link>
+              <Link to="/settings/account">Thay đổi mật khẩu</Link>
             </li>
           </ul>
         </Grid>

@@ -4,8 +4,7 @@ import { Link } from 'react-router-dom';
 import styles from './MotelItem.module.scss';
 
 function MotelItem(props) {
-  const { time, avatar, name, title, acreage, price, img, address, IdMotel } =
-    props;
+  const { time, avatar, name, title, acreage, price, img, address, IdMotel } = props;
   return (
     <Box className={styles.motelItem}>
       <Box>
@@ -14,10 +13,7 @@ function MotelItem(props) {
             <Grid item md={2}>
               <img
                 style={{ width: '110px', height: '110px' }}
-                src={
-                  img ||
-                  'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png'
-                }
+                src={img || 'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png'}
               />
             </Grid>
             <Grid item md={10}>
@@ -29,33 +25,32 @@ function MotelItem(props) {
                   minHeight: '55px',
                   height: '100%',
                   paddingLeft: '12px',
-                  '& > h4,p': {
+                  '& > h3,p': {
                     margin: 0,
                   },
                   '& >p': {
                     color: '#c90927',
                     fontWeight: 700,
+                    fontSize: '14px',
                     paddingBottom: '4px',
                   },
                   '&>span': {
+                    fontSize: '14px',
                     padding: '4px 0',
                   },
                 }}
               >
-                <h4>{title || 'Cho thuê phòng trọ đầy đủ nội thất'}</h4>
+                <h3>{title || 'Cho thuê phòng trọ đầy đủ nội thất'}</h3>
                 <span>{acreage}m2</span>
                 <p>{price} triệu/tháng</p>
                 <Box sx={{ flex: '1 1' }} />
-                <Box>
-                  <san>
+                <Box sx={{ '& span': { fontSize: '14px' } }}>
+                  <span>
                     <img
-                      style={{ width: '16px' }}
-                      src={
-                        avatar ||
-                        'https://static.chotot.com/storage/chotot-icons/svg/user.svg'
-                      }
+                      style={{ width: '16px', height: '16px', borderRadius: '50%' }}
+                      src={avatar || 'https://static.chotot.com/storage/chotot-icons/svg/user.svg'}
                     />
-                  </san>
+                  </span>
                   <span>{name || 'Môi giới'}</span> - &nbsp;
                   <span>
                     {time.month

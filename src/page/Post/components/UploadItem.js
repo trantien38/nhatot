@@ -1,7 +1,15 @@
 import { Box } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import styles from '../Post.module.scss';
-function UploadItem({ iconImage, iconVideo, title, info }) {
+import AddIcon from './AddIcon';
+function UploadItem({ iconImage, iconVideo, title, info, name, callback, content, _name }) {
+  const [titles, setTitles] = useState(title);
+  const handleChangeImage = (e) => {
+    setTitles(`Tải lên ${e.target.files.length} ${content}`);
+    console.log(e.target.files);
+    callback(e.target.files);
+  };
+
   return (
     <Box sx={{ position: 'relative' }}>
       {info && (
@@ -31,8 +39,7 @@ function UploadItem({ iconImage, iconVideo, title, info }) {
       )}
       <Box
         sx={{
-          //   cursor: 'pointer',
-          height: '200px',
+          height: '160px',
           backgroundColor: '#f4f4f4',
           borderRadius: '4px',
           border: '2px dotted #fe9900',
@@ -50,8 +57,8 @@ function UploadItem({ iconImage, iconVideo, title, info }) {
           },
         }}
       >
-        <input id="image" type="file" multiple style={{ display: 'none' }} />
-        <label htmlFor="image">
+        <input id={_name} type="file" name="media" multiple style={{ display: 'none' }} onChange={handleChangeImage} />
+        <label htmlFor={_name}>
           {iconImage && (
             <svg xmlns="http://www.w3.org/2000/svg" width="53" height="39" viewBox="0 0 53 39">
               <g fill="none" fillRule="evenodd" stroke="none" strokeWidth="1">
@@ -85,27 +92,9 @@ function UploadItem({ iconImage, iconVideo, title, info }) {
               ></path>
             </svg>
           )}
-          <span className={styles.iconAdd}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 20 21">
-              <g fill="none" fillRule="evenodd" stroke="none" strokeWidth="1">
-                <g fill="#FF8800" transform="translate(-161 -428)">
-                  <g transform="translate(132 398)">
-                    <g transform="translate(16.648 17.048)">
-                      <g transform="rotate(-180 16.142 16.838)">
-                        <rect width="2.643" height="19.82" x="8.588" y="0" rx="1.321"></rect>
-                        <path
-                          d="M9.91 0c.73 0 1.321.592 1.321 1.321v17.177a1.321 1.321 0 01-2.643 0V1.321C8.588.591 9.18 0 9.91 0z"
-                          transform="rotate(90 9.91 9.91)"
-                        ></path>
-                      </g>
-                    </g>
-                  </g>
-                </g>
-              </g>
-            </svg>
-          </span>
+          <AddIcon />
         </label>
-        <p>{title}</p>
+        <p>{titles}</p>
       </Box>
     </Box>
   );

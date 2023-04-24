@@ -22,7 +22,7 @@ function QuestionToolbar() {
   return (
     <GridToolbarContainer>
       <Button color="primary" startIcon={<Add />}>
-        <Link to="/admin/question/add">Add question</Link>
+        <Link to="/admin/question/add">Thêm question</Link>
       </Button>
       <DialogEditUser open={openDialog} Transition={Transition} handleClose={handleCloseDialog} />
     </GridToolbarContainer>

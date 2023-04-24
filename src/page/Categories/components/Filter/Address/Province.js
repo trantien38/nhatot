@@ -9,7 +9,6 @@ function Province({ handleClose }) {
   useEffect(() => {
     const fetchProvince = async () => {
       const provinceList = await addressApi.getProvince();
-      console.log(provinceList.province);
       setProvince(provinceList.province);
     };
     fetchProvince();

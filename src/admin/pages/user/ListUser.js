@@ -8,11 +8,11 @@ import EditToolbar from './UserToolbar';
 
 const columns = [
   { field: 'IdUser', headerName: 'ID', width: 38 },
-  { field: 'Name', headerName: 'Full name', width: 130 },
-  { field: 'Email', headerName: 'Email', width: 180 },
+  { field: 'Name', headerName: 'Full name', width: 120 },
+  { field: 'Email', headerName: 'Email', width: 160 },
   { field: 'BirthDay', headerName: 'Birth day', width: 120 },
-  { field: 'PhoneNumber', headerName: 'Phone number', width: 120 },
-  { field: 'Gender', headerName: 'Gender', width: 90 },
+  { field: 'PhoneNumber', headerName: 'Phone number', width: 110 },
+  { field: 'Gender', headerName: 'Gender', width: 60 },
   { field: 'Address', headerName: 'Address', width: 160 },
   {
     field: 'actions',

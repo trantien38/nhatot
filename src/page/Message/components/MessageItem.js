@@ -26,7 +26,16 @@ export default function MessageItem({ link, active, img, name, messageTime, titl
         <b className={styles.name}>{name}</b>
         <span className={styles.messageTime}>{messageTime ? ` - ${messageTime}` : ''}</span>
         <p className={styles.title}>{title}</p>
-        <p className={clsx(styles.content, stylePrice ? styles.price : '')}>{content}</p>
+        <p className={clsx(styles.content, stylePrice ? styles.price : '')}>
+          {content == 'Đang hoạt động' && (
+            <img
+              width={'10px'}
+              height={'10px'}
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Location_dot_green.svg/768px-Location_dot_green.svg.png"
+            />
+          )}{' '}
+          {content}
+        </p>
       </Grid>
     </Link>
   );

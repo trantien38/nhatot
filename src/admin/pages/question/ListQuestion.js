@@ -41,13 +41,15 @@ export const ListQuestion = () => {
   const [questions, setQuestions] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
   const [idQuestion, setIdQuestion] = useState();
+  
+  const fetchQuestions = async () => {
+    const questionList = await questionApi.getAll();
+    setQuestions(questionList.question);
+  };
+  
   useEffect(() => {
-    const fetchQuestions = async () => {
-      const questionList = await questionApi.getAll();
-      setQuestions(questionList.question);
-    };
     fetchQuestions();
-  }, [questions]);
+  }, []);
 
   const handleClickOpen = (id) => {
     console.log(id);

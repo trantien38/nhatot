@@ -10,6 +10,7 @@ function InfoUser(props) {
   const avatar = 'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png';
   useEffect(() => {
     const fetchInfoUser = async () => {
+      console.log({ IdMotel, IdUser });
       const infoUsers = await userApi.getInfoUser({ IdMotel, IdUser });
       console.log(infoUsers.user);
       setInfoUser(infoUsers.user);
@@ -18,11 +19,11 @@ function InfoUser(props) {
     fetchInfoUser();
   }, [IdMotel]);
 
-  if (IdMotel) {
+  if (infoUser) {
     return (
       <MessageItem
-        link={`/`}
-        img={`${STATIC_HOST}${infoUser[0]?.Avatar}` || avatar}
+        link={`/user/${IdUser}`}
+        img={infoUser[0]?.Avatar ? `${STATIC_HOST}avatars/${infoUser[0]?.Avatar}` : avatar}
         name={infoUser[0]?.Name}
         content={
           infoUser[0]?.activeStatus == 1

@@ -2,16 +2,17 @@ import { Box, Dialog, Slider } from '@mui/material';
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Button from '~/components/Button/Button';
+import ListMap from './ListMap';
 function valuetext(value) {
   return `${value}°C`;
 }
-function DialogPrice({ open, Transition, handleClose }) {
+
+function DialogListMap({ open, Transition, handleClose, listMotel }) {
   const [value, setValue] = React.useState([0, 3000000]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
   return (
     <Dialog
       open={open}
@@ -19,6 +20,12 @@ function DialogPrice({ open, Transition, handleClose }) {
       //   keepMounted
       onClose={handleClose}
       //   aria-describedby="alert-dialog-slide-description"
+      sx={{
+        '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': {
+          maxWidth: '900px',
+          margin: 0,
+        },
+      }}
     >
       <Box
         sx={{
@@ -59,57 +66,12 @@ function DialogPrice({ open, Transition, handleClose }) {
             },
           }}
         >
-          <p>Giá thuê</p>
+          <p>Tìm quanh đây</p>
         </Box>
       </Box>
-
-      <Box
-        sx={{
-          padding: '0 17px',
-          margin: '10px 0 30px 0',
-        }}
-      >
-        <Box
-          sx={{
-            fontWeight: 400,
-            color: '#222',
-          }}
-        >{`Giá từ ${value[0].toLocaleString('vi', {
-          style: 'currency',
-          currency: 'VND',
-        })} đến ${value[1].toLocaleString('vi', {
-          style: 'currency',
-          currency: 'VND',
-        })}`}</Box>
-        <Box sx={{ width: 480 }}>
-          <Slider
-            min={0}
-            max={20000000}
-            step={500000}
-            getAriaLabel={() => 'Temperature range'}
-            value={value}
-            onChange={handleChange}
-            valueLabelDisplay="auto"
-            getAriaValueText={valuetext}
-          />
-        </Box>
-      </Box>
-      <Box
-        sx={{
-          width: '100%',
-          '& a': {
-            margin: 0,
-            padding: 0,
-          },
-        }}
-        onClick={handleClose}
-      >
-        <Link to={`?price=${value[0]}-${value[1]}`}>
-          <Button orange text="Áp dụng" />
-        </Link>
-      </Box>
+      <ListMap listMotel={listMotel} />
     </Dialog>
   );
 }
 
-export default DialogPrice;
+export default DialogListMap;

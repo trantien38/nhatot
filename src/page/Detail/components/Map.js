@@ -115,8 +115,8 @@ function Map({ address }) {
           }}
           onLoad={(map) => setMap(map)}
         >
-          <Marker position={coordinates} icon={iconMarker} onClick={() => handleClick()} />
-          <Marker position={center} icon={iconMarker} />
+          <Marker position={coordinates} onClick={() => handleClick()} />
+          {/* <Marker position={center} icon={iconMarker} /> */}
           {directionsResponse && <DirectionsRenderer directions={directionsResponse} />}
         </GoogleMap>
       </Box>

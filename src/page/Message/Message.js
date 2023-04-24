@@ -13,13 +13,9 @@ import ItemButton from './components/ItemButton';
 import MessageList from './components/MessageList';
 import Questions from './components/Question/Questions';
 import styles from './Message.module.scss';
-
-import io from 'socket.io-client';
-import { STATIC_HOST } from '~/constants';
 import theme from '~/theme';
-export const socket = io(STATIC_HOST);
 
-export default function Message() {
+export default function Message({ socket }) {
   const [messageList, setMessageList] = useState([]);
   const [chat, setChat] = useState([]);
   const [idHost, setIdHost] = useState();
@@ -41,10 +37,13 @@ export default function Message() {
   // fetch data chat box
   const fetchChat = async () => {
     const chatList = await messageApi.getAllMessagesUserInMotel(params.IdMotel);
-    setChat(chatList.chat);
+    setChat(chatList.message);
+    console.log(chatList.message);
   };
   useEffect(() => {
-    fetchChat();
+    if (params.IdMotel) {
+      fetchChat();
+    }
   }, [params.IdMotel]);
 
   // change icon
@@ -87,9 +86,7 @@ export default function Message() {
     socket.on('connect', () => {
       console.log('Connected to server!');
     });
-
     socket.emit('new_message', newMessage);
-
     socket.on('re-render message', (data) => {
       console.log('received message from server:', data);
       console.log(idUser, data.IdUser);
@@ -98,7 +95,8 @@ export default function Message() {
       }
     });
     const messageUserList = await messageApi.add(newMessage);
-    setChat(messageUserList.chat);
+    setChat(messageUserList.message);
+    console.log(messageUserList.message);
     document.chat.messages.value = '';
   };
   // submit question

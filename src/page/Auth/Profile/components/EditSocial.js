@@ -16,7 +16,7 @@ export const EditSocial = () => {
               <Link to="/settings/social">Liên kết mạng xã hội</Link>
             </li>
             <li>
-              <Link to="/settings/account">Cài đặt tài khoản</Link>
+              <Link to="/settings/account">Thay đổi mật khẩu</Link>
             </li>
           </ul>
         </Grid>

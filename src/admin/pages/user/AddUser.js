@@ -1,5 +1,6 @@
 import { Box, FormControl, Grid, InputLabel, MenuItem, Select, Slide, TextField } from '@mui/material';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Button from '~/components/Button/Button';
 import DialogDetailAddress from '~/page/Auth/Profile/components/DialogDetailAddress';
 
@@ -20,6 +21,7 @@ export const AddUser = () => {
   const handleCloseAddress = () => {
     setOpenAddress(false);
   };
+  const handleSubmit = () => {};
   return (
     <Box sx={{ margin: '0 30px 0 46px' }}>
       <Grid
@@ -75,15 +77,26 @@ export const AddUser = () => {
         <Grid item md={12} sm={12} xs={12}>
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Gender</InputLabel>
-            <Select labelId="demo-simple-select-label" id="demo-simple-select" value={gender} label="Gender" onChange={handleChangeGender}>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={gender}
+              label="Gender"
+              onChange={handleChangeGender}
+            >
               <MenuItem value={'Nam'}>Nam</MenuItem>
               <MenuItem value={'Nữ'}>Nữ</MenuItem>
               <MenuItem value={'Khác'}>Khác</MenuItem>
             </Select>
           </FormControl>
         </Grid>
-        <Grid item md={1} sm={1} xs={1}>
-          <Button orange text={'Save'} />
+        <Grid item sx={{ width: '100px', '& button': { borderRadius: '10px' } }} onClick={handleSubmit}>
+          <Button orange text={'Add'} />
+        </Grid>
+        <Grid item sx={{ width: '100px', '& button': { borderRadius: '10px' } }}>
+          <Link to="/admin/question/list">
+            <Button danger text={'Cancel'} />
+          </Link>
         </Grid>
       </Grid>
     </Box>

@@ -1,8 +1,14 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, FormControl, Grid, InputLabel, MenuItem, Select, Slide, TextField } from '@mui/material';
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Toaster } from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
+import * as yup from 'yup';
 import questionApi from '~/api/QuestionApi';
 import Button from '~/components/Button/Button';
+import InputField from '~/components/HookForm/InputField';
+import { toastMessage } from '~/utils/toast';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
@@ -23,13 +29,33 @@ export const AddQuestion = () => {
   const handleSubmit = async () => {
     const addQuestion = await questionApi.add({ active, question });
     console.log(addQuestion.msg);
+    toastMessage.success(addQuestion.msg);
+
     setTimeout(() => {
       navigate('/admin/question/list');
     }, 2000);
   };
 
+  // const schema = yup.object().shape({
+  //   question: yup
+  //     .string()
+  //     .required('Vui lòng nhập question')
+  // });
+  // const {
+  //   control,
+  //   handleOnSubmit,
+  //   formState: { errors, isSubmitting },
+  // } = useForm({
+  //   defaultValues: {
+  //     question: '',
+
+  //   },
+  //   resolver: yupResolver(schema),
+  // });
+
   return (
     <Box sx={{ margin: '0 30px 0 46px' }}>
+      <Toaster />
       <Grid
         sx={{
           boxShadow: '0 .15rem 1.75rem 0 rgba(58,59,69,.15)',
@@ -57,12 +83,30 @@ export const AddQuestion = () => {
             value={question}
             onChange={handleChangeQuestion}
           />
+          {/* <InputField
+            sx={{
+              fontSize: 2,
+              color: 'red',
+              '& label': {
+                fontSize: 14,
+              },
+              '& svg': {
+                fontSize: 18,
+              },
+            }}
+            label="Question"
+            name="question"
+            type="text"
+            errors={errors}
+            required
+            control={control}
+          /> */}
         </Grid>
 
         <Grid item md={12} sm={12} xs={12}>
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label" value={active}>
-              Status
+              Trạng thái
             </InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -71,8 +115,8 @@ export const AddQuestion = () => {
               label="Gender"
               onChange={handleChangeActive}
             >
-              <MenuItem value={1}>Activated</MenuItem>
-              <MenuItem value={0}>Not activated</MenuItem>
+              <MenuItem value={1}>Hiển thị</MenuItem>
+              <MenuItem value={0}>Ẩn</MenuItem>
             </Select>
           </FormControl>
         </Grid>

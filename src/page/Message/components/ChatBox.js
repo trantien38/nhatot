@@ -3,6 +3,7 @@ import { Box } from '@mui/material';
 import styles from '../Message.module.scss';
 
 function ChatBox({ chat, IdUser }) {
+  console.log(chat)
   return (
     <Box sx={{ overflowX: 'hidden', '& ul': { padding: '13px' } }}>
       <ul>

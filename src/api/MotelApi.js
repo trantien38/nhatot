@@ -7,28 +7,25 @@ const motelApi = {
   },
   getMotelsByIdWard(data) {
     const url = `/motelsInWard/${data.IdWard}`;
-    console.log(data);
-
     return axiosClient.post(url, data);
   },
 
   getMotelsByIdDistrict(data) {
     const url = `/motelsInDistrict/${data.IdDistrict}`;
-    console.log(data);
-
     return axiosClient.post(url, data);
   },
 
   getMotelsByIdProvince(data) {
     const url = `/motelsInProvince/${data.IdProvince}`;
-    console.log(data);
-
     return axiosClient.post(url, data);
   },
 
+  getLimitMotels(data) {
+    const url = '/limitmotels';
+    return axiosClient.post(url, data);
+  },
   getAllMotels(data) {
     const url = '/motels';
-    console.log(data);
     return axiosClient.post(url, data);
   },
   getInfoMotel(idMotel) {
@@ -36,14 +33,19 @@ const motelApi = {
     return axiosClient.get(url);
   },
 
-  getImageMotel(id) {
-    const url = `/image/${id}`;
+  getMediaMotel(id) {
+    const url = `/media/${id}`;
     return axiosClient.get(url);
   },
 
-  add(data) {
+  add(formData) {
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    };
     const url = '/motel';
-    return axiosClient.post(url, data);
+    return axiosClient.post(url, formData, config);
   },
   update(data) {
     const url = `/motel/${data.id}`;

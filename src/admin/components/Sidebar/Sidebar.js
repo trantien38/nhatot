@@ -12,10 +12,10 @@ function Sidebar() {
         <nav>
           <ul>
             <li>
-              <p>Statistical</p>
+              <Link to="/admin">Thống kê</Link>
             </li>
             <li>
-              <Link to="/admin/user/list">User management</Link>
+              <Link to="/admin/user/list">Quản lý tài khoản</Link>
               {/* <ul className="ul-1">
                 <li>
                   <Link to="/admin/user/list">User list</Link>
@@ -29,7 +29,7 @@ function Sidebar() {
               </ul> */}
             </li>
             <li>
-              <Link to="/admin/question/list">Question management</Link>
+              <Link to="/admin/question/list">Quản lý questions</Link>
               {/* <ul className="ul-2">
                 <li>
                   <Link to="/admin/question/list">Question list</Link>
@@ -43,7 +43,7 @@ function Sidebar() {
               </ul> */}
             </li>
             <li>
-              <Link to="/admin/banner/list">Banner management</Link>
+              <Link to="/admin/banner/list">Quản lý banners</Link>
               {/* <ul className="ul-3">
                 <li>
                   <Link to="/admin/banner/list">Banner list</Link>

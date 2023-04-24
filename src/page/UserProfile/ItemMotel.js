@@ -11,7 +11,7 @@ function ItemMotel({ result }) {
       sm={6}
       xs={12}
       sx={{
-        padding:'12px',
+        padding: '12px',
         '&:hover': {
           cursor: 'pointer',
           transition: 'all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) 0s',

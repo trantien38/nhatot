@@ -21,7 +21,7 @@ export default function Sliders() {
     const fetchBanner = async () => {
       const bannerList = await bannerApi.getSrcBanner();
       setBanner(bannerList.banner);
-      setBanner(bannerList.banner);
+      console.log(bannerList);
     };
     fetchBanner();
   }, []);
@@ -35,11 +35,12 @@ export default function Sliders() {
       <Box className={styles.slider}>
         <Box className={clsx(styles.slides, 'slides')}>
           <Slider {...settings}>
-            {banner.map((result, index) => (
-              <div key={index} className={clsx(styles.slide, 'first')}>
-                <img src={`${STATIC_HOST}/banners/${result.img}`} style={{ width: '100%' }} alt="HB PTY JUPITER" />
-              </div>
-            ))}
+            {banner &&
+              banner.map((result, index) => (
+                <div key={index} className={clsx(styles.slide, 'first')}>
+                  <img src={`${STATIC_HOST}/banners/${result.img}`} style={{ width: '100%' }} alt="HB PTY JUPITER" />
+                </div>
+              ))}
           </Slider>
         </Box>
       </Box>

@@ -14,6 +14,10 @@ import News from '~/page/News/News';
 import Post from '~/page/Post/Post';
 import UserProfile from '~/page/UserProfile/UserProfile';
 
+import { io } from 'socket.io-client';
+import { STATIC_HOST } from '~/constants';
+const socket = io(STATIC_HOST);
+
 let routes = () => [
   {
     path: '/',
@@ -52,7 +56,7 @@ let routes = () => [
       { path: 'forget-password', element: <ForgetPassword /> },
       {
         path: '/post',
-        element: <Post />,
+        element: <Post socket={socket}/>,
       },
       {
         path: '/profile',
@@ -60,7 +64,7 @@ let routes = () => [
       },
       {
         path: '/user/:IdUser',
-        element: <UserProfile />,
+        element: <UserProfile socket={socket} />,
       },
       {
         path: '/settings/profile',
@@ -78,11 +82,11 @@ let routes = () => [
   },
   {
     path: '/:messageUserSlug',
-    element: <Message />,
+    element: <Message socket={socket} />,
   },
   {
     path: '/:messageUserSlug/:IdMotel',
-    element: <Message />,
+    element: <Message socket={socket} />,
   },
 
   {

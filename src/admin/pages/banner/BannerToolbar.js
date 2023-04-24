@@ -22,7 +22,7 @@ function BannerToolbar() {
   return (
     <GridToolbarContainer>
       <Button color="primary" startIcon={<Add />}>
-        <Link to="/admin/banner/add">Add banner</Link>
+        <Link to="/admin/banner/add">Thêm banner</Link>
       </Button>
       <DialogEditUser open={openDialog} Transition={Transition} handleClose={handleCloseDialog} />
     </GridToolbarContainer>

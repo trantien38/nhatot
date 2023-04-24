@@ -6,6 +6,8 @@ import ProfileItem from './components/ProfileItem';
 import StorageKeys from '~/constants/storage-keys';
 import userApi from '~/api/UserApi';
 import { STATIC_HOST } from '~/constants';
+import { toastMessage } from '~/utils/toast';
+import { Toaster } from 'react-hot-toast';
 
 export const Profile = () => {
   const [authenticated, setauthenticated] = useState({});
@@ -32,10 +34,12 @@ export const Profile = () => {
     formData.append('avatar', e.target.files[0], e.target.files[0].name);
     formData.append('IdUser', authenticated.IdUser);
     //{ srcImg: e.target.files[0].name, IdUser: authenticated.IdUser }
+
     const { file } = await userApi.changeAvatar(formData);
     setAvatar(file);
     localStorage.removeItem(StorageKeys.USER);
     localStorage.setItem(StorageKeys.USER, JSON.stringify({ ...authenticated, Avatar: file }));
+    toastMessage.success('Thay đổi avatar thành công');
   };
 
   if (!authenticated) {
@@ -49,6 +53,7 @@ export const Profile = () => {
           background: '#fff',
         }}
       >
+        <Toaster />
         <Box
           sx={{
             padding: '0 10px',

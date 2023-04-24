@@ -18,16 +18,18 @@ import userApi from '~/api/UserApi';
 import { socket } from '~/page/Message/Message';
 
 export default function Header() {
+  const [name, setName] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorElNotifi, setAnchorElNotifi] = useState(null);
   const open = Boolean(anchorEl);
   const openNotifi = Boolean(anchorElNotifi);
-  const activeStatus = JSON.parse(localStorage.getItem(StorageKeys?.USER))?.activeStatus == 1;
+  const activeStatus = JSON?.parse(localStorage?.getItem(StorageKeys?.USER))?.activeStatus == 1;
   if (localStorage.getItem(StorageKeys.USER) != 'undefined') {
     var user = JSON.parse(localStorage?.getItem(StorageKeys?.USER));
+    if (name != user?.Name) {
+      setName(user?.Name);
+    }
   }
-  // const [name, setName] = useState(user?.Name);
-  // console.log(user?.Name);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -46,13 +48,13 @@ export default function Header() {
 
   const logout = async () => {
     // socket.emit('logout');
-
     const phoneNumber = JSON.parse(localStorage.getItem(StorageKeys.USER))?.PhoneNumber;
     if (phoneNumber) {
       await userApi.logout({ phoneNumber });
       localStorage.removeItem(StorageKeys.USER);
       localStorage.removeItem(StorageKeys.TOKEN);
     }
+    setName(null);
   };
 
   const [value, setValue] = useState('1');
@@ -143,7 +145,7 @@ export default function Header() {
             onClick={handleClick}
             className={styles.account}
           >
-            <Item icon={<AccountCircleIcon className={styles.item_icon} />} text={user ? user?.Name : 'Tài khoản'} />
+            <Item icon={<AccountCircleIcon className={styles.item_icon} />} text={name ? name : 'Tài khoản'} />
             <span>
               <ArrowDropDown />
             </span>
@@ -182,6 +184,11 @@ export default function Header() {
                 <MenuItem>
                   <Link to="/settings/account">Thay đổi mật khẩu</Link>
                 </MenuItem>
+                {user.IdAuthority == 2 && (
+                  <MenuItem>
+                    <Link to="/settings/account">Quản lý nhà trọ</Link>
+                  </MenuItem>
+                )}
                 <MenuItem onClick={logout}>
                   <Link to="/">Đăng xuất</Link>
                 </MenuItem>

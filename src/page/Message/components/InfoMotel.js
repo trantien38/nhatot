@@ -20,7 +20,7 @@ function InfoMotel({ idMotel, callBackGetIdHost }) {
     return;
   }, [idMotel]);
 
-  if (idMotel)
+  if (infoMotel)
     return (
       <MessageItem
         link={`/detail/${infoMotel[0]?.IdMotel}`}
@@ -32,17 +32,10 @@ function InfoMotel({ idMotel, callBackGetIdHost }) {
     );
   return (
     <Box>
-      <Box
-        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-      >
-        <img
-          style={{ width: '70%' }}
-          src="https://chat.chotot.com/emptyRoom.png"
-        />
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <img style={{ width: '70%' }} src="https://chat.chotot.com/emptyRoom.png" />
       </Box>
-      <p style={{ textAlign: 'center', color: '#333', fontWeight: 700 }}>
-        Liên hệ để biết thêm thông tin chi tiết
-      </p>
+      <p style={{ textAlign: 'center', color: '#333', fontWeight: 700 }}>Liên hệ để biết thêm thông tin chi tiết</p>
     </Box>
   );
 }

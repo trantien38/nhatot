@@ -1,23 +1,31 @@
 import { KeyboardArrowUp } from '@mui/icons-material';
-import { Box, Grid, Pagination } from '@mui/material';
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Box, Grid, Pagination, Skeleton } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 import motelApi from '~/api/MotelApi';
+import { STATIC_HOST } from '~/constants';
 import styles from './Categories.module.scss';
 import Filter from './components/Filter/Filter';
 import MotelItem from './components/MotelItem/MotelItem';
 
+import Geocode from 'react-geocode';
+import StorageKeys from '~/constants/storage-keys';
+
 const pageSize = 8;
 
 function Categories() {
+  const [loading, setLoading] = useState(true);
   const [opacity, setOpacity] = useState(0);
-  const [motels, setMotels] = useState([]);
+  const [limitMotels, setLimitMotels] = useState([]);
   const [pagination, setPagination] = useState({
     count: 0,
     start: 0,
     quantity: pageSize,
   });
+  const [listLatAndLng, setListLatAndLng] = useState([]);
   const { IdProvince, IdDistrict, IdWard } = useParams();
+  const [searchParams] = useSearchParams();
+  const price = searchParams?.get('price')?.split('-');
 
   const toggleopacity = () => {
     const scrolled = document.documentElement.scrollTop;
@@ -38,7 +46,6 @@ function Categories() {
   const handlePageChange = (event, page) => {
     console.log(page);
     const start = (page - 1) * pageSize;
-    // const quantity = (page - 1) * pageSize + pageSize;
     setPagination({ ...pagination, start });
   };
 
@@ -49,10 +56,16 @@ function Categories() {
           IdWard,
           start: pagination.start,
           quantity: pagination.quantity,
+          priceMin: (price && price[0] / 1000000) || 0,
+          priceMax: (price && price[1] / 1000000) || 1000,
         });
         setPagination({ ...pagination, count: motelList.count });
         console.log(motelList.motel);
-        setMotels(motelList.motel);
+        setLimitMotels(motelList.motel);
+
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
       };
       fetchMotels();
     } else if (IdDistrict) {
@@ -61,11 +74,16 @@ function Categories() {
           IdDistrict,
           start: pagination.start,
           quantity: pagination.quantity,
+          priceMin: (price && price[0] / 1000000) || 0,
+          priceMax: (price && price[1] / 1000000) || 1000,
         });
         setPagination({ ...pagination, count: motelList.count });
-
         console.log(motelList.motel);
-        setMotels(motelList.motel);
+        setLimitMotels(motelList.motel);
+
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
       };
       fetchMotels();
     } else if (IdProvince) {
@@ -74,65 +92,91 @@ function Categories() {
           IdProvince,
           start: pagination.start,
           quantity: pagination.quantity,
+          priceMin: (price && price[0] / 1000000) || 0,
+          priceMax: (price && price[1] / 1000000) || 1000,
         });
         console.log(motelList.motel);
         setPagination({ ...pagination, count: motelList.count });
 
-        setMotels(motelList.motel);
+        setLimitMotels(motelList.motel);
+
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
       };
       fetchMotels();
     } else {
-      console.log('getAllMotels');
       const fetchMotels = async () => {
-        console.log(pagination.start, pagination.quantity);
-        const motelList = await motelApi.getAllMotels({ start: pagination.start, quantity: pagination.quantity });
-        console.log(motelList.motel);
+        const motelList = await motelApi.getLimitMotels({
+          start: pagination.start,
+          quantity: pagination.quantity,
+          priceMin: (price && price[0] / 1000000) || 0,
+          priceMax: (price && price[1] / 1000000) || 1000,
+        });
         setPagination({ ...pagination, count: motelList.count });
-        setMotels(motelList.motel);
+        setLimitMotels(motelList.motel);
+
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
       };
       fetchMotels();
     }
-  }, [IdWard, IdDistrict, IdProvince, pagination.start]);
+  }, [IdWard, IdDistrict, IdProvince, pagination.start, price && price[0], price && price[1]]);
+
+  useEffect(() => {
+    const fetchAllMotel = async () => {
+      const allMotel = await motelApi.getAllMotels();
+      findLatAndLng(allMotel.motel);
+    };
+    fetchAllMotel();
+  }, []);
 
   window.addEventListener('scroll', toggleopacity);
+  const findLatAndLng = (listmotels) => {
+    const ListLatAndLng = [];
+    Geocode.setRegion('au');
+    Geocode.setLocationType('ROOFTOP');
+    Geocode.setApiKey(StorageKeys.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
+    listmotels.map((motel) => {
+      Geocode.fromAddress(`${motel?.Address}, ${motel?.WardName}, ${motel?.DistrictName}, ${motel?.ProvinceName}`).then(
+        (response) => {
+          ListLatAndLng.push({ ...motel, latAndLng: response.results[0].geometry.location });
+          // console.log(response.results[0].geometry.location);
+        },
+        (error) => {
+          console.error(error);
+        },
+      );
+      // console.log(`${motel?.Address}, ${motel?.WardName}, ${motel?.DistrictName}, ${motel?.ProvinceName}`);
+    });
+    setListLatAndLng(ListLatAndLng);
+  };
+
   return (
     <Box>
       <Filter
-        address={IdWard ? motels[0]?.WardName : IdDistrict ? motels[0]?.DistrictName : IdProvince ? motels[0]?.ProvinceName : ''}
+        listMotel={listLatAndLng}
+        address={
+          IdWard
+            ? limitMotels[0]?.WardName
+            : IdDistrict
+            ? limitMotels[0]?.DistrictName
+            : IdProvince
+            ? limitMotels[0]?.ProvinceName
+            : ''
+        }
       />
       <Grid container className={styles.motelList}>
         <Grid item md={9}>
-          {motels?.map((result) => (
-            <MotelItem
-              avatar={result.Avatar}
-              time={{
-                mon: result.month,
-                week: result.week,
-                day: result.day,
-                hour: result.hour,
-                minute: result.minute,
-                second: result.second,
-              }}
-              name={result.Name}
-              title={result.Title}
-              acreage={result.Acreage}
-              price={result.Price}
-              img={result.srcImage}
-              address={
-                IdDistrict
-                  ? `${result.WardPrefix} ${result.WardName}`
-                  : IdProvince
-                  ? `${result.DistrictPrefix} ${result.DistrictName}`
-                  : result.ProvinceName
-              }
-              IdMotel={result.IdMotel}
-            />
-          ))}
           <Box
             sx={{
               display: 'flex',
               justifyContent: 'center',
               padding: '12px 0',
+              '& li>button': {
+                fontSize: '14px',
+              },
             }}
           >
             <Pagination
@@ -143,6 +187,36 @@ function Categories() {
               color="primary"
             />
           </Box>
+          {limitMotels?.map((result) => {
+            return loading ? (
+              <Skeleton variant="rectangular" width="100%" height={130} sx={{ margin: '6px 0' }} />
+            ) : (
+              <MotelItem
+                avatar={result?.Avatar?.includes('http') ? result?.Avatar : `${STATIC_HOST}avatars/${result.Avatar}`}
+                time={{
+                  mon: result.month,
+                  week: result.week,
+                  day: result.day,
+                  hour: result.hour,
+                  minute: result.minute,
+                  second: result.second,
+                }}
+                name={result.Name}
+                title={result.Title}
+                acreage={result.Acreage}
+                price={result.Price}
+                img={result?.srcMedia?.includes('http') ? result.srcMedia : `${STATIC_HOST}motels/${result.srcMedia}`}
+                address={
+                  IdDistrict
+                    ? `${result.WardPrefix} ${result.WardName}`
+                    : IdProvince
+                    ? `${result.DistrictPrefix} ${result.DistrictName}`
+                    : result.ProvinceName
+                }
+                IdMotel={result.IdMotel}
+              />
+            );
+          })}
         </Grid>
         <Grid item md={3}>
           <button
@@ -156,6 +230,8 @@ function Categories() {
           </button>
         </Grid>
       </Grid>
+      <br />
+      {/* <ListMap /> */}
     </Box>
   );
 }

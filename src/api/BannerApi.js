@@ -8,6 +8,7 @@ const bannerApi = {
   },
   getAll(params) {
     const url = '/banners';
+    console.log('useeffect3')
     return axiosClient.get(url, { params });
   },
   get(id) {

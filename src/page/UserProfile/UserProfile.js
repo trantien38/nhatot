@@ -1,22 +1,29 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Box, Grid, Menu, Tab } from '@mui/material';
-import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import motelApi from '~/api/MotelApi';
+import { Box, Grid, Tab } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Toaster } from 'react-hot-toast';
+import { useParams } from 'react-router-dom';
 import userApi from '~/api/UserApi';
 import Button from '~/components/Button/Button';
-import DetailItem from '../Detail/components/DetailItem';
+import StorageKeys from '~/constants/storage-keys';
+import { toastMessage } from '~/utils/toast';
 import ItemMotel from './ItemMotel';
 
-function UserProfile() {
+function UserProfile({ socket }) {
   const [user, setUser] = useState({});
   const [motel, setMotel] = useState([]);
-
+  const [follow, setFollow] = useState();
+  const [followers, setFollowers] = useState();
+  const [following, setFollowing] = useState();
+  const infoUser = JSON?.parse(localStorage?.getItem(StorageKeys?.USER));
   const { IdUser } = useParams();
   const fetchUser = async () => {
-    const users = await userApi.getUser(IdUser);
+    const users = await userApi.getUser({ IdUser, IdFollowers: infoUser?.IdUser });
     setUser(users.user[0]);
     setMotel(users.motel);
+    setFollow(users.follow);
+    setFollowers(users.followers);
+    setFollowing(users.following);
     console.log(users);
   };
   useEffect(() => {
@@ -29,8 +36,29 @@ function UserProfile() {
     setValue(newValue);
   };
 
+  const handleFollow = async (e) => {
+    const follow = await userApi.follow({ IdFollowing: +IdUser, IdFollowers: infoUser?.IdUser });
+    if (e.target.innerText == 'Theo dõi') {
+      socket.on('connect', () => {
+        console.log('Connected to server!');
+      });
+
+      socket.emit('new_follow', { msg: `${infoUser.Name} vừa theo dõi bạn` });
+
+      setFollow('Đang theo dõi');
+      setFollowers(followers + 1);
+      toastMessage.success(follow.msg);
+    }
+    if (e.target.innerText == 'Đang theo dõi') {
+      setFollow('Theo dõi');
+      setFollowers(followers - 1);
+      toastMessage.success(follow.msg);
+    }
+  };
+
   return (
     <Grid container sx={{ justifyContent: 'space-between', margin: '10px 0' }}>
+      <Toaster />
       <Grid item md={4} xs={12} sm={5} sx={{ backgroundColor: '#fff', padding: '12px', borderRadius: '8px' }}>
         <Box
           sx={{
@@ -63,12 +91,14 @@ function UserProfile() {
           <h2>{user.Name}</h2>
           <p>
             Người theo dõi:&nbsp;
-            <b>{user.Followers}</b>
+            <b>{followers}</b>
             <span></span>
             Đang theo dõi:&nbsp;
-            <b>{user.Following}</b>
+            <b>{following}</b>
           </p>
-          <Button orange text="Theo dõi" />
+          <Box onClick={handleFollow}>
+            <Button orange text={follow} />
+          </Box>
         </Box>
         <Box
           sx={{

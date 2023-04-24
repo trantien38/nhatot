@@ -5,13 +5,11 @@ import Button from '~/components/Button/Button';
 function valuetext(value) {
   return `${value}°C`;
 }
-function DialogPrice({ open, Transition, handleClose }) {
-  const [value, setValue] = React.useState([0, 3000000]);
-
+function DialogAcreage({ open, Transition, handleClose }) {
+  const [value, setValue] = React.useState([0, 20]);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
   return (
     <Dialog
       open={open}
@@ -59,7 +57,7 @@ function DialogPrice({ open, Transition, handleClose }) {
             },
           }}
         >
-          <p>Giá thuê</p>
+          <p>Chọn diện tích</p>
         </Box>
       </Box>
 
@@ -74,18 +72,12 @@ function DialogPrice({ open, Transition, handleClose }) {
             fontWeight: 400,
             color: '#222',
           }}
-        >{`Giá từ ${value[0].toLocaleString('vi', {
-          style: 'currency',
-          currency: 'VND',
-        })} đến ${value[1].toLocaleString('vi', {
-          style: 'currency',
-          currency: 'VND',
-        })}`}</Box>
+        >{`Diện tích từ ${value[0]} m2 đến ${value[1]} m2`}</Box>
         <Box sx={{ width: 480 }}>
           <Slider
             min={0}
-            max={20000000}
-            step={500000}
+            max={100}
+            step={1}
             getAriaLabel={() => 'Temperature range'}
             value={value}
             onChange={handleChange}
@@ -104,7 +96,7 @@ function DialogPrice({ open, Transition, handleClose }) {
         }}
         onClick={handleClose}
       >
-        <Link to={`?price=${value[0]}-${value[1]}`}>
+        <Link to={`?acreage=${value[0]}-${value[1]}`}>
           <Button orange text="Áp dụng" />
         </Link>
       </Box>
@@ -112,4 +104,4 @@ function DialogPrice({ open, Transition, handleClose }) {
   );
 }
 
-export default DialogPrice;
+export default DialogAcreage;

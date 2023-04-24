@@ -4,7 +4,6 @@ import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import bannerApi from '~/api/BannerApi';
-import questionApi from '~/api/QuestionApi';
 import BannerToolbar from './BannerToolbar';
 
 const columns = [
@@ -34,9 +33,13 @@ export const ListBanner = () => {
   const [banners, setBanners] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
   useEffect(() => {
+    console.log('useeffect')
     const fetchBanners = async () => {
+      console.log('useeffect2')
+
       const bannerList = await bannerApi.getAll();
-      setBanners(bannerList.banner);
+      // setBanners(bannerList.banner);
+      console.log(bannerList);
     };
     fetchBanners();
   }, []);

@@ -18,12 +18,14 @@ export default function Search({ onChangeSearch, focused, valueSearch, showLoadi
   return (
     <Box className={cx('search')}>
       <IconButton className={cx('drop_down')}>
-        Cho thuê
-        {/* <DropDown /> */}
+        <Link to="cho-thue-phong-tro">
+          Phòng trọ
+          {/* <DropDown /> */}
+        </Link>
       </IconButton>
       <Box
         sx={{
-          width: '78%',
+          width: 'calc(100% - 108px)',
           backgroundColor: '#f4f4f4',
           borderRadius: '0 4px 4px 0',
         }}
@@ -39,8 +41,12 @@ export default function Search({ onChangeSearch, focused, valueSearch, showLoadi
           aria-label="search"
           className={globalStyles.btn}
           sx={{
-            marginBottom: '6px',
-            padding: ' 8px 16px',
+            // marginBottom: '6px',
+            // padding: ' 8px 16px',
+            '& svg': {
+              width: '30px',
+              height: '16px',
+            },
           }}
         >
           {focused && !!valueSearch ? (
@@ -56,7 +62,12 @@ export default function Search({ onChangeSearch, focused, valueSearch, showLoadi
           )}
         </IconButton>
       </Box>
-      <IconButton className={globalStyles.btn} sx={{ marginLeft: '20px' }}>
+      <IconButton
+        className={globalStyles.btn}
+        sx={{
+          marginLeft: '8px !important',
+        }}
+      >
         <Link to={host ? '/post' : '/'}>
           <PostIcon />
           &nbsp;Đăng tin
