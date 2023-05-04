@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Box, Dialog, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
-import styles from '../Profile.module.scss';
 import addressApi from '~/api/AddressApi';
 import Button from '~/components/Button/Button';
 
@@ -85,7 +84,7 @@ function DialogDetailAddress({ open, Transition, handleClose, Address, WardName,
         <Link to="">
           <img
             onClick={handleClose}
-            className={styles.btn_back}
+            style={{ cursor: 'pointer' }}
             src="https://static.chotot.com/storage/chotot-icons/svg/back.svg"
           />
         </Link>

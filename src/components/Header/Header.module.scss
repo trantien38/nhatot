@@ -1,24 +1,29 @@
 .header {
-  height: 52px;
+  height: var(--height_header);
   max-width: 1080px;
   display: flex;
   justify-content: space-between;
   margin: auto !important;
+  & a {
+    height: 100%;
+    margin: 0 8px;
+    padding: 0 8px;
+    text-decoration: none;
+  }
 }
 .item {
   &:hover {
     opacity: 0.6;
   }
   display: flex;
-  margin: -10px 6px;
+  align-items: center;
+  // margin: -10px 6px;
+  height: 100%;
   cursor: pointer;
   color: #222222;
   & p {
     font-size: 16px;
   }
-}
-a {
-  text-decoration: none;
 }
 .account {
   display: flex;
@@ -35,7 +40,7 @@ a {
     width: 1.5em;
   }
   & svg {
-    width: 1.5em;
+    width: 1.2em;
   }
 }
 

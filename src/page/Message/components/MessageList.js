@@ -7,7 +7,6 @@ import styles from '../Message.module.scss';
 import MessageItem from './MessageItem';
 
 function MessageList(props) {
-  console.log(props)
   const [loadMore, setLoadMore] = useState(true);
   const navigate = useNavigate();
   const avatar = 'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png';
@@ -44,7 +43,7 @@ function MessageList(props) {
   ) {
     return (
       <div id="list" className={styles.messageList}>
-        {props.messages.map((result) => (
+        {props?.messages?.map((result) => (
           <Box key={result.IdMotel}>
             <MessageItem
               link={`/message-${props.idUser}/${result.IdMotel}`}
@@ -53,7 +52,21 @@ function MessageList(props) {
               active={false}
               img={result.Avatar ? `${STATIC_HOST}/avatars/${result?.Avatar}` : avatar}
               name={result.Name}
-              messageTime={'1 giờ trước'}
+              messageTime={
+                result?.month
+                  ? `${result?.month} tháng trước`
+                  : result?.week
+                  ? `${result?.week} tuần trước`
+                  : result?.day
+                  ? `${result?.day} ngày trước`
+                  : result?.hour
+                  ? `${result?.hour} giờ trước`
+                  : result?.minute
+                  ? `${result?.minute} phút trước`
+                  : result?.second > 10
+                  ? `${result?.second} giây trước`
+                  : 'Vài giây trước'
+              }
               title={result.Title}
               content={result.Content}
             />

@@ -37,19 +37,21 @@ function UserProfile({ socket }) {
   };
 
   const handleFollow = async (e) => {
+    console.log({ IdFollowing: IdUser, IdFollowers: infoUser?.IdUser })
     const follow = await userApi.follow({ IdFollowing: +IdUser, IdFollowers: infoUser?.IdUser });
     if (e.target.innerText == 'Theo dõi') {
       socket.on('connect', () => {
         console.log('Connected to server!');
       });
 
-      socket.emit('new_follow', { msg: `${infoUser.Name} vừa theo dõi bạn` });
+      socket.emit('new_follow', { msg: `${infoUser.Name} vừa theo dõi bạn`, IdFollowing: +IdUser });
 
       setFollow('Đang theo dõi');
       setFollowers(followers + 1);
       toastMessage.success(follow.msg);
     }
     if (e.target.innerText == 'Đang theo dõi') {
+      socket.emit('un_follow', { msg: `${infoUser.Name} hủy theo dõi bạn`, IdFollowing: +IdUser });
       setFollow('Theo dõi');
       setFollowers(followers - 1);
       toastMessage.success(follow.msg);

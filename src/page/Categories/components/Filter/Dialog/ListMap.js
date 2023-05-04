@@ -8,6 +8,7 @@ import iconMarker from '~/assets/images/markerIcon-removebg-preview.png';
 import { toast, Toaster } from 'react-hot-toast';
 import { toastMessage } from '~/utils/toast';
 import { Link } from 'react-router-dom';
+import theme from '~/theme';
 
 const center = { lat: 16.047199, lng: 108.219955 };
 
@@ -22,7 +23,7 @@ function ListMap({ listMotel }) {
   const [duration, setDuration] = useState('');
   const [origin, setOrigin] = useState(infoUser ? addressUser : '');
   const [destination, setDestination] = useState('');
-  const [radius, setRadius] = useState(6);
+  const [radius, setRadius] = useState();
   const [markerLoaded, setMarkerLoaded] = useState(false);
 
   /** @type React.MutableRefObject<HTMLInputElement> */
@@ -128,7 +129,9 @@ function ListMap({ listMotel }) {
   const handleClickShowInfoMotel = (motel) => {
     setDestination(`${motel?.Address}, ${motel?.WardName}, ${motel?.DistrictName}, ${motel?.ProvinceName}`);
     console.log(motel);
-    setMarkerLoaded(true);
+    const infoElement = document.querySelector(`.info-${motel.IdMotel}`);
+    console.log(infoElement);
+    // setMarkerLoaded(true);
   };
 
   return (
@@ -147,10 +150,15 @@ function ListMap({ listMotel }) {
         >
           <Marker position={coordinates} onClick={() => handleClickShowInfoMotel()} />
           {motels?.map((motel) => (
-            <Marker position={motel.latAndLng} icon={iconMarker} onClick={() => handleClickShowInfoMotel(motel)}>
+            <Marker
+              key={motel.IdMotel}
+              position={motel.latAndLng}
+              icon={iconMarker}
+              onClick={() => handleClickShowInfoMotel(motel)}
+            >
               {markerLoaded && (
                 <InfoWindow>
-                  <Link to={`/detail/${motel.IdMotel}`}>
+                  <Link to={`/detail/${motel.IdMotel}`} className={`info-${motel.IdMotel}`}>
                     <h4>{motel.Title}</h4>
                     <p>{`Giá cho thuê: ${motel.Price} triệu/tháng`}</p>
                     <p>{`Diện tích sử dụng: ${motel.Acreage} m2`}</p>
@@ -166,9 +174,12 @@ function ListMap({ listMotel }) {
       <Toaster />
       <Box
         sx={{
-          width: '900px',
+          backgroundColor: theme.color.measuring,
+          width: '567px',
           fontSize: '16px',
           boxSizing: 'border-box',
+          position: 'relative',
+          right: '-68px',
           '& input': {
             width: 'calc(100% - 10px)',
             fontSize: '16px',
@@ -193,6 +204,19 @@ function ListMap({ listMotel }) {
               <Input type="text" onChange={handleChangeOrigin} value={origin} placeholder="Điểm đi" ref={originRef} />
             </Autocomplete>
           </Box>
+          <Box sx={{ width: '120px' }}>
+            <Autocomplete>
+              <Input
+                type="text"
+                onChange={handleChangeRadius}
+                value={radius}
+                placeholder="Bán kính: ? km"
+                // ref={destiantionRef}
+              />
+            </Autocomplete>
+          </Box>
+        </HStack>
+        <HStack spacing={2} mt={8} justifyContent="space-between">
           <Box flexGrow={6}>
             <Autocomplete>
               <Input
@@ -204,27 +228,16 @@ function ListMap({ listMotel }) {
               />
             </Autocomplete>
           </Box>
-
-          <ButtonGroup>
-            <Button sx={{ cursor: 'pointer' }} colorScheme="pink" type="submit" onClick={calculateRoute}>
-              Tính đường đi
-            </Button>
-            <IconButton sx={{ cursor: 'pointer' }} aria-label="center back" icon={<FaTimes />} onClick={clearRoute} />
-          </ButtonGroup>
+          <Box>
+            <ButtonGroup>
+              <Button sx={{ cursor: 'pointer' }} colorScheme="pink" type="submit" onClick={calculateRoute}>
+                Tính đường đi
+              </Button>
+            </ButtonGroup>
+          </Box>
         </HStack>
         <HStack spacing={4} mt={4} justifyContent="space-between">
-          <Box>
-            {/* <Autocomplete> */}
-            <Input
-              type="text"
-              onChange={handleChangeRadius}
-              value={radius}
-              placeholder="Bán kính bao nhiêu km?"
-              // ref={destiantionRef}
-            />
-            {/* </Autocomplete> */}
-          </Box>
-          <Text>Khoảng cách ước tính: {distance} </Text>
+          <Text sx={{ margin: '6px 0' }}>Khoảng cách ước tính: {distance} </Text>
           <Text>Thời gian ước tính: {duration} </Text>
           <IconButton
             aria-label="center back"
@@ -236,7 +249,14 @@ function ListMap({ listMotel }) {
               map.setZoom(15);
               //   setDestination(address);
             }}
-            sx={{ cursor: 'pointer' }}
+            sx={{ cursor: 'pointer', backgroundColor: theme.color.measuring, border: 'none' }}
+          />
+
+          <IconButton
+            sx={{ cursor: 'pointer', backgroundColor: theme.color.measuring, border: 'none' }}
+            aria-label="center back"
+            icon={<FaTimes />}
+            onClick={clearRoute}
           />
         </HStack>
       </Box>

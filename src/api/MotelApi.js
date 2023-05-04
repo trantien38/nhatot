@@ -1,6 +1,10 @@
 import axiosClient from './axiosClient';
 
 const motelApi = {
+  getMotelsByIdHost(IdUser) {
+    const url = `/getMotelsByIdHost/${IdUser}`;
+    return axiosClient.get(url);
+  },
   getAllMotelByIdUser(IdUser) {
     const url = `/getMotelByIdUser/${IdUser}`;
     return axiosClient.get(url);

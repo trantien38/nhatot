@@ -46,6 +46,7 @@ function DialogAddress({ open, Transition, handleClose }) {
               ? `/cho-thue-phong-tro`
               : ''
           }
+          onClick={!IdProvince && handleClose}
         >
           <img className={styles.btn_back} src="https://static.chotot.com/storage/chotot-icons/svg/back.svg" />
         </Link>

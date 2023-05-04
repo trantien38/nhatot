@@ -23,20 +23,35 @@
   list-style-type: none;
   margin-bottom: 12px;
 }
-
+.name {
+  color: #000000;
+  font-weight: 600;
+  font-size: 14px;
+}
 .messageTime {
-  font-size: 0.8rem;
+  font-size: 1rem;
 }
 .messageActive {
   background-color: #ececec;
+}
+.messageItem {
+  display: flex;
+  border-bottom: 1px solid #ececec;
+  padding: 10px 7px !important;
+  cursor: pointer;
+  &:hover {
+    background-color: #ececec;
+  }
 }
 .title {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   font-weight: 700;
-  font-size: 0.75rem;
+  font-size: 1rem;
   margin: 4px 0;
+  max-width: 260px;
+  display: block;
   color: #9b9b9b;
 }
 

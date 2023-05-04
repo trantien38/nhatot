@@ -5,10 +5,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import userApi from '~/api/UserApi';
 import Button from '~/components/Button/Button';
 import StorageKeys from '~/constants/storage-keys';
+import theme from '~/theme';
 import { toastMessage } from '~/utils/toast';
 
 import styles from '../Profile.module.scss';
-import DialogDetailAddress from './DialogDetailAddress';
+import DialogDetailAddress from '../../../../components/DialogDetailAddress';
+import Sidebar from './Sidebar';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
@@ -91,23 +93,11 @@ export const EditProfile = () => {
   };
 
   return (
-    <Box sx={{ maxWidth: '960px', margin: 'auto' }}>
+    <Box sx={{ maxWidth: theme.size.browser, margin: 'auto', '& h2': { paddingLeft: '12px' } }}>
       <Toaster />
       <h2>Chỉnh sửa trang cá nhân</h2>
       <Grid container>
-        <Grid item md={4}>
-          <ul className={styles.sidebar}>
-            <li>
-              <Link to="/settings/profile">Thông tin cá nhân</Link>
-            </li>
-            <li>
-              <Link to="/settings/social">Liên kết mạng xã hội</Link>
-            </li>
-            <li>
-              <Link to="/settings/account">Thay đổi mật khẩu</Link>
-            </li>
-          </ul>
-        </Grid>
+        <Sidebar />
         <Grid
           sx={{
             backgroundColor: '#fff',

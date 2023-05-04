@@ -10,13 +10,13 @@ function MotelItem(props) {
       <Box>
         <Link to={`/detail/${IdMotel}`}>
           <Grid container>
-            <Grid item md={2}>
+            <Grid item >
               <img
                 style={{ width: '110px', height: '110px' }}
                 src={img || 'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png'}
               />
             </Grid>
-            <Grid item md={10}>
+            <Grid item >
               <Box
                 sx={{
                   flex: '1 1',

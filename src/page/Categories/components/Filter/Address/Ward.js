@@ -19,10 +19,10 @@ function Ward({ handleClose }) {
   return (
     <ul className={styles.ul}>
       <li className={styles.district} onClick={handleClose}>
-        <Link to={''}>Tất cả</Link>
+        <Link to={`/cho-thue-phong-tro/${IdProvince}/${IdDistrict}`}>Tất cả</Link>
       </li>
       {ward.map((result) => (
-        <li key={result.IdWard} className={styles.district}>
+        <li key={result.IdWard} className={styles.district} onClick={handleClose}>
           <Link
             to={`/cho-thue-phong-tro/${IdProvince}/${IdDistrict}/${result.IdWard}`}
           >{`${result.WardPrefix} ${result.WardName}`}</Link>

@@ -88,7 +88,7 @@ function Detail() {
   };
   return (
     <Grid container>
-      <Grid item md={8}>
+      <Grid item md={8} sm={12} xs={12}>
         <Box sx={{ backgroundColor: '#eee' }}>
           <Box sx={{ padding: '0 120px' }}>
             {/* {motel[0].Type == 'image' && ( */}
@@ -167,7 +167,7 @@ function Detail() {
                 </span>
               </p>
             </Box>
-            <Box display={'flex'}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <DetailItem icon="https://static.chotot.com/storage/icons/svg/share-new.svg" title="Chia sẻ" />
               <DetailItem
                 sx={{ '&:hover': { cursor: 'pointer' } }}
@@ -176,7 +176,7 @@ function Detail() {
               />
             </Box>
           </Box>
-          <Box sx={{ display: 'flex' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <img width={'20px'} src="https://static.chotot.com/storage/icons/logos/ad-param/location.svg" />
             <Box sx={{ marginLeft: '8px' }}>
               <span>{address}</span>
@@ -215,7 +215,7 @@ function Detail() {
                 : `Đăng ${motel[0]?.second} giây trước`
             }
           />
-          <Box sx={{ display: 'flex' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <img width={'20px'} src="https://static.chotot.com/storage/icons/svg/shield.svg" />
             <span>&nbsp;&nbsp;Tin đã được duyệt. &nbsp;</span>
             <Link className={styles.map}>Tìm hiểu thêm</Link>
@@ -259,7 +259,7 @@ function Detail() {
           {parse(motel[0]?.Description)}
         </Box>
       </Grid>
-      <Grid item md={4} sx={{}}>
+      <Grid item md={4} display={{ md: 'block', xs: 'block', sm: 'none' }} sx={{ width: '100%' }}>
         <Box
           sx={{
             backgroundColor: '#fff',
@@ -293,7 +293,7 @@ function Detail() {
               </Link>
             </Box>
             <Box>
-              <DetailItem icon={'https://static.chotot.com/storage/default_medias/pty/private-pty-icon.svg'} title={'Cá nhân'} />
+              <DetailItem icon={'https://static.chotot.com/storage/default_images/pty/private-pty-icon.svg'} title={'Cá nhân'} />
             </Box>
             <Box>
               <DetailItem
@@ -350,7 +350,7 @@ function Detail() {
             </Link>
           </Box>
         </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', margin: '12px' }}>
           <Box>
             <DetailItem
               icon={'https://storage.googleapis.com/static-chotot-com/storage/chotot-icons/svg/support.svg'}

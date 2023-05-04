@@ -6,23 +6,11 @@ import { Link } from 'react-router-dom';
 
 export default function MessageItem({ link, active, img, name, messageTime, title, content, stylePrice }) {
   return (
-    <Link
-      to={link}
-      style={{
-        display: 'flex',
-        borderBottom: '1px solid #ececec',
-        padding: '10px 7px',
-        cursor: 'pointer',
-        '&:hover': {
-          backgroundColor: '#ececec',
-        },
-      }}
-      className={active ? styles.messageActive : ''}
-    >
-      <Grid>
+    <Link to={link} className={clsx(styles.messageItem, active ? styles.messageActive : '')}>
+      <Box>
         <img src={img} className={styles.img} />
-      </Grid>
-      <Grid>
+      </Box>
+      <Box>
         <b className={styles.name}>{name}</b>
         <span className={styles.messageTime}>{messageTime ? ` - ${messageTime}` : ''}</span>
         <p className={styles.title}>{title}</p>
@@ -36,7 +24,7 @@ export default function MessageItem({ link, active, img, name, messageTime, titl
           )}{' '}
           {content}
         </p>
-      </Grid>
+      </Box>
     </Link>
   );
 }

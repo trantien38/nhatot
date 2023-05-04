@@ -1,24 +1,29 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Grid, Slide, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import { set } from 'lodash';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Toaster } from 'react-hot-toast';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import * as yup from 'yup';
 import motelApi from '~/api/MotelApi';
+import AddIcon from '~/components/AddIcon';
 import Button from '~/components/Button/Button';
 import DialogDetailAddress from '~/components/DialogDetailAddress';
 import InputField from '~/components/HookForm/InputField';
+import { STATIC_HOST } from '~/constants';
 import StorageKeys from '~/constants/storage-keys';
+import Editor from '~/page/Post/components/Editor';
+import UploadItem from '~/page/Post/components/UploadItem';
 import { toastMessage } from '~/utils/toast';
-import AddIcon from '../../components/AddIcon';
-import Editor from './components/Editor';
-import UploadItem from './components/UploadItem';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
 });
-function Post({ socket }) {
+function EditMotel({ socket }) {
+  const { editSlug } = useParams();
+  const [name, id] = editSlug.split('-');
+
   const navigate = useNavigate();
   const [openAddress, setOpenAddress] = useState(false);
   const [addressDetail, setAddressDetail] = useState('');
@@ -29,6 +34,36 @@ function Post({ socket }) {
   const [image, setImage] = useState([]);
   const [video, setVideo] = useState([]);
   const [description, setDescription] = useState('');
+  const [title, setTitle] = useState('');
+  const [status, setStatus] = useState('');
+  const [price, setPrice] = useState('');
+  const [acreage, setAcreage] = useState('');
+  const [deposits, setDeposits] = useState('');
+
+  useEffect(() => {
+    const fetchMotel = async () => {
+      const motelItem = await motelApi.getInfoMotel(id);
+      console.log(motelItem);
+
+      const images = motelItem.media.filter((item) => item.Type == 'image');
+      const videos = motelItem.media.filter((item) => item.Type == 'video');
+      console.log(images);
+      console.log(videos);
+      setImage(images);
+      setVideo(videos);
+      setTitle(motelItem.motel[0].Title);
+      setStatus(motelItem.motel[0].Status);
+      setPrice(motelItem.motel[0].Price);
+      setAcreage(motelItem.motel[0].Acreage);
+      setDeposits(motelItem.motel[0].Deposits);
+      //   setMotel(motelItem.motel);
+      //   setAddress(
+      //     `${motelItem?.motel[0]?.Address}, ${motelItem?.motel[0]?.WardPrefix} ${motelItem?.motel[0]?.WardName}, ${motelItem?.motel[0]?.DistrictPrefix} ${motelItem?.motel[0]?.DistrictName}, Tp.${motelItem?.motel[0]?.ProvinceName}`,
+      //   );
+      //   setLoading(false);
+    };
+    fetchMotel();
+  }, [id]);
 
   const { IdUser, Name } = JSON?.parse(localStorage?.getItem(StorageKeys?.USER));
   const schema = yup.object().shape({
@@ -102,15 +137,15 @@ function Post({ socket }) {
     formData.append('province', province);
     formData.append('title', values.title);
     formData.append('ward', ward);
-    formData.append('notifi', `${Name} vừa đăng phòng trọ mới`);
+    // formData.append('notifi', `${Name} vừa đăng phòng trọ mới`);
 
     const addMotel = await motelApi.add(formData);
     toastMessage.success(addMotel.notifi);
 
-    socket.emit('post-motel', { msg: `${Name} vừa đăng phòng trọ mới`, IdUser });
+    // socket.emit('post-motel', { msg: `${Name} vừa đăng phòng trọ mới`, IdUser });
 
     // setTimeout(() => {
-    //   navigate('/cho-thue-phong-tro');
+    //   navigate('/manage-motel');
     // }, 1500);
   };
   const handleDeleteImage = (src) => {
@@ -169,12 +204,12 @@ function Post({ socket }) {
         <Grid item md={4} sm={8.5} sx={{ marginTop: '16px', padding: '0 10px' }}>
           <Grid container spacing={1}>
             {image[0]
-              ? image.map((src) => {
+              ? image.map((srcImage) => {
                   return (
                     <Grid item md={6} sm={4} xs={6} height="130px">
-                      <img width="100%" height="120px" src={URL.createObjectURL(src)} />
-                      <span onClick={() => handleDeleteImage(src)}>
-                        <AddIcon style={{ transform: 'rotate(45deg)', marginTop: '8px', marginLeft: '-24px' }} />
+                      <img width="100%" height="120px" src={`${STATIC_HOST}motels/${srcImage.srcMedia}`} />
+                      <span onClick={() => handleDeleteImage(srcImage)}>
+                        <AddIcon style={{ transform: 'rotate(45deg)', marginTop: '-111px', marginLeft: '138px' }} />
                       </span>
                     </Grid>
                   );
@@ -185,10 +220,10 @@ function Post({ socket }) {
                   return (
                     <Grid item md={6} sm={4} xs={6} height="130px">
                       <video width="100%" height="120" controls>
-                        <source src={URL.createObjectURL(srcVideo)} type="video/mp4" />
+                        <source src={`${STATIC_HOST}motels/${srcVideo.srcMedia}`} type="video/mp4" />
                       </video>
                       <span onClick={() => handleDeleteVideo(srcVideo)}>
-                        <AddIcon style={{ transform: 'rotate(45deg)', marginTop: '8px', marginLeft: '-24px' }} />
+                        <AddIcon style={{ transform: 'rotate(45deg)', marginTop: '-111px', marginLeft: '138px' }} />
                       </span>
                     </Grid>
                   );
@@ -222,6 +257,7 @@ function Post({ socket }) {
                   fontSize: 18,
                 },
               }}
+            //   value={title}
               label="Tiêu đề"
               type="text"
               name="title"
@@ -345,7 +381,7 @@ function Post({ socket }) {
             <Editor handleChangeDescription={handleChangeDescription} />
           </Grid>
           <Grid item md={12} sm={12} xs={12} sx={{ marginTop: '16px' }}>
-            <Button type="submit" orange text={'Đăng tin'} />
+            <Button type="submit" orange text={'Lưu thay đổi'} />
           </Grid>
         </Grid>
         {/* </Box> */}
@@ -354,4 +390,4 @@ function Post({ socket }) {
   );
 }
 
-export default Post;
+export default EditMotel;

@@ -1,7 +1,6 @@
-import { CloseOutlined } from '@mui/icons-material';
 import { Dialog } from '@mui/material';
+import HeaderDialog from '~/components/HeaderDialog';
 import Map from './Map';
-import styles from '../Detail.module.scss';
 
 function DialogMap({ open, Transition, handleClose, address }) {
   console.log(address);
@@ -20,12 +19,7 @@ function DialogMap({ open, Transition, handleClose, address }) {
       onClose={handleClose}
       aria-describedby="alert-dialog-slide-description"
     >
-      <div className={styles.dialogMapTop}>
-        <p>Bản đồ</p>
-        <span onClick={handleClose}>
-          <CloseOutlined />
-        </span>
-      </div>
+      <HeaderDialog title="Bản đồ" handleClose={handleClose} />
 
       {address && <Map address={address} />}
     </Dialog>

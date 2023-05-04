@@ -2,7 +2,7 @@ import { Box, FormControl, Grid, InputLabel, MenuItem, Select, Slide, TextField 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '~/components/Button/Button';
-import DialogDetailAddress from '~/page/Auth/Profile/components/DialogDetailAddress';
+import DialogDetailAddress from '~/components/DialogDetailAddress';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;

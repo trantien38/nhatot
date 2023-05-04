@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Controller } from 'react-hook-form';
 
 function InputField(props) {
-  const { placeholder, label, control, name, errors, size = 'small', type = 'text', sx } = props;
+  const { placeholder, label, control, value, name, errors, size = 'small', type = 'text', sx } = props;
   const hasError = errors[name];
   // console.log(hasError);
   // console.log(errors);
@@ -24,7 +24,7 @@ function InputField(props) {
       name={name}
       control={control}
       render={({ field }) => (
-        <FormControl  fullWidth size={size} sx={sx}>
+        <FormControl fullWidth size={size} sx={sx}>
           <TextField
             {...field}
             variant="outlined"
@@ -34,7 +34,7 @@ function InputField(props) {
             size={size}
             type={isShowPassword ? 'text' : type}
             placeholder={placeholder}
-            
+            value={value}
             error={!!hasError}
             helperText={hasError?.message}
           />

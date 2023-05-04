@@ -26,6 +26,7 @@ function Categories() {
   const { IdProvince, IdDistrict, IdWard } = useParams();
   const [searchParams] = useSearchParams();
   const price = searchParams?.get('price')?.split('-');
+  const acreage = searchParams?.get('acreage')?.split('-');
 
   const toggleopacity = () => {
     const scrolled = document.documentElement.scrollTop;
@@ -58,6 +59,8 @@ function Categories() {
           quantity: pagination.quantity,
           priceMin: (price && price[0] / 1000000) || 0,
           priceMax: (price && price[1] / 1000000) || 1000,
+          acreageMin: (acreage && acreage[0]) || 0,
+          acreageMax: (acreage && acreage[1]) || 1000,
         });
         setPagination({ ...pagination, count: motelList.count });
         console.log(motelList.motel);
@@ -76,6 +79,8 @@ function Categories() {
           quantity: pagination.quantity,
           priceMin: (price && price[0] / 1000000) || 0,
           priceMax: (price && price[1] / 1000000) || 1000,
+          acreageMin: (acreage && acreage[0]) || 0,
+          acreageMax: (acreage && acreage[1]) || 1000,
         });
         setPagination({ ...pagination, count: motelList.count });
         console.log(motelList.motel);
@@ -94,6 +99,8 @@ function Categories() {
           quantity: pagination.quantity,
           priceMin: (price && price[0] / 1000000) || 0,
           priceMax: (price && price[1] / 1000000) || 1000,
+          acreageMin: (acreage && acreage[0]) || 0,
+          acreageMax: (acreage && acreage[1]) || 1000,
         });
         console.log(motelList.motel);
         setPagination({ ...pagination, count: motelList.count });
@@ -112,6 +119,8 @@ function Categories() {
           quantity: pagination.quantity,
           priceMin: (price && price[0] / 1000000) || 0,
           priceMax: (price && price[1] / 1000000) || 1000,
+          acreageMin: (acreage && acreage[0]) || 0,
+          acreageMax: (acreage && acreage[1]) || 1000,
         });
         setPagination({ ...pagination, count: motelList.count });
         setLimitMotels(motelList.motel);
@@ -122,7 +131,16 @@ function Categories() {
       };
       fetchMotels();
     }
-  }, [IdWard, IdDistrict, IdProvince, pagination.start, price && price[0], price && price[1]]);
+  }, [
+    IdWard,
+    IdDistrict,
+    IdProvince,
+    pagination.start,
+    price && price[0],
+    price && price[1],
+    acreage && acreage[0],
+    acreage && acreage[1],
+  ]);
 
   useEffect(() => {
     const fetchAllMotel = async () => {
@@ -156,6 +174,9 @@ function Categories() {
   return (
     <Box>
       <Filter
+        handlePageChange={handlePageChange}
+        pagination={pagination}
+        pageSize={pageSize}
         listMotel={listLatAndLng}
         address={
           IdWard
@@ -166,27 +187,11 @@ function Categories() {
             ? limitMotels[0]?.ProvinceName
             : ''
         }
+        price={price}
+        acreage={acreage}
       />
       <Grid container className={styles.motelList}>
-        <Grid item md={9}>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              padding: '12px 0',
-              '& li>button': {
-                fontSize: '14px',
-              },
-            }}
-          >
-            <Pagination
-              onChange={handlePageChange}
-              count={Math.ceil(pagination.count / pageSize)}
-              variant="outlined"
-              shape="rounded"
-              color="primary"
-            />
-          </Box>
+        <Grid item md={7} sm={12} xs={12}>
           {limitMotels?.map((result) => {
             return loading ? (
               <Skeleton variant="rectangular" width="100%" height={130} sx={{ margin: '6px 0' }} />
@@ -218,7 +223,7 @@ function Categories() {
             );
           })}
         </Grid>
-        <Grid item md={3}>
+        <Grid item md={5}>
           <button
             style={{
               opacity: opacity,

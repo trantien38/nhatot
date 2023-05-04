@@ -18,7 +18,7 @@ function District({ handleClose }) {
   return (
     <ul className={styles.ul}>
       <li className={styles.district} onClick={handleClose}>
-        <Link to={''}>Tất cả</Link>
+        <Link to={`/cho-thue-phong-tro/${IdProvince}`}>Tất cả</Link>
       </li>
       {district.map((result) => (
         <li key={result.IdDistrict} className={styles.district}>

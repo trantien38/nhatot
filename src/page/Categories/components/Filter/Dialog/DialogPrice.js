@@ -5,7 +5,7 @@ import Button from '~/components/Button/Button';
 function valuetext(value) {
   return `${value}°C`;
 }
-function DialogPrice({ open, Transition, handleClose }) {
+function DialogPrice({ open, Transition, handleClose, handleDeleteFilter }) {
   const [value, setValue] = React.useState([0, 3000000]);
 
   const handleChange = (event, newValue) => {
@@ -36,7 +36,7 @@ function DialogPrice({ open, Transition, handleClose }) {
             flexDirection: 'column',
             cursor: 'pointer',
           }}
-          onClick={handleClose}
+          onClick={handleDeleteFilter}
         >
           <img
             width={22}

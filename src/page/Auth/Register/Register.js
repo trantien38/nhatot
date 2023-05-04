@@ -18,10 +18,13 @@ export const Register = () => {
       const resultAction = await dispatch(action);
       const user = unwrapResult(resultAction);
       console.log('New user', user);
-      toastMessage.success('Đăng ký tài khoản thành công');
-      setTimeout(() => {
-        navigate('/login');
-      }, 2000);
+      toastMessage.success(user.message);
+      if(user.message == 'Đăng ký tài khoản thành công'){
+
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
+      }
     } catch (error) {
       toastMessage.error('Đăng ký không thành công');
       console.log('Failed to register: ', error);

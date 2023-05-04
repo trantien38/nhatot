@@ -11,9 +11,14 @@ const theme = createTheme({
     price: '#c90927',
     hoverBtn: '',
     scroll: '#b7b7b7',
+    measuring: '#ffffff',
+    // measuring: '#70f6fccf'
+    // backgroundHeader:'#ffba00',
+    backgroundHeader:'#fff',
   },
   size: {
     browser: '1080px',
+    heightHeader: '68px',
   },
 });
 

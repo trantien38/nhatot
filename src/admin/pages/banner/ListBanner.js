@@ -33,9 +33,9 @@ export const ListBanner = () => {
   const [banners, setBanners] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
   useEffect(() => {
-    console.log('useeffect')
+    console.log('useeffect');
     const fetchBanners = async () => {
-      console.log('useeffect2')
+      console.log('useeffect2');
 
       const bannerList = await bannerApi.getAll();
       // setBanners(bannerList.banner);

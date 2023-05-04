@@ -10,26 +10,27 @@ import Categories from '~/page/Categories/Categories';
 import Detail from '~/page/Detail/Detail';
 import Home from '~/page/Home/Home';
 import Message from '~/page/Message/Message';
-import News from '~/page/News/News';
 import Post from '~/page/Post/Post';
+import ManageMotel from '~/page/ManageMotel/ManageMotel';
 import UserProfile from '~/page/UserProfile/UserProfile';
 
 import { io } from 'socket.io-client';
 import { STATIC_HOST } from '~/constants';
+import EditMotel from '~/page/ManageMotel/components/EditMotel';
 const socket = io(STATIC_HOST);
 
 let routes = () => [
   {
     path: '/',
-    element: <Layout />,
+    element: <Layout socket={socket} />,
     children: [
       {
         path: '/',
         element: <Home />,
       },
       {
-        path: 'news',
-        element: <News />,
+        path: 'manage-motel',
+        element: <ManageMotel />,
       },
       {
         path: 'detail/:IdMotel',
@@ -55,8 +56,12 @@ let routes = () => [
       { path: 'register', element: <Register /> },
       { path: 'forget-password', element: <ForgetPassword /> },
       {
-        path: '/post',
-        element: <Post socket={socket}/>,
+        path: '/manage-motel/add',
+        element: <Post socket={socket} />,
+      },
+      {
+        path: '/manage-motel/:editSlug',
+        element: <EditMotel />,
       },
       {
         path: '/profile',

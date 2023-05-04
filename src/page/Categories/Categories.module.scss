@@ -1,6 +1,7 @@
 .motelList {
   max-width: var(--width-browser);
-  margin: auto !important;
+  // margin: auto !important;
+  margin-top: 76px;
 }
 .motelList a {
   margin: 0;
@@ -14,7 +15,7 @@
   height: 38px;
   position: fixed;
   bottom: 55px;
-  left: 38px;
+  right: 38px;
   color: #fff;
   cursor: pointer;
   border-radius: 100%;

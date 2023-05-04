@@ -18,7 +18,7 @@ export default function Search({ onChangeSearch, focused, valueSearch, showLoadi
   return (
     <Box className={cx('search')}>
       <IconButton className={cx('drop_down')}>
-        <Link to="cho-thue-phong-tro">
+        <Link to="/cho-thue-phong-tro">
           Phòng trọ
           {/* <DropDown /> */}
         </Link>

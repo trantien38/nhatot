@@ -1,8 +1,7 @@
 import { Box } from '@mui/material';
 import React, { useState } from 'react';
-import styles from '../Post.module.scss';
-import AddIcon from './AddIcon';
-function UploadItem({ iconImage, iconVideo, title, info, name, callback, content, _name }) {
+import AddIcon from '~/components/AddIcon';
+function UploadItem({ iconImage, iconVideo, title, info, callback, content, _name }) {
   const [titles, setTitles] = useState(title);
   const handleChangeImage = (e) => {
     setTitles(`Tải lên ${e.target.files.length} ${content}`);

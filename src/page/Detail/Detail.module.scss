@@ -152,28 +152,3 @@
   }
 }
 
-.dialogMapTop {
-  background-color: #f26622 !important;
-  display: flex;
-  & > p {
-    color: #000;
-    font-size: 16px;
-    font-weight: 600;
-    text-align: center;
-    width: 100%;
-    padding: 14px;
-    margin: 0 auto;
-  }
-  & > span {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    right: 15px;
-    top: 15px;
-    background-size: cover;
-    cursor: pointer;
-  }
-  & > span > svg {
-    font-size: 20px;
-  }
-}

@@ -5,25 +5,31 @@ import Face4Icon from '@mui/icons-material/Face4';
 import MarkUnreadChatAltIcon from '@mui/icons-material/MarkUnreadChatAlt';
 import { Box } from '@mui/system';
 import Grid from '@mui/system/Unstable_Grid/Grid';
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Menu, MenuItem, Tab } from '@mui/material';
+import { Toaster } from 'react-hot-toast';
+
+import images from '~/assets/images';
+import userApi from '~/api/UserApi';
 import StorageKeys from '~/constants/storage-keys';
+import { toastMessage } from '~/utils/toast';
 import Search from '../Search/Search';
 import styles from './Header.module.scss';
 import Item from './Item';
-import userApi from '~/api/UserApi';
-import { socket } from '~/page/Message/Message';
+import theme from '~/theme';
+import notifiApi from '~/api/NotifiApi';
+import { STATIC_HOST } from '~/constants';
 
-export default function Header() {
+export default function Header({ socket }) {
   const [name, setName] = useState('');
+  const [notifis, setNotifis] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorElNotifi, setAnchorElNotifi] = useState(null);
   const open = Boolean(anchorEl);
   const openNotifi = Boolean(anchorElNotifi);
-  const activeStatus = JSON?.parse(localStorage?.getItem(StorageKeys?.USER))?.activeStatus == 1;
+  const infoUser = JSON?.parse(localStorage?.getItem(StorageKeys?.USER));
   if (localStorage.getItem(StorageKeys.USER) != 'undefined') {
     var user = JSON.parse(localStorage?.getItem(StorageKeys?.USER));
     if (name != user?.Name) {
@@ -36,6 +42,7 @@ export default function Header() {
   };
 
   const handleClickNotifi = (event) => {
+    console.log(event.currentTarget);
     setAnchorElNotifi(event.currentTarget);
   };
 
@@ -47,7 +54,6 @@ export default function Header() {
   };
 
   const logout = async () => {
-    // socket.emit('logout');
     const phoneNumber = JSON.parse(localStorage.getItem(StorageKeys.USER))?.PhoneNumber;
     if (phoneNumber) {
       await userApi.logout({ phoneNumber });
@@ -63,141 +69,246 @@ export default function Header() {
     setValue(newValue);
   };
 
+  useEffect(() => {
+    socket?.on('follow', (data) => {
+      if (data.IdFollowing == infoUser?.IdUser) {
+        console.log(data, infoUser?.IdUser);
+        toastMessage.success(data.msg);
+        // setTimeout(() => {
+        //   setNotifis([...notifis, data]);
+        //   console.log([...notifis, data]);
+        // }, 1000);
+        fetchNotifi();
+      }
+    });
+    socket?.on('unfollow', (data) => {
+      console.log(data, infoUser?.IdUser);
+      if (data.IdFollowing == infoUser?.IdUser) {
+        // const newNotifis = notifis.filter((notifi) => {
+        //   console.log(notifi.nameFollow);
+        //   console.log(data.nameFollow);
+        //   console.log(notifi.nameFollow != data.nameFollow);
+        //   return notifi.nameFollow != data.nameFollow;
+        // });
+        // console.log(newNotifis);
+        // setNotifis(newNotifis);
+        fetchNotifi();
+      }
+    });
+
+    socket?.on('post_motel', (data) => {
+      console.log(data);
+      data.followers.map((item) => {
+        if (infoUser?.IdUser == item.IdFollowers) {
+          toastMessage.success(data.notifi);
+
+          fetchNotifi();
+        }
+      });
+    });
+  }, []);
+
+  const fetchNotifi = async () => {
+    const listNotifi = await notifiApi.getAllNotifiByIdUser(infoUser?.IdUser);
+    console.log(listNotifi);
+    setNotifis(listNotifi.notifi);
+  };
+  useEffect(() => {
+    fetchNotifi();
+  }, []);
+
   return (
-    <Box sx={{ backgroundColor: '#fff', position: 'sticky', top: 0, zIndex: 9 }}>
+    <Box sx={{ backgroundColor: theme.color.backgroundHeader, position: 'sticky', top: 0, zIndex: 9 }}>
+      <Toaster />
       <Grid container spacing={2} className={styles.header}>
-        <Grid sx={{ height: '100%', padding: '8px 0' }}>
-          <Link to="/" style={{ margin: 0, padding: 0 }}>
+        <Grid item md={1.6} sm={12} xs={12} sx={{ height: '100%', padding: '6px 0' }}>
+          <Link
+            to="/"
+            style={{ margin: 0, padding: 0, alignItems: 'center', height: '100%', display: 'flex', justifyContent: 'center' }}
+          >
             <img
               src="https://static.chotot.com/storage/default_images/pty/nhatot-logo.png"
               style={{ height: '100%', cursor: 'pointer' }}
             />
           </Link>
         </Grid>
-        <Grid
-          sx={{
-            display: 'flex',
-            right: 0,
-            height: '100%',
-            padding: '0',
-            marginRight: '0px',
-          }}
-        >
-          <Link to="/">
-            <Item icon={<Home className={styles.item_icon} />} text={'Trang chủ'} />
-          </Link>
-          <Link to="/news">
-            <Item icon={<Face4Icon className={styles.item_icon} />} text={'Quản lý tin'} />
-          </Link>
-          <Link to={activeStatus ? `/message-${user?.IdUser}` : '/login'}>
-            <Item icon={<MarkUnreadChatAltIcon className={styles.item_icon} />} text={'Chat'} />
-          </Link>
-          <Link
-            id="basic-button"
-            aria-controls={openNotifi ? 'basic-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={openNotifi ? 'true' : undefined}
-            onClick={handleClickNotifi}
-          >
-            <Item icon={<AddAlertIcon className={styles.item_icon} />} text={'Thông báo'} />
-          </Link>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorElNotifi}
-            open={openNotifi}
-            onClose={handleCloseNotifi}
-            MenuListProps={{
-              'aria-labelledby': 'basic-button',
-            }}
+        <Grid item md={10.4} display={{ md: 'block', sm: 'none', xs: 'none' }} sx={{ padding: '0' }}>
+          <Box
             sx={{
-              '& li': { padding: 0 },
-              '& a': { margin: 0, padding: '6px 68px 6px 12px', width: '100%' },
+              right: 0,
+              height: '100%',
+              padding: '0',
+              marginRight: '0px',
+              display: 'flex',
+              justifyContent: 'right',
             }}
           >
-            <Box sx={{ width: '100%', typography: 'body1' }}>
-              <TabContext value={value}>
-                <Box
-                  sx={{
-                    borderBottom: 1,
-                    borderColor: '#C0C0C0',
-                    '& .Mui-selected': { color: '#222222 !important' },
-                    '& .css-1aquho2-MuiTabs-indicator': {
-                      backgroundColor: '#FF8800',
-                    },
-                  }}
-                >
-                  <TabList onChange={handleChange} aria-label="lab API tabs example">
-                    <Tab sx={{ width: '50%' }} label="Hoạt động" value="1" />
-                    <Tab sx={{ width: '50%' }} label="Tin mới" value="2" />
-                  </TabList>
-                </Box>
-                <TabPanel value="1">Chúng tôi không có cập nhật nào. Vui lòng kiểm tra lại sau</TabPanel>
-                <TabPanel value="2">Chúng tôi không có cập nhật nào. Vui lòng kiểm tra lại sau</TabPanel>
-              </TabContext>
-            </Box>
-          </Menu>
+            <Link to="/">
+              <Item icon={<Home className={styles.item_icon} />} text={'Trang chủ'} />
+            </Link>
+            <Link to="/cho-thue-phong-tro">
+              <Item icon={<Face4Icon className={styles.item_icon} />} text={'Nhà trọ'} />
+            </Link>
+            <Link to={infoUser?.activeStatus == 1 ? `/message-${user?.IdUser}` : '/login'}>
+              <Item icon={<MarkUnreadChatAltIcon className={styles.item_icon} />} text={'Chat'} />
+            </Link>
+            <Link
+              id="basic-button"
+              aria-controls={openNotifi ? 'basic-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={openNotifi ? 'true' : undefined}
+              onClick={handleClickNotifi}
+            >
+              <Item icon={<AddAlertIcon className={styles.item_icon} />} text={'Thông báo'} />
+            </Link>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorElNotifi}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+              open={openNotifi}
+              onClose={handleCloseNotifi}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
+              }}
+              sx={{
+                '& li': { padding: 0 },
+                '& a': { margin: 0, padding: '6px 68px 6px 12px', width: '100%' },
+              }}
+            >
+              <Box sx={{ width: '100%', typography: 'body1' }}>
+                <TabContext value={value}>
+                  <Box
+                    sx={{
+                      borderBottom: 1,
+                      borderColor: '#C0C0C0',
+                      '& .Mui-selected': { color: '#222222 !important' },
+                      '& .css-1aquho2-MuiTabs-indicator': {
+                        backgroundColor: '#FF8800',
+                      },
+                    }}
+                  >
+                    <TabList onChange={handleChange} aria-label="lab API tabs example">
+                      <Tab sx={{ width: '50%' }} label="Tin mới" value="1" />
+                      <Tab sx={{ width: '50%' }} label="Hoạt động" value="2" />
+                    </TabList>
+                  </Box>
+                  <TabPanel
+                    value="1"
+                    sx={{
+                      padding: 0,
+                      overflow: 'auto',
+                      maxHeight: '200px',
+                    }}
+                  >
+                    {notifis?.length > 0
+                      ? notifis.map((notifi) => (
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              padding: '6px 12px',
+                              '&:hover': {
+                                backgroundColor: '#f4f4f4',
+                                cursor: 'pointer',
+                              },
+                              '& p': {
+                                margin: 0,
+                              },
+                            }}
+                          >
+                            <img
+                              style={{ borderRadius: '50%', width: '38px', height: '38px' }}
+                              src={notifi?.Avatar ? `${STATIC_HOST}avatars/${notifi.Avatar}` : images.avatar}
+                            />
+                            <Box sx={{ marginLeft: '8px' }}>
+                              <b>{notifi.Content}</b>
+                              <br />
+                              <span>
+                                {notifi?.month
+                                  ? `${notifi?.month} tháng trước`
+                                  : notifi?.week
+                                  ? `${notifi?.week} tuần trước`
+                                  : notifi?.day
+                                  ? `${notifi?.day} ngày trước`
+                                  : notifi?.hour
+                                  ? `${notifi?.hour} giờ trước`
+                                  : notifi?.minute
+                                  ? `${notifi?.minute} phút trước`
+                                  : `vài giây trước`}
+                              </span>
+                            </Box>
+                          </Box>
+                        ))
+                      : 'Hiện tại chưa có thông báo nào'}
+                  </TabPanel>
+                  <TabPanel value="2">Hiện tại chưa có thông báo nào</TabPanel>
+                </TabContext>
+              </Box>
+            </Menu>
 
-          <Link
-            id="basic-button"
-            aria-controls={open ? 'basic-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-            onClick={handleClick}
-            className={styles.account}
-          >
-            <Item icon={<AccountCircleIcon className={styles.item_icon} />} text={name ? name : 'Tài khoản'} />
-            <span>
-              <ArrowDropDown />
-            </span>
-          </Link>
-          <Menu
-            id="basic-menu"
-            // onBlur={setAnchorEl(null)}
-            onClick={handleClose}
-            anchorEl={anchorEl}
-            open={open}
-            MenuListProps={{
-              'aria-labelledby': 'basic-button',
-            }}
-            sx={{
-              '& li': { padding: 0 },
-              '& a': { margin: 0, padding: '6px 68px 6px 12px', width: '100%' },
-            }}
-          >
-            {user ? (
-              ''
-            ) : (
-              <>
-                <MenuItem>
-                  <Link to="/login">Đăng nhập</Link>
-                </MenuItem>
-                <MenuItem>
-                  <Link to="/register">Đăng ký</Link>
-                </MenuItem>
-              </>
-            )}
-            {user && (
-              <div>
-                <MenuItem>
-                  <Link to={activeStatus ? '/profile' : '/login'}>Trang cá nhân</Link>
-                </MenuItem>
-                <MenuItem>
-                  <Link to="/settings/account">Thay đổi mật khẩu</Link>
-                </MenuItem>
-                {user.IdAuthority == 2 && (
+            <Link
+              id="basic-button"
+              aria-controls={open ? 'basic-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? 'true' : undefined}
+              onClick={handleClick}
+              className={styles.account}
+            >
+              <Item icon={<AccountCircleIcon className={styles.item_icon} />} text={name ? name : 'Tài khoản'} />
+              <span>
+                <ArrowDropDown sx={{ height: '100%' }} />
+              </span>
+            </Link>
+            <Menu
+              id="basic-menu"
+              // onBlur={setAnchorEl(null)}
+              onClick={handleClose}
+              anchorEl={anchorEl}
+              open={open}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
+              }}
+              sx={{
+                '& li': { padding: 0 },
+                '& a': { margin: 0, padding: '6px 68px 6px 12px', width: '100%' },
+              }}
+            >
+              {user ? (
+                ''
+              ) : (
+                <>
                   <MenuItem>
-                    <Link to="/settings/account">Quản lý nhà trọ</Link>
+                    <Link to="/login">Đăng nhập</Link>
                   </MenuItem>
-                )}
-                <MenuItem onClick={logout}>
-                  <Link to="/">Đăng xuất</Link>
-                </MenuItem>
-              </div>
-            )}
-          </Menu>
+                  <MenuItem>
+                    <Link to="/register">Đăng ký</Link>
+                  </MenuItem>
+                </>
+              )}
+              {user && (
+                <div>
+                  <MenuItem>
+                    <Link to={infoUser?.activeStatus == 1 ? '/profile' : '/login'}>Trang cá nhân</Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <Link to="/settings/account">Thay đổi mật khẩu</Link>
+                  </MenuItem>
+                  {user.IdAuthority == 2 && (
+                    <MenuItem>
+                      <Link to="/manage-motel">Quản lý nhà trọ</Link>
+                    </MenuItem>
+                  )}
+                  <MenuItem onClick={logout}>
+                    <Link to="/">Đăng xuất</Link>
+                  </MenuItem>
+                </div>
+              )}
+            </Menu>
+          </Box>
         </Grid>
       </Grid>
-      <Search />
+      {/* <Search /> */}
     </Box>
   );
 }

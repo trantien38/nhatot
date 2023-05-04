@@ -1,6 +1,10 @@
 import axiosClient from './axiosClient';
 
 const messageApi = {
+  getMessageByNameUser(data) {
+    const url = `/getMessageByNameUser`;
+    return axiosClient.post(url, data);
+  },
   getAllMessagesUserInMotel(idMotel) {
     const url = `/chat/${idMotel}`;
     return axiosClient.get(url);

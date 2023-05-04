@@ -1,10 +1,4 @@
-import {
-  Facebook,
-  Instagram,
-  LinkedIn,
-  Telegram,
-  YouTube,
-} from '@mui/icons-material';
+import { Facebook, Instagram, LinkedIn, Telegram, YouTube } from '@mui/icons-material';
 import { Grid, Link, List, ListItem } from '@mui/material';
 import { Box } from '@mui/system';
 import React from 'react';
@@ -18,44 +12,7 @@ export default function Footer() {
     >
       <div className={styles.footer}>
         <Grid container sx={{ padding: '8px' }}>
-          <Grid item md={3}>
-            <p style={{ padding: 0 }}>TẢI ỨNG DỤNG NHÀ TỐT</p>
-            <Box>
-              <Grid container>
-                <Grid item md={6}>
-                  <source
-                    type="image/webp"
-                    srcSet="https://static.chotot.com/storage/default/group-qr.webp"
-                  ></source>
-                  <img
-                    alt="Chợ Tốt"
-                    className="aw__ifuk1ky"
-                    src="https://static.chotot.com/storage/default/group-qr.jpeg"
-                    width="100"
-                    height="100"
-                  />
-                </Grid>
-                <Grid item md={6}>
-                  <img
-                    alt="App Store"
-                    src="https://static.chotot.com/storage/default/ios.svg"
-                    className={styles.footer_img}
-                  />
-                  <img
-                    alt="Google Play"
-                    src="https://static.chotot.com/storage/default/android.svg"
-                    className={styles.footer_img}
-                  />
-                  <img
-                    alt="App Huawei"
-                    src="https://static.chotot.com/storage/default/huawei_app_install.png"
-                    className={styles.footer_img}
-                  />
-                </Grid>
-              </Grid>
-            </Box>
-          </Grid>
-          <Grid item md={3}>
+          <Grid item md={2} sm={6} xs={12} display={{ sm: '', xs: '' }}>
             <p>HỖ TRỢ KHÁCH HÀNG</p>
             <List
               sx={{
@@ -86,7 +43,7 @@ export default function Footer() {
               </ListItem>
             </List>
           </Grid>
-          <Grid item md={3}>
+          <Grid item md={2} sm={6} xs={12} display={{ sm: '', xs: '' }}>
             <p>VỀ NHÀ TỐT</p>
             <List
               sx={{
@@ -117,7 +74,49 @@ export default function Footer() {
               </ListItem>
             </List>
           </Grid>
-          <Grid item md={3}>
+          <Grid item md={4} sm={6} xs={12} display={{ sm: '', xs: '' }}>
+            <p style={{ padding: 0 }}>TẢI ỨNG DỤNG NHÀ TỐT</p>
+            <Box>
+              <Grid container>
+                <Grid item md={6} sm={5} xs={6}>
+                  <source type="image/webp" srcSet="https://static.chotot.com/storage/default/group-qr.webp"></source>
+                  <img
+                    alt="Chợ Tốt"
+                    className="aw__ifuk1ky"
+                    src="https://static.chotot.com/storage/default/group-qr.jpeg"
+                    width="100"
+                    height="100"
+                  />
+                </Grid>
+                <Grid item md={6} sm={7} xs={6}>
+                  <Grid container>
+                    <Grid item sm={12} xs={12}>
+                      <img
+                        alt="App Store"
+                        src="https://static.chotot.com/storage/default/ios.svg"
+                        className={styles.footer_img}
+                      />
+                    </Grid>
+                    <Grid item sm={12} xs={12}>
+                      <img
+                        alt="Google Play"
+                        src="https://static.chotot.com/storage/default/android.svg"
+                        className={styles.footer_img}
+                      />
+                    </Grid>
+                    <Grid item sm={12} xs={12}>
+                      <img
+                        alt="App Huawei"
+                        src="https://static.chotot.com/storage/default/huawei_app_install.png"
+                        className={styles.footer_img}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Box>
+          </Grid>
+          <Grid item md={4} sm={6} xs={12} display={{ sm: '', xs: '' }}>
             <p style={{ paddingLeft: '8px' }}>LIÊN KẾT</p>
             <List
               sx={{
@@ -182,11 +181,11 @@ export default function Footer() {
               padding: '8px',
             }}
           >
-            CÔNG TY TNHH NHÀ TỐT - Người đại diện theo pháp luật: Trần Y Tiến;
-            GPDKKD: 0312120782 do sở KH & ĐT TP.Đà Nẵng cấp ngày 11/01/2023;
+            CÔNG TY TNHH NHÀ TỐT - Người đại diện theo pháp luật: Trần Y Tiến; GPDKKD: 0312120782 do sở KH & ĐT TP.Đà Nẵng cấp
+            ngày 11/01/2023;
             <br />
-            Địa chỉ: 96 Bùi Giáng, Hòa An, Cẩm Lệ, Đà Nẵng, Việt Nam; Email:
-            trantien01ht@gmail.com - Tổng đài CSKH: 19001007 (100đ/phút)
+            Địa chỉ: 96 Bùi Giáng, Hòa An, Cẩm Lệ, Đà Nẵng, Việt Nam; Email: trantien01ht@gmail.com - Tổng đài CSKH: 19001007
+            (100đ/phút)
           </span>
         </Grid>
       </div>

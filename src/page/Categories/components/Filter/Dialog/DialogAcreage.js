@@ -5,7 +5,7 @@ import Button from '~/components/Button/Button';
 function valuetext(value) {
   return `${value}°C`;
 }
-function DialogAcreage({ open, Transition, handleClose }) {
+function DialogAcreage({ open, Transition, handleClose, handleDeleteFilter }) {
   const [value, setValue] = React.useState([0, 20]);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -34,7 +34,7 @@ function DialogAcreage({ open, Transition, handleClose }) {
             flexDirection: 'column',
             cursor: 'pointer',
           }}
-          onClick={handleClose}
+          onClick={handleDeleteFilter}
         >
           <img
             width={22}

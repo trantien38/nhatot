@@ -8,6 +8,7 @@ import userApi from '~/api/UserApi';
 import { STATIC_HOST } from '~/constants';
 import { toastMessage } from '~/utils/toast';
 import { Toaster } from 'react-hot-toast';
+import theme from '~/theme';
 
 export const Profile = () => {
   const [authenticated, setauthenticated] = useState({});
@@ -48,7 +49,7 @@ export const Profile = () => {
     return (
       <Box
         sx={{
-          maxWidth: '960px',
+          maxWidth: theme.size.browser,
           margin: 'auto',
           background: '#fff',
         }}
@@ -124,17 +125,17 @@ export const Profile = () => {
               <ProfileItem title="Apple" content="Chưa kết nối Apple" connect="Kết nối" />
               <ProfileItem title="Email" content={`${authenticated?.Email}` || 'Chưa có thông tin'} edit={true} />
               <ProfileItem title="Địa chỉ" content={`${authenticated?.Address}` || 'Chưa có thông tin'} edit={true} />
-              <ProfileItem title="CMND/CCCD/Hộ chiếu" content="Chưa có thông tin" edit={true} />
+              {/* <ProfileItem title="CMND/CCCD/Hộ chiếu" content="Chưa có thông tin" edit={true} />
               <ProfileItem title="Ngày cấp" content="Chưa có thông tin" edit={true} />
-              <ProfileItem title="Nơi cấp" content="Chưa có thông tin" edit={true} />
+              <ProfileItem title="Nơi cấp" content="Chưa có thông tin" edit={true} /> */}
               <ProfileItem title="Giới tính" content={`${authenticated?.Gender}` || 'Chưa có thông tin'} edit={true} />
               <ProfileItem
                 title="Ngày sinh"
                 content={formatBirthDay(authenticated?.BirthDay) || 'Chưa có thông tin'}
                 edit={true}
               />
-              <ProfileItem title="Mã số thuế" content="Chưa có thông tin" edit={true} />
-              <ProfileItem title="Danh mục yêu thích" content={authenticated.favorites || 'Chưa có thông tin'} edit={true} />
+              {/* <ProfileItem title="Mã số thuế" content="Chưa có thông tin" edit={true} />
+              <ProfileItem title="Danh mục yêu thích" content={authenticated.favorites || 'Chưa có thông tin'} edit={true} /> */}
               <ProfileItem title="Mật khẩu" content={authenticated.password || '********'} edit={true} />
             </Box>
           </Box>

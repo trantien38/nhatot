@@ -4,10 +4,10 @@ import theme from '~/theme';
 import Footer from './Footer';
 import Header from './Header';
 
-export default function Layout() {
+export default function Layout({ socket }) {
   return (
-    <>
-      <Header />
+    <Box sx={{ margin: '0' }}>
+      <Header socket={socket} />
       <Box
         sx={{
           maxWidth: theme.size.browser,
@@ -17,6 +17,6 @@ export default function Layout() {
         <Outlet />
       </Box>
       <Footer />
-    </>
+    </Box>
   );
 }

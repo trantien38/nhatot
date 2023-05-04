@@ -13,11 +13,12 @@ function InfoMotel({ idMotel, callBackGetIdHost }) {
       const InfoMotels = await motelApi.getInfoMotel(idMotel);
       console.log(idMotel);
       console.log(InfoMotels.motel);
-      setInfoMotel(InfoMotels.motel);
-      callBackGetIdHost(InfoMotels.motel[0].IdUser);
+      setInfoMotel(InfoMotels?.motel);
+      callBackGetIdHost(InfoMotels?.motel[0]?.IdUser);
     };
+    // if (idMotel) {
+    // }
     fetchInfoMotel();
-    return;
   }, [idMotel]);
 
   if (infoMotel)
