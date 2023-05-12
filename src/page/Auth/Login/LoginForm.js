@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 import InputField from '~/components/HookForm/InputField';
+import { APPLE_ICON, FACEBOOK_ICON, GOOGLE_ICON, LOGIN_BACKGROUND, LOGIN_LOGO } from '~/constants';
 
 function LoginForm(props) {
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -51,7 +52,7 @@ function LoginForm(props) {
       >
         <section
           style={{
-            backgroundImage: 'url(https://static.chotot.com/storage/assets/LOGIN/login_background.webp)',
+            backgroundImage: `url(${LOGIN_BACKGROUND})`,
             position: 'absolute',
             zIndex: 1,
             top: 0,
@@ -103,7 +104,7 @@ function LoginForm(props) {
                     },
                   }}
                 >
-                  <img src="https://static.chotot.com/storage/assets/LOGIN/logo.svg" />
+                  <img src={LOGIN_LOGO} />
                 </Box>
               </Box>
               <Box>
@@ -219,13 +220,13 @@ function LoginForm(props) {
               }}
             >
               <Link style={{}}>
-                <img src="https://static.chotot.com/storage/assets/LOGIN/facebook.svg" />
+                <img src={FACEBOOK_ICON} />
               </Link>
               <Link>
-                <img src="https://static.chotot.com/storage/assets/LOGIN/google.svg" />
+                <img src={GOOGLE_ICON} />
               </Link>
               <Link>
-                <img src="https://static.chotot.com/storage/assets/LOGIN/apple.svg" />
+                <img src={APPLE_ICON} />
               </Link>
             </Box>
             <Box

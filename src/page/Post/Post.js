@@ -174,7 +174,7 @@ function Post({ socket }) {
                     <Grid item md={6} sm={4} xs={6} height="130px">
                       <img width="100%" height="120px" src={URL.createObjectURL(src)} />
                       <span onClick={() => handleDeleteImage(src)}>
-                        <AddIcon style={{ transform: 'rotate(45deg)', marginTop: '8px', marginLeft: '-24px' }} />
+                        <AddIcon style={{ transform: 'rotate(45deg)', marginTop: '-111px', marginLeft: '138px' }} />
                       </span>
                     </Grid>
                   );

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { STATIC_HOST } from '~/constants';
 
 export const getClientToken = () => {
   return axios.defaults.headers.common['Authorization'];
@@ -13,7 +14,7 @@ export const setClientToken = (token) => {
 };
 
 const axiosClient = axios.create({
-  baseURL: 'http://localhost:8000/',
+  baseURL: STATIC_HOST,
   headers: {
     'Content-Type': 'application/json',
   },

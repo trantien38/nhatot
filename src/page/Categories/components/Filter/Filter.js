@@ -12,6 +12,7 @@ import ListMap from './Dialog/ListMap';
 import DialogListMap from './Dialog/DialogListMap';
 import StorageKeys from '~/constants/storage-keys';
 import { useNavigate } from 'react-router-dom';
+import { LOCATION_FILTER, LOCATION_GRAY_ICON } from '~/constants';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
@@ -95,7 +96,7 @@ function Filter({ address, listMotel, handlePageChange, pagination, pageSize, pr
         </Box> */}
 
         <Box className={styles.filter} onClick={handleClickOpenAddress}>
-          <img src="https://static.chotot.com/storage/chotot-icons/svg/new-location.svg" />
+          <img src={LOCATION_FILTER} />
           <span style={{ paddingBottom: '3px' }}>&nbsp;{address || 'Toàn quốc'}</span>
           <ArrowDropDown />
         </Box>

@@ -3,6 +3,7 @@ import { Box } from '@mui/system';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import addressApi from '~/api/AddressApi';
+import { AREA_ICON, BACK_ICON } from '~/constants';
 import District from '../Address/District';
 import Province from '../Address/Province';
 import Ward from '../Address/Ward';
@@ -48,7 +49,7 @@ function DialogAddress({ open, Transition, handleClose }) {
           }
           onClick={!IdProvince && handleClose}
         >
-          <img className={styles.btn_back} src="https://static.chotot.com/storage/chotot-icons/svg/back.svg" />
+          <img className={styles.btn_back} src={BACK_ICON} />
         </Link>
         <Box
           sx={{
@@ -89,7 +90,7 @@ function DialogAddress({ open, Transition, handleClose }) {
             },
           }}
         >
-          <img src="https://static.chotot.com/storage/icons/svg/city.svg" />
+          <img src={AREA_ICON} />
           &nbsp;&nbsp;<p>Lọc theo khu vực</p>
         </Box>
         <Box sx={{ width: '480px' }}>

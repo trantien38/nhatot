@@ -34,7 +34,7 @@ let routes = () => [
       },
       {
         path: 'detail/:IdMotel',
-        element: <Detail />,
+        element: <Detail socket={socket} />,
       },
       {
         path: 'cho-thue-phong-tro',
@@ -90,7 +90,7 @@ let routes = () => [
     element: <Message socket={socket} />,
   },
   {
-    path: '/:messageUserSlug/:IdMotel',
+    path: '/:messageUserSlug/:IdRoom',
     element: <Message socket={socket} />,
   },
 

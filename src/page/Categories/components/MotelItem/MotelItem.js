@@ -1,6 +1,7 @@
 import { Grid } from '@mui/material';
 import { Box } from '@mui/system';
 import { Link } from 'react-router-dom';
+import { AVATAR_DEFAULT, SAVEAD_ICON } from '~/constants';
 import styles from './MotelItem.module.scss';
 
 function MotelItem(props) {
@@ -13,7 +14,7 @@ function MotelItem(props) {
             <Grid item >
               <img
                 style={{ width: '110px', height: '110px' }}
-                src={img || 'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png'}
+                src={img || AVATAR_DEFAULT}
               />
             </Grid>
             <Grid item >
@@ -48,7 +49,7 @@ function MotelItem(props) {
                   <span>
                     <img
                       style={{ width: '16px', height: '16px', borderRadius: '50%' }}
-                      src={avatar || 'https://static.chotot.com/storage/chotot-icons/svg/user.svg'}
+                      src={avatar || AVATAR_DEFAULT}
                     />
                   </span>
                   <span>{name || 'Môi giới'}</span> - &nbsp;
@@ -76,7 +77,7 @@ function MotelItem(props) {
                 bottom: '2px',
               }}
             >
-              <img src="https://static.chotot.com/storage/icons/saveAd/save-ad.svg" />
+              <img src={SAVEAD_ICON} />
             </Box>
           </Grid>
         </Link>

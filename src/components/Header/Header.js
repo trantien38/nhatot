@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Menu, MenuItem, Tab } from '@mui/material';
 import { Toaster } from 'react-hot-toast';
+import { CloseOutlined } from '@mui/icons-material';
 
 import images from '~/assets/images';
 import userApi from '~/api/UserApi';
@@ -20,7 +21,7 @@ import styles from './Header.module.scss';
 import Item from './Item';
 import theme from '~/theme';
 import notifiApi from '~/api/NotifiApi';
-import { STATIC_HOST } from '~/constants';
+import { LOGO_APP, STATIC_HOST } from '~/constants';
 
 export default function Header({ socket }) {
   const [name, setName] = useState('');
@@ -117,6 +118,11 @@ export default function Header({ socket }) {
     fetchNotifi();
   }, []);
 
+  const handleDeleteNotifi = async (notifi) => {
+    const deleteNotifi = await notifiApi.deleteNotifi({ IdNotifi: notifi.IdNotifi, IdUser: infoUser?.IdUser });
+    console.log(deleteNotifi);
+    setNotifis(deleteNotifi.notifi);
+  };
   return (
     <Box sx={{ backgroundColor: theme.color.backgroundHeader, position: 'sticky', top: 0, zIndex: 9 }}>
       <Toaster />
@@ -127,7 +133,7 @@ export default function Header({ socket }) {
             style={{ margin: 0, padding: 0, alignItems: 'center', height: '100%', display: 'flex', justifyContent: 'center' }}
           >
             <img
-              src="https://static.chotot.com/storage/default_images/pty/nhatot-logo.png"
+              src={LOGO_APP}
               style={{ height: '100%', cursor: 'pointer' }}
             />
           </Link>
@@ -143,11 +149,12 @@ export default function Header({ socket }) {
               justifyContent: 'right',
             }}
           >
-            <Link to="/">
+            {/* <Link to="/">
               <Item icon={<Home className={styles.item_icon} />} text={'Trang chủ'} />
-            </Link>
+            </Link> */}
             <Link to="/cho-thue-phong-tro">
-              <Item icon={<Face4Icon className={styles.item_icon} />} text={'Nhà trọ'} />
+              <Item icon={<Home className={styles.item_icon} />} text={'Nhà trọ'} />
+              {/* <Item icon={<Face4Icon className={styles.item_icon} />} text={'Nhà trọ'} /> */}
             </Link>
             <Link to={infoUser?.activeStatus == 1 ? `/message-${user?.IdUser}` : '/login'}>
               <Item icon={<MarkUnreadChatAltIcon className={styles.item_icon} />} text={'Chat'} />
@@ -201,46 +208,74 @@ export default function Header({ socket }) {
                       maxHeight: '200px',
                     }}
                   >
-                    {notifis?.length > 0
-                      ? notifis.map((notifi) => (
-                          <Box
-                            sx={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              padding: '6px 12px',
-                              '&:hover': {
-                                backgroundColor: '#f4f4f4',
-                                cursor: 'pointer',
-                              },
-                              '& p': {
-                                margin: 0,
-                              },
-                            }}
-                          >
-                            <img
-                              style={{ borderRadius: '50%', width: '38px', height: '38px' }}
-                              src={notifi?.Avatar ? `${STATIC_HOST}avatars/${notifi.Avatar}` : images.avatar}
-                            />
-                            <Box sx={{ marginLeft: '8px' }}>
-                              <b>{notifi.Content}</b>
-                              <br />
-                              <span>
-                                {notifi?.month
-                                  ? `${notifi?.month} tháng trước`
-                                  : notifi?.week
-                                  ? `${notifi?.week} tuần trước`
-                                  : notifi?.day
-                                  ? `${notifi?.day} ngày trước`
-                                  : notifi?.hour
-                                  ? `${notifi?.hour} giờ trước`
-                                  : notifi?.minute
-                                  ? `${notifi?.minute} phút trước`
-                                  : `vài giây trước`}
-                              </span>
-                            </Box>
+                    {notifis?.length > 0 ? (
+                      notifis.map((notifi) => (
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            padding: '6px 12px',
+                            '&:hover': {
+                              backgroundColor: '#f4f4f4',
+                              cursor: 'pointer',
+                            },
+                            '&:hover > span': {
+                              visibility: 'visible !important',
+                            },
+                            '& p': {
+                              margin: 0,
+                            },
+                          }}
+                        >
+                          <img
+                            style={{ borderRadius: '50%', width: '38px', height: '38px' }}
+                            src={notifi?.Avatar ? `${STATIC_HOST}avatars/${notifi.Avatar}` : images.avatar}
+                          />
+                          <Box sx={{ marginLeft: '8px', width: '100%' }}>
+                            <b>{notifi.Content}</b>
+                            <br />
+                            <span>
+                              {notifi?.month
+                                ? `${notifi?.month} tháng trước`
+                                : notifi?.week
+                                ? `${notifi?.week} tuần trước`
+                                : notifi?.day
+                                ? `${notifi?.day} ngày trước`
+                                : notifi?.hour
+                                ? `${notifi?.hour} giờ trước`
+                                : notifi?.minute
+                                ? `${notifi?.minute} phút trước`
+                                : `vài giây trước`}
+                            </span>
                           </Box>
-                        ))
-                      : 'Hiện tại chưa có thông báo nào'}
+                          <span
+                            style={{
+                              visibility: 'hidden',
+                            }}
+                            onClick={() => handleDeleteNotifi(notifi)}
+                          >
+                            <CloseOutlined
+                              sx={{
+                                marginLeft: '8px',
+                                padding: '10px',
+                                '&:hover': {
+                                  backgroundColor: '#e1ece1',
+                                  borderRadius: '50%',
+                                },
+                              }}
+                            />
+                          </span>
+                        </Box>
+                      ))
+                    ) : (
+                      <Box
+                        sx={{
+                          padding: '24px',
+                        }}
+                      >
+                        Hiện tại chưa có thông báo nào
+                      </Box>
+                    )}
                   </TabPanel>
                   <TabPanel value="2">Hiện tại chưa có thông báo nào</TabPanel>
                 </TabContext>

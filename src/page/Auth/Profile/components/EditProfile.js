@@ -85,11 +85,10 @@ export const EditProfile = () => {
     localStorage.removeItem(StorageKeys.USER);
     localStorage.setItem(StorageKeys.USER, JSON.stringify(result.users));
     toastMessage.success('Cập nhật thông tin cá nhân thành công');
-    // alert(123)
 
     setTimeout(() => {
       navigate('/profile');
-    }, 2000);
+    }, 1500);
   };
 
   return (

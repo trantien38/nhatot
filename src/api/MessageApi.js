@@ -1,6 +1,10 @@
 import axiosClient from './axiosClient';
 
 const messageApi = {
+  createRoom(data) {
+    const url = '/createRoom';
+    return axiosClient.post(url, data);
+  },
   getMessageByNameUser(data) {
     const url = `/getMessageByNameUser`;
     return axiosClient.post(url, data);
@@ -32,7 +36,7 @@ const messageApi = {
 
   add(data) {
     const url = '/message';
-    // console.log(data);
+    console.log(data);
     return axiosClient.post(url, data);
   },
   update(data) {

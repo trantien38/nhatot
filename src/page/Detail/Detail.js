@@ -4,12 +4,30 @@ import { Box } from '@mui/system';
 import { ScrollingCarousel } from '@trendyol-js/react-carousel';
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Slider from 'react-slick';
 import parse from 'html-react-parser';
 
 import motelApi from '~/api/MotelApi';
-import { STATIC_HOST } from '~/constants';
+import {
+  AVATAR_DEFAULT,
+  CART,
+  CHAT_ICON,
+  FURNITURE_ICON,
+  GREEN_DOT,
+  GREY_DOT,
+  HELP_ICON,
+  INDIVIDUAL_ICON,
+  LOCATION_GRAY_ICON,
+  PHONE_ICON,
+  PRICE_ICON,
+  REPORT_ICON,
+  SAVEAD_ICON,
+  SHARE_ICON,
+  SHIELD_ICON,
+  STATIC_HOST,
+  TIMER_ICON,
+} from '~/constants';
 import StorageKeys from '~/constants/storage-keys';
 import Questions from '../Message/components/Question/Questions';
 import DetailItem from './components/DetailItem';
@@ -17,18 +35,20 @@ import DetailSkeleton from './components/DetailSkeleton';
 import DialogMap from './components/DialogMap';
 import ImageItem from './components/ImageItem';
 import styles from './Detail.module.scss';
+import messageApi from '~/api/MessageApi';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
 });
 
-function Detail() {
+function Detail({ socket }) {
+  const navigate = useNavigate();
+  const [phoneNumber, setPhoneNumber] = useState('09********');
   const [motel, setMotel] = useState([]);
   const [media, setMedia] = useState([]);
   const [openMap, setOpenMap] = useState(false);
   const params = useParams();
   const user = JSON.parse(localStorage?.getItem(StorageKeys.USER));
-  const avatar = 'https://static.chotot.com/storage/default_medias/default-avatar.webp';
   const activeStatus = JSON.parse(localStorage.getItem(StorageKeys?.USER))?.activeStatus == 1;
   const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(true);
@@ -62,9 +82,6 @@ function Detail() {
   }, [params.IdMotel]);
 
   const handleChangeImage = (srcMedia, type) => () => {
-    // motel[0].srcMedia = srcMedia;
-    // const newMotel = motel;
-    // setMotel(newMotel);
     const elementImage = document.querySelector('.srcimage');
     const elementVideo = document.querySelector('.srcvideo');
     if (type == 'image') {
@@ -85,6 +102,33 @@ function Detail() {
     infinite: true,
     slidesToShow: 5,
     slidesToScroll: 1,
+  };
+
+  const handleCreateRoom = async () => {
+    console.log({ IdMotel: params.IdMotel, IdRenter: user.IdUser, IdHost: motel[0].IdUser });
+    const { room } = await messageApi.createRoom({ IdMotel: params.IdMotel, IdRenter: user.IdUser, IdHost: motel[0].IdUser });
+    console.log(room);
+    navigate(`/message-${user.IdUser}/${room[0].IdRoom}`);
+  };
+  const handleChangeMessage = async (newMessage) => {
+    socket.emit('new_message', newMessage);
+    socket.on('re-render message', (data) => {
+      console.log('received message from server:', data);
+    });
+    const messageUserList = await messageApi.add(newMessage);
+  };
+  const handleSubmitQuestion = async (Content) => {
+    const { room } = await messageApi.createRoom({ IdMotel: params.IdMotel, IdRenter: user.IdUser, IdHost: motel[0].IdUser });
+    console.log(room[0].IdRoom);
+    const newMessage = {
+      Content,
+      IdUser: user.IdUser,
+      IdRoom: room[0].IdRoom,
+    };
+    handleChangeMessage(newMessage);
+    setTimeout(() => {
+      navigate(`/message-${user.IdUser}/${room[0].IdRoom}`);
+    }, 1000);
   };
   return (
     <Grid container>
@@ -168,16 +212,12 @@ function Detail() {
               </p>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <DetailItem icon="https://static.chotot.com/storage/icons/svg/share-new.svg" title="Chia sẻ" />
-              <DetailItem
-                sx={{ '&:hover': { cursor: 'pointer' } }}
-                icon="https://static.chotot.com/storage/icons/saveAd/save-ad.svg"
-                title="Lưu tin"
-              />
+              <DetailItem icon={SHARE_ICON} title="Chia sẻ" />
+              <DetailItem sx={{ '&:hover': { cursor: 'pointer' } }} icon={SAVEAD_ICON} title="Lưu tin" />
             </Box>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <img width={'20px'} src="https://static.chotot.com/storage/icons/logos/ad-param/location.svg" />
+            <img width={'20px'} src={LOCATION_GRAY_ICON} />
             <Box sx={{ marginLeft: '8px' }}>
               <span>{address}</span>
               <br />
@@ -200,7 +240,7 @@ function Detail() {
             </Box>
           </Box>
           <DetailItem
-            icon={'https://static.chotot.com/storage/icons/svg/order_timer.svg'}
+            icon={TIMER_ICON}
             title={
               motel[0]?.month
                 ? `Đăng ${motel[0]?.month} tháng trước`
@@ -216,9 +256,9 @@ function Detail() {
             }
           />
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <img width={'20px'} src="https://static.chotot.com/storage/icons/svg/shield.svg" />
-            <span>&nbsp;&nbsp;Tin đã được duyệt. &nbsp;</span>
-            <Link className={styles.map}>Tìm hiểu thêm</Link>
+            <img width={'20px'} src={SHIELD_ICON} />
+            <span>&nbsp; Tin đã được duyệt. &nbsp;</span>
+            {/* <Link className={styles.map}>Tìm hiểu thêm</Link> */}
           </Box>
         </Box>
         <Box
@@ -231,19 +271,13 @@ function Detail() {
           <h1 className={styles.title}>Đặc điểm bất động sản</h1>
           <Grid container sx={{ marginTop: '12px' }}>
             <Grid item md={7}>
-              <DetailItem icon={'https://static.chotot.com/storage/icons/logos/ad-param/ad_type.png'} title={'Cho thuê'} />
+              <DetailItem icon={CART} title={'Cho thuê'} />
             </Grid>
             <Grid item md={5}>
-              <DetailItem
-                icon={'https://static.chotot.com/storage/icons/logos/ad-param/size.png'}
-                title={`Diện tích: ${motel[0]?.Acreage} m2`}
-              />
+              <DetailItem icon={PRICE_ICON} title={`Diện tích: ${motel[0]?.Acreage} m2`} />
             </Grid>
             <Grid item md={7}>
-              <DetailItem
-                icon={'https://static.chotot.com/storage/icons/logos/ad-param/furnishing_rent.png'}
-                title={`Tình trạng nội thất: ${motel[0]?.Status}`}
-              />
+              <DetailItem icon={FURNITURE_ICON} title={`Tình trạng nội thất: ${motel[0]?.Status}`} />
             </Grid>
           </Grid>
         </Box>
@@ -256,7 +290,7 @@ function Detail() {
         >
           <h1 className={styles.title}>Mô tả chi tiết</h1>
 
-          {parse(motel[0]?.Description)}
+          {motel[0] && parse(motel[0]?.Description)}
         </Box>
       </Grid>
       <Grid item md={4} display={{ md: 'block', xs: 'block', sm: 'none' }} sx={{ width: '100%' }}>
@@ -265,7 +299,7 @@ function Detail() {
             backgroundColor: '#fff',
             marginBottom: '8px',
             padding: '12px',
-            display: 'flex',
+            display: '-webkit-box',
           }}
         >
           <Box
@@ -274,9 +308,12 @@ function Detail() {
               height: '50px',
             }}
           >
-            <img className={styles.avatar} src={motel[0]?.Avatar ? `${STATIC_HOST}/avatars/${motel[0]?.Avatar}` : avatar} />
+            <img
+              className={styles.avatar}
+              src={motel[0]?.Avatar ? `${STATIC_HOST}/avatars/${motel[0]?.Avatar}` : AVATAR_DEFAULT}
+            />
           </Box>
-          <Box sx={{ paddingLeft: '8px', width: '100%' }}>
+          <Box sx={{ paddingLeft: '8px', width: 'calc(100% - 50px)' }}>
             <Box
               sx={{
                 display: 'flex',
@@ -293,15 +330,11 @@ function Detail() {
               </Link>
             </Box>
             <Box>
-              <DetailItem icon={'https://static.chotot.com/storage/default_images/pty/private-pty-icon.svg'} title={'Cá nhân'} />
+              <DetailItem icon={INDIVIDUAL_ICON} title={'Cá nhân'} />
             </Box>
             <Box>
               <DetailItem
-                icon={
-                  motel[0]?.activeStatus == 1
-                    ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Location_dot_green.svg/768px-Location_dot_green.svg.png'
-                    : 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Location_dot_grey.svg/1200px-Location_dot_grey.svg.png'
-                }
+                icon={motel[0]?.activeStatus == 1 ? GREEN_DOT : GREY_DOT}
                 title={
                   motel[0]?.activeStatus == 1
                     ? 'Đang hoạt động'
@@ -331,37 +364,24 @@ function Detail() {
           <Box>
             <h1 className={styles.title}>Liên hệ với người bán</h1>
             <Box className={styles.question}>
-              <Questions />
+              <Questions onSubmit={handleSubmitQuestion} />
             </Box>
           </Box>
           <Box>
-            <Box className={styles.btnSdt}>
-              <DetailItem
-                icon={'https://static.chotot.com/storage/chotot-icons/svg/white-phone.svg'}
-                sdt={'093838****'}
-                title={'BẤM ĐỂ HIỆN SỐ'}
-              />
+            <Box className={styles.btnSdt} onClick={() => setPhoneNumber(motel[0]?.PhoneNumber)}>
+              <DetailItem icon={PHONE_ICON} sdt={phoneNumber} title={'BẤM ĐỂ HIỆN SỐ'} />
             </Box>
-            <Link className={styles.btnChat} to={activeStatus ? `/message-${user?.IdUser}/${motel[0]?.IdMotel}` : '/login'}>
-              <DetailItem
-                icon={'https://static.chotot.com.vn/storage/chotot-icons/png/chat_green.png'}
-                title={'CHAT VỚI NGƯỜI BÁN'}
-              />
-            </Link>
+            <div className={styles.btnChat} onClick={() => handleCreateRoom()}>
+              <DetailItem icon={CHAT_ICON} title={'CHAT VỚI NGƯỜI BÁN'} />
+            </div>
           </Box>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', margin: '12px' }}>
           <Box>
-            <DetailItem
-              icon={'https://storage.googleapis.com/static-chotot-com/storage/chotot-icons/svg/support.svg'}
-              title={'Cần trợ giúp'}
-            />
+            <DetailItem icon={HELP_ICON} title={'Cần trợ giúp'} />
           </Box>
           <Box>
-            <DetailItem
-              icon={'https://storage.googleapis.com/static-chotot-com/storage/chotot-icons/svg/warning_grey.svg'}
-              title={'Báo cáo tin đăng này'}
-            />
+            <DetailItem icon={REPORT_ICON} title={'Báo cáo tin đăng này'} />
           </Box>
         </Box>
       </Grid>

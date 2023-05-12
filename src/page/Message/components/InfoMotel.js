@@ -1,31 +1,32 @@
 import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import motelApi from '~/api/MotelApi';
+import { STATIC_HOST } from '~/constants';
 import MessageItem from './MessageItem';
 
-function InfoMotel({ idMotel, callBackGetIdHost }) {
+function InfoMotel({ IdRoom, callBackGetIdHost }) {
   const [infoMotel, setInfoMotel] = useState([]);
   const imgRoom =
     'https://cdn.chotot.com/5bmc0aGA85_stXnY33AWkQrDhQlp_iGRyDa1WW-NIpQ/preset:listing/plain/40489371e66627a7da396aa506eb3640-2812770810323125887.jpg';
 
   useEffect(() => {
     const fetchInfoMotel = async () => {
-      const InfoMotels = await motelApi.getInfoMotel(idMotel);
-      console.log(idMotel);
+      const InfoMotels = await motelApi.getInfoMotelByIdRoom(IdRoom);
+      console.log(IdRoom);
       console.log(InfoMotels.motel);
       setInfoMotel(InfoMotels?.motel);
       callBackGetIdHost(InfoMotels?.motel[0]?.IdUser);
     };
-    // if (idMotel) {
-    // }
-    fetchInfoMotel();
-  }, [idMotel]);
+    if (IdRoom) {
+      fetchInfoMotel();
+    }
+  }, [IdRoom]);
 
-  if (infoMotel)
+  if (infoMotel[0])
     return (
       <MessageItem
         link={`/detail/${infoMotel[0]?.IdMotel}`}
-        img={imgRoom}
+        img={`${STATIC_HOST}motels/${infoMotel[0]?.srcMedia}` || imgRoom}
         name={infoMotel[0]?.Title}
         content={`${infoMotel[0]?.Price} triệu/tháng`}
         stylePrice={'price'}

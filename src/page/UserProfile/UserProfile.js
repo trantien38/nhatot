@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast';
 import { useParams } from 'react-router-dom';
 import userApi from '~/api/UserApi';
 import Button from '~/components/Button/Button';
+import { AVATAR_DEFAULT, STATIC_HOST } from '~/constants';
 import StorageKeys from '~/constants/storage-keys';
 import { toastMessage } from '~/utils/toast';
 import ItemMotel from './ItemMotel';
@@ -37,7 +38,7 @@ function UserProfile({ socket }) {
   };
 
   const handleFollow = async (e) => {
-    console.log({ IdFollowing: IdUser, IdFollowers: infoUser?.IdUser })
+    console.log({ IdFollowing: IdUser, IdFollowers: infoUser?.IdUser });
     const follow = await userApi.follow({ IdFollowing: +IdUser, IdFollowers: infoUser?.IdUser });
     if (e.target.innerText == 'Theo dõi') {
       socket.on('connect', () => {
@@ -73,7 +74,7 @@ function UserProfile({ socket }) {
             justifyContent: 'center',
           }}
         >
-          <img src="https://cdn.chotot.com/uac2/13048690" />
+          <img src={user?.Avatar ? `${STATIC_HOST}avatars/${user?.Avatar}` : AVATAR_DEFAULT} />
         </Box>
         <Box
           sx={{
@@ -111,7 +112,7 @@ function UserProfile({ socket }) {
             },
           }}
         >
-          <Box sx={{ display: 'flex', margin: '12px 0' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', margin: '12px 0' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
               <path
                 fill-rule="evenodd"
@@ -121,7 +122,7 @@ function UserProfile({ socket }) {
             </svg>
             <span>phản hồi chat: 82% (Trong 6 giờ)</span>
           </Box>
-          <Box sx={{ display: 'flex', margin: '12px 0' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', margin: '12px 0' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 25" aria-hidden="true" fill="currentColor">
               <path
                 fill-rule="evenodd"
@@ -137,7 +138,7 @@ function UserProfile({ socket }) {
             </svg>
             Đã tham gia: 2 năm 8 tháng
           </Box>
-          <Box sx={{ display: 'flex', margin: '12px 0' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', margin: '12px 0' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 25" aria-hidden="true" fill="currentColor">
               <path
                 fill-rule="evenodd"
@@ -152,7 +153,7 @@ function UserProfile({ socket }) {
             </svg>
             Đã xác thực
           </Box>
-          <Box sx={{ display: 'flex', margin: '12px 0' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', margin: '12px 0' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
               <g fill-rule="evenodd" clip-path="url(#clip0_8440_50966)" clip-rule="evenodd">
                 <path d="M12 7.45a2.3 2.3 0 100 4.6 2.3 2.3 0 000-4.6zm-3.7 2.3a3.7 3.7 0 117.4 0 3.7 3.7 0 01-7.4 0z"></path>

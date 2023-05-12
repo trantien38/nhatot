@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 import { FormInput } from '~/components/HookForm/InputForm';
+import { LOGIN_BACKGROUND } from '~/constants';
 
 export const ForgetPassword = () => {
   const initialValues = { phone: '' };
@@ -38,7 +39,7 @@ export const ForgetPassword = () => {
       >
         <section
           style={{
-            backgroundImage: 'url(https://static.chotot.com/storage/assets/LOGIN/login_background.webp)',
+            backgroundImage: `url(${LOGIN_BACKGROUND})`,
             position: 'absolute',
             zIndex: 1,
             top: 0,

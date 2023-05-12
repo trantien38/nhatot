@@ -1,7 +1,7 @@
 import { Facebook, Instagram, LinkedIn, Telegram, YouTube } from '@mui/icons-material';
 import { Grid, Link, List, ListItem } from '@mui/material';
 import { Box } from '@mui/system';
-import React from 'react';
+import { APP_HUAWEI, APP_STORE, GOOGLE_PLAY, QR_IMAGE, QR_SOURCE } from '~/constants';
 import styles from './Footer.module.scss';
 export default function Footer() {
   return (
@@ -79,11 +79,11 @@ export default function Footer() {
             <Box>
               <Grid container>
                 <Grid item md={6} sm={5} xs={6}>
-                  <source type="image/webp" srcSet="https://static.chotot.com/storage/default/group-qr.webp"></source>
+                  <source type="image/webp" srcSet={QR_SOURCE}></source>
                   <img
                     alt="Chợ Tốt"
-                    className="aw__ifuk1ky"
-                    src="https://static.chotot.com/storage/default/group-qr.jpeg"
+                    // className="aw__ifuk1ky"
+                    src={QR_IMAGE}
                     width="100"
                     height="100"
                   />
@@ -91,25 +91,13 @@ export default function Footer() {
                 <Grid item md={6} sm={7} xs={6}>
                   <Grid container>
                     <Grid item sm={12} xs={12}>
-                      <img
-                        alt="App Store"
-                        src="https://static.chotot.com/storage/default/ios.svg"
-                        className={styles.footer_img}
-                      />
+                      <img alt="App Store" src={APP_STORE} className={styles.footer_img} />
                     </Grid>
                     <Grid item sm={12} xs={12}>
-                      <img
-                        alt="Google Play"
-                        src="https://static.chotot.com/storage/default/android.svg"
-                        className={styles.footer_img}
-                      />
+                      <img alt="Google Play" src={GOOGLE_PLAY} className={styles.footer_img} />
                     </Grid>
                     <Grid item sm={12} xs={12}>
-                      <img
-                        alt="App Huawei"
-                        src="https://static.chotot.com/storage/default/huawei_app_install.png"
-                        className={styles.footer_img}
-                      />
+                      <img alt="App Huawei" src={APP_HUAWEI} className={styles.footer_img} />
                     </Grid>
                   </Grid>
                 </Grid>

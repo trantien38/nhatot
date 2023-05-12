@@ -44,14 +44,17 @@
   }
 }
 .title {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  // white-space: nowrap;
+  // text-overflow: ellipsis;
   font-weight: 700;
   font-size: 1rem;
   margin: 4px 0;
   max-width: 260px;
-  display: block;
+  // display: block;
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* số dòng hiển thị */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
   color: #9b9b9b;
 }
 

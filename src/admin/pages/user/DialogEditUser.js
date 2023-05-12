@@ -1,6 +1,7 @@
 import { Box, Dialog } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { BACK_ICON } from '~/constants';
 
 function DialogEditUser({ open, Transition, handleClose }) {
   return (
@@ -14,7 +15,7 @@ function DialogEditUser({ open, Transition, handleClose }) {
         }}
       >
         <Link to="">
-          <img onClick={handleClose} src="https://static.chotot.com/storage/chotot-icons/svg/back.svg" />
+          <img onClick={handleClose} src={BACK_ICON} />
         </Link>
         <Box
           sx={{

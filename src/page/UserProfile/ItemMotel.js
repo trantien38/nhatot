@@ -1,9 +1,11 @@
 import { Box, Grid } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { STATIC_HOST, TIMER_ICON } from '~/constants';
 import DetailItem from '../Detail/components/DetailItem';
 
 function ItemMotel({ result }) {
+  console.log(result);
   return (
     <Grid
       item
@@ -25,10 +27,7 @@ function ItemMotel({ result }) {
       }}
     >
       <Link to={`/detail/${result.IdMotel}`}>
-        <img
-          width={'100%'}
-          src="https://cdn.chotot.com/jFtYfGhwaUCDJVuoz7t0SH98XYlcJPAEoS61rJIQvBU/preset:listing/plain/809cc533aa2e1caa72b5f4b217dc39c2-2820522923279241264.jpg"
-        />
+        <img width={'100%'} src={`${STATIC_HOST}motels/${result.srcMedia}`} />
         <Box
           sx={{
             '& p': {
@@ -45,7 +44,7 @@ function ItemMotel({ result }) {
           <p>{result.Title}</p>
           <b>{result.Price} triệu/tháng</b>
           <DetailItem
-            icon={'https://static.chotot.com/storage/icons/svg/order_timer.svg'}
+            icon={TIMER_ICON}
             title={
               result.monthCreateDay
                 ? `Đăng ${result.monthCreateDay} tháng trước`

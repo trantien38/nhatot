@@ -36,6 +36,10 @@ const motelApi = {
     const url = `/motel/${idMotel}`;
     return axiosClient.get(url);
   },
+  getInfoMotelByIdRoom(IdRoom) {
+    const url = `/getInfoMotelByIdRoom/${IdRoom}`;
+    return axiosClient.get(url);
+  },
 
   getMediaMotel(id) {
     const url = `/media/${id}`;

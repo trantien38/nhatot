@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import messageApi from '~/api/MessageApi';
 import Header from '~/components/Header';
 import { SearchIcon } from '~/components/Icon';
+import { GALLERY_ICON, LOCATION_ICON, MESSAGE_ICON, PLUSCIRCLE_ICON } from '~/constants';
 import theme from '~/theme';
 import ChatBox from './components/ChatBox';
 import InfoMotel from './components/InfoMotel';
@@ -29,25 +30,21 @@ export default function Message({ socket }) {
   // fetch data message list
   const fetchMessage = async () => {
     const messageUserList = await messageApi.getListMessageUser(idUser);
-
     console.log(messageUserList.message);
     const listMessage = [];
     listMessage.push(messageUserList.message[0]);
     console.log(listMessage);
     const ids = [];
-    ids.push(messageUserList?.message[0]?.IdMotel);
+    ids.push(messageUserList?.message[0]?.IdRoom);
     messageUserList.message.map(async (item) => {
-      if (ids.includes(item.IdMotel)) {
+      if (ids.includes(item.IdRoom)) {
       } else {
-        await ids.push(item.IdMotel);
+        ids.push(item.IdRoom);
         listMessage.push(item);
       }
     });
+    await console.log(listMessage);
     await setMessageList(listMessage);
-
-    // setMessageList(messageUserList.message);
-    // console.log(messageUserList.message);
-    // refListMessage.current = messageUserList.message;
   };
   useEffect(() => {
     fetchMessage();
@@ -55,7 +52,7 @@ export default function Message({ socket }) {
 
   // fetch data chat box
   const fetchChat = async () => {
-    const chatList = await messageApi.getAllMessagesUserInMotel(params.IdMotel);
+    const chatList = await messageApi.getAllMessagesUserInMotel(params.IdRoom);
     setChat(chatList.message);
     // console.log(chatList.message);
     setTimeout(() => {
@@ -65,10 +62,10 @@ export default function Message({ socket }) {
     }, 100);
   };
   useEffect(() => {
-    if (params.IdMotel) {
+    if (params.IdRoom) {
       fetchChat();
     }
-  }, [params.IdMotel]);
+  }, [params.IdRoom]);
 
   // change icon
   const handleChangeIcon = () => {
@@ -102,7 +99,7 @@ export default function Message({ socket }) {
     const newMessage = {
       Content,
       IdUser: idUser,
-      IdMotel: params.IdMotel,
+      IdRoom: params.IdRoom,
     };
     handleChangeMessage(newMessage);
   };
@@ -116,7 +113,8 @@ export default function Message({ socket }) {
         fetchMessage();
       }
     });
-    const messageUserList = await messageApi.add(newMessage);
+    await messageApi.add(newMessage);
+    // const messageUserList = await messageApi.add(newMessage);
     fetchChat();
     fetchMessage();
     document.chat.messages.value = '';
@@ -126,7 +124,7 @@ export default function Message({ socket }) {
     const newMessage = {
       Content,
       IdUser: idUser,
-      IdMotel: params.IdMotel,
+      IdRoom: params.IdRoom,
     };
     handleChangeMessage(newMessage);
   };
@@ -183,13 +181,13 @@ export default function Message({ socket }) {
           <Grid
             item
             md={4}
-            sm={params.IdMotel ? 0 : 12}
-            xs={params.IdMotel ? 0 : 12}
+            sm={params.IdRoom ? 0 : 12}
+            xs={params.IdRoom ? 0 : 12}
             sx={{
               overflow: 'auto',
               height: '100%',
             }}
-            display={{ md: 'block', sm: params.IdMotel ? 'none' : 0, xs: params.IdMotel ? 'none' : 0 }}
+            display={{ md: 'block', sm: params.IdRoom ? 'none' : 0, xs: params.IdRoom ? 'none' : 0 }}
           >
             <Box
               sx={{
@@ -269,21 +267,21 @@ export default function Message({ socket }) {
           <Grid
             item
             md={8}
-            sm={params.IdMotel ? 12 : 0}
-            xs={params.IdMotel ? 12 : 0}
+            sm={params.IdRoom ? 12 : 0}
+            xs={params.IdRoom ? 12 : 0}
             display={{
               md: 'block',
-              sm: params.IdMotel ? 'block' : 'none',
-              xs: params.IdMotel ? 'block' : 'none',
+              sm: params.IdRoom ? 'block' : 'none',
+              xs: params.IdRoom ? 'block' : 'none',
             }}
             sx={{ height: '100%' }}
           >
             <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               <Box>
-                <InfoUser IdUser={idUser} IdMotel={params.IdMotel} data={messageList} callBackGetIdHost={callBackGetIdHost} />
-                <InfoMotel idMotel={params.IdMotel} callBackGetIdHost={callBackGetIdHost} />
+                <InfoUser IdUser={idUser} IdRoom={params.IdRoom} data={messageList} callBackGetIdHost={callBackGetIdHost} />
+                <InfoMotel IdRoom={params.IdRoom} callBackGetIdHost={callBackGetIdHost} />
               </Box>
-              {params.IdMotel && (
+              {params.IdRoom && (
                 <Box
                   sx={{
                     display: 'flex',
@@ -314,23 +312,11 @@ export default function Message({ socket }) {
                           className={clsx(styles.messageIcon, 'addIcon')}
                           onClick={handleChangeIcon}
                           alt="open"
-                          src="https://chat.chotot.com/icons/plusCircle.svg"
+                          src={PLUSCIRCLE_ICON}
                         />
-                        <img
-                          style={{ display: 'none' }}
-                          className={clsx(styles.messageIcon, 'threeIcon')}
-                          src="https://chat.chotot.com/icons/message.svg"
-                        />
-                        <img
-                          style={{ display: 'none' }}
-                          className={clsx(styles.messageIcon, 'threeIcon')}
-                          src="https://chat.chotot.com/icons/gallery.svg"
-                        />
-                        <img
-                          style={{ display: 'none' }}
-                          className={clsx(styles.messageIcon, 'threeIcon')}
-                          src="https://chat.chotot.com/icons/location.svg"
-                        />
+                        <img style={{ display: 'none' }} className={clsx(styles.messageIcon, 'threeIcon')} src={MESSAGE_ICON} />
+                        <img style={{ display: 'none' }} className={clsx(styles.messageIcon, 'threeIcon')} src={GALLERY_ICON} />
+                        <img style={{ display: 'none' }} className={clsx(styles.messageIcon, 'threeIcon')} src={LOCATION_ICON} />
                         <input
                           className={styles.inputMessage}
                           placeholder="Nhập tin nhắn..."

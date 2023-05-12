@@ -5,7 +5,7 @@ import styles from './Profile.module.scss';
 import ProfileItem from './components/ProfileItem';
 import StorageKeys from '~/constants/storage-keys';
 import userApi from '~/api/UserApi';
-import { STATIC_HOST } from '~/constants';
+import { AVATAR_DEFAULT, STATIC_HOST } from '~/constants';
 import { toastMessage } from '~/utils/toast';
 import { Toaster } from 'react-hot-toast';
 import theme from '~/theme';
@@ -103,11 +103,7 @@ export const Profile = () => {
                 height: '140px',
                 borderRadius: '50%',
               }}
-              src={
-                avatar
-                  ? `${STATIC_HOST}/avatars/${avatar}`
-                  : 'https://static.chotot.com/storage/CT_WEB_UNI_PRIVATE_DASHBOARD/a37e405294c593b0493765d71c6b78df682f66b3/dist/32ea486819346b666d9e012fea3f5be0.png'
-              }
+              src={avatar ? `${STATIC_HOST}/avatars/${avatar}` : AVATAR_DEFAULT}
             />
             <label htmlFor="avatar">
               <Box className={styles.changeAvatar}>

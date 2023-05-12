@@ -1,12 +1,13 @@
 import { Box } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { LOGO_APP } from '~/constants';
 import styles from './Sidebar.module.scss';
 
 function Sidebar() {
   return (
     <Box className={styles.sidebar}>
       <Box sx={{ margin: ' 0 80px', cursor: 'pointer', height: '60px' }}>
-        <img width={'100%'} src="https://static.chotot.com/storage/default_images/pty/nhatot-logo.png" />
+        <img width={'100%'} src={LOGO_APP} />
       </Box>
       <Box className={styles.sidebar_scrollbar}>
         <nav>

@@ -3,6 +3,7 @@ import { Box, Dialog, FormControl, Grid, InputLabel, MenuItem, Select, TextField
 import { Link } from 'react-router-dom';
 import addressApi from '~/api/AddressApi';
 import Button from '~/components/Button/Button';
+import { BACK_ICON } from '~/constants';
 
 function DialogDetailAddress({ open, Transition, handleClose, Address, WardName, DistrictName, ProvinceName, callbackParent }) {
   const [detailAddress, setDetailAddress] = useState(Address);
@@ -85,7 +86,7 @@ function DialogDetailAddress({ open, Transition, handleClose, Address, WardName,
           <img
             onClick={handleClose}
             style={{ cursor: 'pointer' }}
-            src="https://static.chotot.com/storage/chotot-icons/svg/back.svg"
+            src={BACK_ICON}
           />
         </Link>
         <Box

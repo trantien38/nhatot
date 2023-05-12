@@ -2,6 +2,7 @@ import { Box, Dialog, Slider } from '@mui/material';
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Button from '~/components/Button/Button';
+import { BACK_ICON } from '~/constants';
 function valuetext(value) {
   return `${value}°C`;
 }
@@ -38,11 +39,7 @@ function DialogPrice({ open, Transition, handleClose, handleDeleteFilter }) {
           }}
           onClick={handleDeleteFilter}
         >
-          <img
-            width={22}
-            height={22}
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/OOjs_UI_icon_close.svg/480px-OOjs_UI_icon_close.svg.png"
-          />
+          <img width={22} height={22} src={BACK_ICON} />
         </Box>
         <Box
           sx={{

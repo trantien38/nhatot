@@ -1,3 +1,4 @@
+import { Grid } from '@mui/material';
 import { Box } from '@mui/system';
 import React from 'react';
 import Sliders from '~/components/Slider/Sliders';
@@ -63,6 +64,104 @@ export default function Home() {
         <Menu title={'Cho thuê bất động sản'} count={28.286} />
         <Menu title={'Dụ án được quan tâm'} count={86.868} />
       </Box>
+      <Box
+        sx={{
+          backgroundColor: '#fff',
+          marginTop: '12px',
+        }}
+      >
+        <img
+          alt="mid banner"
+          src="https://cdn.chotot.com/admincentre/-qh1VBGLyzy32EqV2OrQiAHtFlVHJpmBKREXUSklPmA/preset:raw/plain/e3bc34302544e429bdbd6372b3ebd42b-2811454364981615492.jpg"
+          width="100%"
+        />
+      </Box>
+      <Box
+        sx={{
+          backgroundColor: '#fff',
+          marginTop: '12px',
+          '& h2': {
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: '#262e3e',
+            padding: '7.5px 12px',
+          },
+          '& h2 > p': {
+            fontSize: '18px',
+            color: '#fff',
+            margin: 0,
+            fontWeight: 700,
+          },
+          '& h2 > img': {
+            marginLeft: '13px',
+          },
+        }}
+      >
+        <h2>
+          <p>Trở thành Đối tác Nhà Tốt</p>
+          <img width="22.4" height="28" alt="shield icon" src="https://static.chotot.com/storage/default_images/pty/shield.svg" />
+        </h2>
+        <Grid container>
+          <Grid
+            item
+            md={4}
+            sx={{
+              display: 'flex',
+              '& > img': {
+                marginRight: '12px',
+                width: '80px',
+                height: '80px',
+              },
+            }}
+          >
+            <img src="https://cdn.chotot.com/admincentre/cyv7mNjb62sbJme5uSc3WQz0OiNl7RvYiqKw1tf2ZIM/preset:raw/plain/e34f3443057f6cc5b640d117d73a4429-2808379119443443986.jpg" />
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                '& span': {
+                  color: '#ff833f',
+                  fontSize: '16px',
+                  fontWeight: 700,
+                  margin: '4px 0',
+                },
+                '& p': {
+                  color: '#222',
+                  fontWeight: 700,
+                  margin: 0,
+                },
+              }}
+            >
+              <span>Nhãn Đối Tác</span>
+              <p>Tăng 40% hiệu quả tin đăng</p>
+            </Box>
+          </Grid>
+          <Grid item md={4}>
+            <img src="https://cdn.chotot.com/admincentre/jpZqe68svUuCc0trsTLg9oUuDPqUc78tSMAkukSd7Ns/preset:raw/plain/1d6d2218e5c9703dad0fd94101a805d6-2808379189790155893.jpg" />
+            <Box
+              sx={{
+                '& span': {},
+                '& p': {},
+              }}
+            >
+              <span>Tin đăng tiếp cận</span>
+              <p>Hơn 40 triệu người mua tiềm năng</p>
+            </Box>
+          </Grid>
+          <Grid item md={4}>
+            <img src="https://cdn.chotot.com/admincentre/nIzlhaBBTRc1kI2ORAXWq09FAbD6Wq9DQPM1sSTSjPU/preset:raw/plain/bde99245622feb8caa90ba49c2ff9d81-2808379230799729806.jpg" />
+            <Box
+              sx={{
+                '& span': {},
+                '& p': {},
+              }}
+            >
+              <span>Tài Khoản Doanh Nghiệp</span>
+              <p>Giúp tăng hiệu quả quản lý</p>
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
 
       <Box>
         <Box sx={{ padding: '8px' }}>
@@ -82,7 +181,6 @@ export default function Home() {
             nhất.
           </p>
         </Box>
-        <Box></Box>
       </Box>
     </>
   );

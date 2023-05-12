@@ -2,33 +2,33 @@ import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import userApi from '~/api/UserApi';
-import { STATIC_HOST } from '~/constants';
+import { AVATAR_DEFAULT, STATIC_HOST } from '~/constants';
 import StorageKeys from '~/constants/storage-keys';
 import MessageItem from './MessageItem';
 
 function InfoUser(props) {
-  const { IdMotel, data, IdUser, callBackGetIdHost } = props;
+  const { IdRoom, data, IdUser, callBackGetIdHost } = props;
   const [infoUser, setInfoUser] = useState([]);
   // const IdUser = JSON.parse(localStorage.getItem(StorageKeys.USER))?.IdUser;
 
-  const avatar = 'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png';
+  
   useEffect(() => {
     const fetchInfoUser = async () => {
-      const infoUsers = await userApi.getInfoUser({ IdMotel, IdUser });
+      const infoUsers = await userApi.getInfoUser({ IdRoom, IdUser });
       setInfoUser(infoUsers?.user);
       callBackGetIdHost(infoUsers?.user[0].IdMotel);
     };
     // if (IdMotel) {
     fetchInfoUser();
     // }
-  }, [IdMotel]);
+  }, [IdRoom]);
 
   if (infoUser) {
     return (
       <Box sx={{ position: 'relative' }}>
         <MessageItem
           link={`/user/${infoUser[0]?.IdUser}`}
-          img={infoUser[0]?.Avatar ? `${STATIC_HOST}avatars/${infoUser[0]?.Avatar}` : avatar}
+          img={infoUser[0]?.Avatar ? `${STATIC_HOST}avatars/${infoUser[0]?.Avatar}` : AVATAR_DEFAULT}
           name={infoUser[0]?.Name}
           content={
             infoUser[0]?.activeStatus == 1

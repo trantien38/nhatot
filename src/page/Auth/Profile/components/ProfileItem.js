@@ -1,6 +1,7 @@
 import styles from '../Profile.module.scss';
 import { Box } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { EDIT_ICON } from '~/constants';
 
 function ProfileItem(props) {
   const { title, content, connect, edit } = props;
@@ -17,7 +18,7 @@ function ProfileItem(props) {
         <span>{content}</span>
         {edit && (
           <Link to="/settings/profile">
-            <img src="https://st.chotot.com/storage/chotot-icons/svg/edit.svg" />
+            <img src= {EDIT_ICON}/>
           </Link>
         )}
         {connect && (

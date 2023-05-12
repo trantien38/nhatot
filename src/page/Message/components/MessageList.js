@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { STATIC_HOST } from '~/constants';
+import { AVATAR_DEFAULT, STATIC_HOST } from '~/constants';
 import StorageKeys from '~/constants/storage-keys';
 import styles from '../Message.module.scss';
 import MessageItem from './MessageItem';
@@ -9,7 +9,6 @@ import MessageItem from './MessageItem';
 function MessageList(props) {
   const [loadMore, setLoadMore] = useState(true);
   const navigate = useNavigate();
-  const avatar = 'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png';
 
   useEffect(() => {
     const list = document.getElementById('list');
@@ -43,35 +42,39 @@ function MessageList(props) {
   ) {
     return (
       <div id="list" className={styles.messageList}>
-        {props?.messages?.map((result) => (
-          <Box key={result.IdMotel}>
-            <MessageItem
-              link={`/message-${props.idUser}/${result.IdMotel}`}
-              onClick={result.IdMotel}
-              idMotel={result.IdMotel}
-              active={false}
-              img={result.Avatar ? `${STATIC_HOST}/avatars/${result?.Avatar}` : avatar}
-              name={result.Name}
-              messageTime={
-                result?.month
-                  ? `${result?.month} tháng trước`
-                  : result?.week
-                  ? `${result?.week} tuần trước`
-                  : result?.day
-                  ? `${result?.day} ngày trước`
-                  : result?.hour
-                  ? `${result?.hour} giờ trước`
-                  : result?.minute
-                  ? `${result?.minute} phút trước`
-                  : result?.second > 10
-                  ? `${result?.second} giây trước`
-                  : 'Vài giây trước'
-              }
-              title={result.Title}
-              content={result.Content}
-            />
-          </Box>
-        ))}
+        {props.messages[0] ? (
+          props.messages.map((result) => (
+            <Box key={result.IdMotel}>
+              <MessageItem
+                link={`/message-${props.idUser}/${result.IdRoom}`}
+                onClick={result.IdMotel}
+                idMotel={result.IdMotel}
+                active={false}
+                img={result.Avatar ? `${STATIC_HOST}/avatars/${result?.Avatar}` : AVATAR_DEFAULT}
+                name={result.Name}
+                messageTime={
+                  result?.month
+                    ? `${result?.month} tháng trước`
+                    : result?.week
+                    ? `${result?.week} tuần trước`
+                    : result?.day
+                    ? `${result?.day} ngày trước`
+                    : result?.hour
+                    ? `${result?.hour} giờ trước`
+                    : result?.minute
+                    ? `${result?.minute} phút trước`
+                    : result?.second > 10
+                    ? `${result?.second} giây trước`
+                    : 'Vài giây trước'
+                }
+                title={result.Title}
+                content={result.Content}
+              />
+            </Box>
+          ))
+        ) : (
+          <p style={{ textAlign: 'center', fontSize: '14px' }}>Hiện chưa có tin nhắn nào</p>
+        )}
       </div>
     );
   } else {
