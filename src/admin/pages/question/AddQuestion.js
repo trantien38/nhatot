@@ -124,9 +124,9 @@ export const AddQuestion = () => {
           <Button orange text={'Add'} />
         </Grid>
         <Grid item sx={{ width: '100px', '& button': { borderRadius: '10px' } }}>
-          <Link to="/admin/question/list">
-            <Button danger text={'Cancel'} />
-          </Link>
+          {/* <Link to="/admin/question/list"> */}
+            <Button linkTo="/admin/question/list" danger text={'Cancel'} />
+          {/* </Link> */}
         </Grid>
       </Grid>
     </Box>

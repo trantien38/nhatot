@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Button from '~/components/Button/Button';
 import { AVATAR_DEFAULT, STATIC_HOST } from '~/constants';
 import StorageKeys from '~/constants/storage-keys';
 import styles from '../Message.module.scss';
@@ -73,7 +74,25 @@ function MessageList(props) {
             </Box>
           ))
         ) : (
-          <p style={{ textAlign: 'center', fontSize: '14px' }}>Hiện chưa có tin nhắn nào</p>
+          <Box
+            sx={{
+              padding: '0 20px',
+              textAlign: 'center',
+              '& h5': {
+                textAlign: 'center',
+                fontSize: '16px',
+                color: '#222',
+                margin: '20px 0 8px 0',
+              },
+            }}
+          >
+            <img src="https://chat.chotot.com/emptyState.svg" />
+            <h5>Bạn chưa có cuộc trò chuyện nào!</h5>
+            <p>Trải nghiệm chat để làm rõ thông tin về nhà trọ trước khi bắt đầu thực hiện thuê trọ</p>
+            {/* <Link to="/"> */}
+            <Button linkTo="/" orange text="Về trang chủ" sx={{ width: '100px !important' }} />
+            {/* </Link> */}
+          </Box>
         )}
       </div>
     );

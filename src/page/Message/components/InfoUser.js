@@ -1,30 +1,38 @@
 import { Box } from '@mui/material';
+import { load } from 'npm';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import userApi from '~/api/UserApi';
 import { AVATAR_DEFAULT, STATIC_HOST } from '~/constants';
 import StorageKeys from '~/constants/storage-keys';
 import MessageItem from './MessageItem';
 
 function InfoUser(props) {
-  const { IdRoom, data, IdUser, callBackGetIdHost } = props;
+  // const [loading, setLoading] = useState(true);
+  const { data, IdUser, callBackGetIdHost } = props;
+  const { IdRoom } = useParams();
   const [infoUser, setInfoUser] = useState([]);
   // const IdUser = JSON.parse(localStorage.getItem(StorageKeys.USER))?.IdUser;
 
-  
   useEffect(() => {
     const fetchInfoUser = async () => {
       const infoUsers = await userApi.getInfoUser({ IdRoom, IdUser });
       setInfoUser(infoUsers?.user);
-      callBackGetIdHost(infoUsers?.user[0].IdMotel);
+      console.log(infoUsers);
+      // callBackGetIdHost(infoUsers?.user[0].IdRoom);
+      // setLoading(false);
     };
-    // if (IdMotel) {
+    // if (IdRoom) {
     fetchInfoUser();
     // }
   }, [IdRoom]);
 
-  if (infoUser) {
+  if (IdRoom) {
     return (
+      // <>
+      //   {loading ? (
+      //     <>loading</>
+      //   ) : (
       <Box sx={{ position: 'relative' }}>
         <MessageItem
           link={`/user/${infoUser[0]?.IdUser}`}
@@ -64,6 +72,8 @@ function InfoUser(props) {
           <Link to={`/message-${IdUser}`}>Đóng</Link>
         </Box>
       </Box>
+      //     )}
+      //   </>
     );
   }
 }

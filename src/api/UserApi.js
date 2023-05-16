@@ -1,5 +1,13 @@
 import axiosClient from './axiosClient';
 const userApi = {
+  addFavourite(data) {
+    const url = './user/addFavourite';
+    return axiosClient.post(url, data);
+  },
+  deleteFavourite(data) {
+    const url = './user/deleteFavourite';
+    return axiosClient.post(url, data);
+  },
   register(data) {
     const url = './user/register';
     return axiosClient.post(url, data);

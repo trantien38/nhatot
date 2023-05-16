@@ -17,6 +17,7 @@ import UserProfile from '~/page/UserProfile/UserProfile';
 import { io } from 'socket.io-client';
 import { STATIC_HOST } from '~/constants';
 import EditMotel from '~/page/ManageMotel/components/EditMotel';
+import Favourite from '~/page/Favourite/Favourite';
 const socket = io(STATIC_HOST);
 
 let routes = () => [
@@ -66,6 +67,10 @@ let routes = () => [
       {
         path: '/profile',
         element: <Profile />,
+      },
+      {
+        path: '/favourite',
+        element: <Favourite />,
       },
       {
         path: '/user/:IdUser',

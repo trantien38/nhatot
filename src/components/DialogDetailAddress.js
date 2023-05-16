@@ -14,24 +14,25 @@ function DialogDetailAddress({ open, Transition, handleClose, Address, WardName,
   const [wards, setWards] = useState([]);
   const [ward, setWard] = useState(WardName);
 
-  const handleChangeProvince = (event) => {
-    setProvince(event.target.value);
-    console.log(event.target.value);
+  const handleChangeProvince = (e) => {
+    setProvince(e.target.value);
+    console.log(e.target.value);
     setDistrict('');
     setDetailAddress('');
   };
-  const handleChangeDistrict = (event) => {
-    setDistrict(event.target.value);
+  const handleChangeDistrict = (e) => {
+    console.log(e);
+    setDistrict(e.target.value);
     setWard('');
     setDetailAddress('');
   };
-  const handleChangeWard = (event) => {
-    setWard(event.target.value);
-    console.log(event);
+  const handleChangeWard = (e) => {
+    setWard(e.target.value);
+    console.log(e);
     setDetailAddress('');
   };
-  const handleChangeDetailAddress = (event) => {
-    setDetailAddress(event.target.value);
+  const handleChangeDetailAddress = (e) => {
+    setDetailAddress(e.target.value);
   };
 
   useEffect(() => {
@@ -44,6 +45,7 @@ function DialogDetailAddress({ open, Transition, handleClose, Address, WardName,
   useEffect(() => {
     const fetchDistrict = async () => {
       const districtList = await addressApi.getDistrictByProvinceName({ ProvinceName: province });
+      console.log(districtList);
       setDistricts(districtList.district);
     };
     fetchDistrict();
@@ -83,11 +85,7 @@ function DialogDetailAddress({ open, Transition, handleClose, Address, WardName,
         }}
       >
         <Link to="">
-          <img
-            onClick={handleClose}
-            style={{ cursor: 'pointer' }}
-            src={BACK_ICON}
-          />
+          <img onClick={handleClose} style={{ cursor: 'pointer' }} src={BACK_ICON} />
         </Link>
         <Box
           sx={{

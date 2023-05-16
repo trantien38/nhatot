@@ -1,5 +1,6 @@
 export const LOGO_APP = 'https://static.chotot.com/storage/default_images/pty/nhatot-logo.png';
 export const STATIC_HOST = 'http://localhost:8000/';
+// export const STATIC_HOST = 'http://192.168.1.88:8000/';
 export const THUMBNAIL_PLACEHOLDER = 'https://via.placeholder.com/444';
 export const AVATAR_DEFAULT = 'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png';
 
@@ -46,3 +47,5 @@ export const APP_HUAWEI = 'https://static.chotot.com/storage/default/huawei_app_
 
 export const QR_SOURCE = 'https://static.chotot.com/storage/default/group-qr.webp';
 export const QR_IMAGE = 'https://static.chotot.com/storage/default/group-qr.jpeg';
+
+export const RED_HEART = 'https://em-content.zobj.net/source/animated-noto-color-emoji/356/red-heart_2764-fe0f.gif';

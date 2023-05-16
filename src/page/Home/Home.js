@@ -3,6 +3,7 @@ import { Box } from '@mui/system';
 import React from 'react';
 import Sliders from '~/components/Slider/Sliders';
 import Category from './Category';
+import Item from './Item';
 import Menu from './Menu';
 
 export default function Home() {
@@ -101,65 +102,27 @@ export default function Home() {
           <p>Trở thành Đối tác Nhà Tốt</p>
           <img width="22.4" height="28" alt="shield icon" src="https://static.chotot.com/storage/default_images/pty/shield.svg" />
         </h2>
-        <Grid container>
-          <Grid
-            item
-            md={4}
-            sx={{
-              display: 'flex',
-              '& > img': {
-                marginRight: '12px',
-                width: '80px',
-                height: '80px',
-              },
-            }}
-          >
-            <img src="https://cdn.chotot.com/admincentre/cyv7mNjb62sbJme5uSc3WQz0OiNl7RvYiqKw1tf2ZIM/preset:raw/plain/e34f3443057f6cc5b640d117d73a4429-2808379119443443986.jpg" />
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                '& span': {
-                  color: '#ff833f',
-                  fontSize: '16px',
-                  fontWeight: 700,
-                  margin: '4px 0',
-                },
-                '& p': {
-                  color: '#222',
-                  fontWeight: 700,
-                  margin: 0,
-                },
-              }}
-            >
-              <span>Nhãn Đối Tác</span>
-              <p>Tăng 40% hiệu quả tin đăng</p>
-            </Box>
-          </Grid>
-          <Grid item md={4}>
-            <img src="https://cdn.chotot.com/admincentre/jpZqe68svUuCc0trsTLg9oUuDPqUc78tSMAkukSd7Ns/preset:raw/plain/1d6d2218e5c9703dad0fd94101a805d6-2808379189790155893.jpg" />
-            <Box
-              sx={{
-                '& span': {},
-                '& p': {},
-              }}
-            >
-              <span>Tin đăng tiếp cận</span>
-              <p>Hơn 40 triệu người mua tiềm năng</p>
-            </Box>
-          </Grid>
-          <Grid item md={4}>
-            <img src="https://cdn.chotot.com/admincentre/nIzlhaBBTRc1kI2ORAXWq09FAbD6Wq9DQPM1sSTSjPU/preset:raw/plain/bde99245622feb8caa90ba49c2ff9d81-2808379230799729806.jpg" />
-            <Box
-              sx={{
-                '& span': {},
-                '& p': {},
-              }}
-            >
-              <span>Tài Khoản Doanh Nghiệp</span>
-              <p>Giúp tăng hiệu quả quản lý</p>
-            </Box>
-          </Grid>
+        <Grid
+          container
+          sx={{
+            padding: '0 14px 14px 14px',
+          }}
+        >
+          <Item
+            src="https://cdn.chotot.com/admincentre/cyv7mNjb62sbJme5uSc3WQz0OiNl7RvYiqKw1tf2ZIM/preset:raw/plain/e34f3443057f6cc5b640d117d73a4429-2808379119443443986.jpg"
+            title="Nhãn Đối Tác"
+            content="Tăng 40% hiệu quả tin đăng"
+          />
+          <Item
+            src="https://cdn.chotot.com/admincentre/jpZqe68svUuCc0trsTLg9oUuDPqUc78tSMAkukSd7Ns/preset:raw/plain/1d6d2218e5c9703dad0fd94101a805d6-2808379189790155893.jpg"
+            title="Tin đăng tiếp cận"
+            content="Hơn 40 triệu người mua tiềm năng"
+          />
+          <Item
+            src="https://cdn.chotot.com/admincentre/nIzlhaBBTRc1kI2ORAXWq09FAbD6Wq9DQPM1sSTSjPU/preset:raw/plain/bde99245622feb8caa90ba49c2ff9d81-2808379230799729806.jpg"
+            title="Tài Khoản Doanh Nghiệp"
+            content="Giúp tăng hiệu quả quản lý"
+          />
         </Grid>
       </Box>
 

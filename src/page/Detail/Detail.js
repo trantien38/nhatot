@@ -319,6 +319,9 @@ function Detail({ socket }) {
                 display: 'flex',
                 width: '100%',
                 justifyContent: 'space-between',
+                '& a': {
+                  padding: '2px',
+                },
               }}
             >
               <b>{motel[0]?.Name}</b>

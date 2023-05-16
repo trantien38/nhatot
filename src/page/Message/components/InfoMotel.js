@@ -1,10 +1,12 @@
 import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import motelApi from '~/api/MotelApi';
 import { STATIC_HOST } from '~/constants';
 import MessageItem from './MessageItem';
 
-function InfoMotel({ IdRoom, callBackGetIdHost }) {
+function InfoMotel({ callBackGetIdHost }) {
+  const { IdRoom } = useParams();
   const [infoMotel, setInfoMotel] = useState([]);
   const imgRoom =
     'https://cdn.chotot.com/5bmc0aGA85_stXnY33AWkQrDhQlp_iGRyDa1WW-NIpQ/preset:listing/plain/40489371e66627a7da396aa506eb3640-2812770810323125887.jpg';
@@ -22,7 +24,7 @@ function InfoMotel({ IdRoom, callBackGetIdHost }) {
     }
   }, [IdRoom]);
 
-  if (infoMotel[0])
+  if (IdRoom)
     return (
       <MessageItem
         link={`/detail/${infoMotel[0]?.IdMotel}`}

@@ -20,6 +20,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 function Post({ socket }) {
   const navigate = useNavigate();
+  const [titleImage, setTitleImage] = useState('Đăng từ 3 đến 12 hình');
+  const [titleVideo, setTitleVideo] = useState('Tải lên video');
+
   const [openAddress, setOpenAddress] = useState(false);
   const [addressDetail, setAddressDetail] = useState('');
   const [address, setAddress] = useState('');
@@ -38,9 +41,11 @@ function Post({ socket }) {
     price: yup.string().required('Vui lòng nhập giá'),
     deposits: yup.string().required('Vui lòng nhập số tiền cọc'),
     title: yup.string().required('Vui lòng nhập tiêu đề'),
+    addressDetail: yup.string().required('Vui lòng nhập địa chỉ'),
   });
   const {
     control,
+    setValue,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({
@@ -50,6 +55,7 @@ function Post({ socket }) {
       price: '',
       deposits: '',
       title: '',
+      addressDetail: '',
       // description: '',
     },
     resolver: yupResolver(schema),
@@ -66,6 +72,7 @@ function Post({ socket }) {
     });
     console.log(datas);
     setImage(datas);
+    setTitleImage(`Tải lên ${data.length} hình ảnh`);
   };
 
   const handleChangeVideo = (data) => {
@@ -78,6 +85,7 @@ function Post({ socket }) {
     });
     console.log(datas);
     setVideo(datas);
+    setTitleVideo(`Tải lên ${data.length} video`);
   };
 
   const handleChangeDescription = (values) => {
@@ -103,11 +111,18 @@ function Post({ socket }) {
     formData.append('title', values.title);
     formData.append('ward', ward);
     formData.append('notifi', `${Name} vừa đăng phòng trọ mới`);
-
-    const addMotel = await motelApi.add(formData);
-    toastMessage.success(addMotel.notifi);
-
-    socket.emit('post-motel', { msg: `${Name} vừa đăng phòng trọ mới`, IdUser });
+    if (addressDetail)
+      if (!description) {
+        toastMessage.error('Nhập mô tả chi tiết');
+      } else if (!image[0]) {
+        toastMessage.error('Tải ảnh lên nào');
+      } else if (!video[0]) {
+        toastMessage.error('Tải video lên nào');
+      } else {
+        const addMotel = await motelApi.add(formData);
+        toastMessage.success(addMotel.msg);
+        socket.emit('post-motel', { msg: `${Name} vừa đăng phòng trọ mới`, IdUser });
+      }
 
     // setTimeout(() => {
     //   navigate('/cho-thue-phong-tro');
@@ -117,11 +132,14 @@ function Post({ socket }) {
     console.log(src);
     const newImages = image.filter((item) => item !== src);
     setImage(newImages);
+    setTitleImage(`Tải lên ${newImages.length} hình ảnh`);
+    console.log(newImages);
   };
   const handleDeleteVideo = (src) => {
     console.log(src);
     const newVideos = video.filter((item) => item !== src);
     setVideo(newVideos);
+    setTitleVideo(`Tải lên ${newVideos.length} video`);
     console.log(newVideos);
   };
   const handleClickOpenAddress = () => {
@@ -154,14 +172,14 @@ function Post({ socket }) {
               name="media"
               _name="image"
               iconImage
-              title="Đăng từ 3 đến 12 hình"
+              title={titleImage}
               content="hình ảnh"
               info
             />
           </Grid>
           <hr />
           <Grid item md={12} sm={12} xs={5.8}>
-            <UploadItem callback={handleChangeVideo} name="media" _name="video" iconVideo title="Tải lên video" content="video" />
+            <UploadItem callback={handleChangeVideo} name="media" _name="video" iconVideo title={titleVideo} content="video" />
           </Grid>
         </Grid>
       </Grid>
@@ -171,10 +189,31 @@ function Post({ socket }) {
             {image[0]
               ? image.map((src) => {
                   return (
-                    <Grid item md={6} sm={4} xs={6} height="130px">
+                    <Grid
+                      key={src.name}
+                      item
+                      md={6}
+                      sm={4}
+                      xs={6}
+                      height="130px"
+                      sx={{
+                        '& > span': {
+                          marginTop: '-120px',
+                          marginLeft: '123px',
+                          display: 'block',
+                          '&:hover': {
+                            backgroundColor: '#b6b0b0',
+                            borderRadius: '50%',
+                            width: '38px !important',
+                            height: '38px !important',
+                            cursor: 'pointer',
+                          },
+                        },
+                      }}
+                    >
                       <img width="100%" height="120px" src={URL.createObjectURL(src)} />
                       <span onClick={() => handleDeleteImage(src)}>
-                        <AddIcon style={{ transform: 'rotate(45deg)', marginTop: '-111px', marginLeft: '138px' }} />
+                        <AddIcon style={{ transform: 'rotate(45deg)', marginTop: '10px', marginLeft: '10px' }} />
                       </span>
                     </Grid>
                   );
@@ -183,12 +222,33 @@ function Post({ socket }) {
             {video[0]
               ? video.map((srcVideo) => {
                   return (
-                    <Grid item md={6} sm={4} xs={6} height="130px">
+                    <Grid
+                      key={srcVideo.name}
+                      item
+                      md={6}
+                      sm={4}
+                      xs={6}
+                      height="130px"
+                      sx={{
+                        '& > span': {
+                          marginTop: '-120px',
+                          marginLeft: '123px',
+                          display: 'block',
+                          '&:hover': {
+                            backgroundColor: '#b6b0b0',
+                            borderRadius: '50%',
+                            width: '38px !important',
+                            height: '38px !important',
+                            cursor: 'pointer',
+                          },
+                        },
+                      }}
+                    >
                       <video width="100%" height="120" controls>
                         <source src={URL.createObjectURL(srcVideo)} type="video/mp4" />
                       </video>
                       <span onClick={() => handleDeleteVideo(srcVideo)}>
-                        <AddIcon style={{ transform: 'rotate(45deg)', marginTop: '8px', marginLeft: '-24px' }} />
+                        <AddIcon style={{ transform: 'rotate(45deg)', marginTop: '10px', marginLeft: '10px' }} />
                       </span>
                     </Grid>
                   );
@@ -311,10 +371,9 @@ function Post({ socket }) {
               control={control}
             />
           </Grid>
-
           <Grid
             sx={{
-              marginBottom: '16px',
+              margin: '16px 0 32px 0',
             }}
             item
             md={12}
@@ -322,14 +381,38 @@ function Post({ socket }) {
             xs={12}
             onClick={handleClickOpenAddress}
           >
-            <TextField
+            <InputField
+              sx={{
+                fontSize: 2,
+                color: 'red',
+                '& label': {
+                  fontSize: 14,
+                },
+                '& svg': {
+                  fontSize: 18,
+                },
+              }}
+              setF
+              label="Địa chỉ"
+              type="string"
+              name="addressDetail"
+              setValue={addressDetail}
+              errors={errors}
+              required
+              control={control}
+            />
+            {/* <TextField
               label="Địa chỉ"
               id="outlined-basic"
+              name="addressDetail"
+              errors={errors}
+              control={control}
+              // required
               //   onChange={handleChangeAddress}
               value={addressDetail}
               variant="outlined"
               fullWidth
-            />
+            /> */}
           </Grid>
           <DialogDetailAddress
             Address={address}

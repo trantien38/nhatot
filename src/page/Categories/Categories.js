@@ -10,13 +10,16 @@ import MotelItem from './components/MotelItem/MotelItem';
 
 import Geocode from 'react-geocode';
 import StorageKeys from '~/constants/storage-keys';
+import SkeletonMotelItem from '~/components/SkeletonMotelItem';
 
 const pageSize = 8;
 
 function Categories() {
+  const infoUser = JSON.parse(localStorage.getItem(StorageKeys.USER));
   const [loading, setLoading] = useState(true);
   const [opacity, setOpacity] = useState(0);
   const [limitMotels, setLimitMotels] = useState([]);
+  const [favourite, setFavourite] = useState([]);
   const [pagination, setPagination] = useState({
     count: 0,
     start: 0,
@@ -54,6 +57,7 @@ function Categories() {
     if (IdWard) {
       const fetchMotels = async () => {
         const motelList = await motelApi.getMotelsByIdWard({
+          IdUser: infoUser.IdUser,
           IdWard,
           start: pagination.start,
           quantity: pagination.quantity,
@@ -63,9 +67,9 @@ function Categories() {
           acreageMax: (acreage && acreage[1]) || 1000,
         });
         setPagination({ ...pagination, count: motelList.count });
-        console.log(motelList.motel);
+        console.log(motelList);
         setLimitMotels(motelList.motel);
-
+        setFavourite(motelList.favourite);
         setTimeout(() => {
           setLoading(false);
         }, 1000);
@@ -74,6 +78,7 @@ function Categories() {
     } else if (IdDistrict) {
       const fetchMotels = async () => {
         const motelList = await motelApi.getMotelsByIdDistrict({
+          IdUser: infoUser.IdUser,
           IdDistrict,
           start: pagination.start,
           quantity: pagination.quantity,
@@ -83,7 +88,9 @@ function Categories() {
           acreageMax: (acreage && acreage[1]) || 1000,
         });
         setPagination({ ...pagination, count: motelList.count });
-        console.log(motelList.motel);
+        console.log(motelList);
+        setFavourite(motelList.favourite);
+
         setLimitMotels(motelList.motel);
 
         setTimeout(() => {
@@ -94,6 +101,7 @@ function Categories() {
     } else if (IdProvince) {
       const fetchMotels = async () => {
         const motelList = await motelApi.getMotelsByIdProvince({
+          IdUser: infoUser.IdUser,
           IdProvince,
           start: pagination.start,
           quantity: pagination.quantity,
@@ -102,10 +110,10 @@ function Categories() {
           acreageMin: (acreage && acreage[0]) || 0,
           acreageMax: (acreage && acreage[1]) || 1000,
         });
-        console.log(motelList.motel);
+        console.log(motelList);
         setPagination({ ...pagination, count: motelList.count });
-
         setLimitMotels(motelList.motel);
+        setFavourite(motelList.favourite);
 
         setTimeout(() => {
           setLoading(false);
@@ -115,6 +123,7 @@ function Categories() {
     } else {
       const fetchMotels = async () => {
         const motelList = await motelApi.getLimitMotels({
+          IdUser: infoUser.IdUser,
           start: pagination.start,
           quantity: pagination.quantity,
           priceMin: (price && price[0] / 1000000) || 0,
@@ -122,9 +131,10 @@ function Categories() {
           acreageMin: (acreage && acreage[0]) || 0,
           acreageMax: (acreage && acreage[1]) || 1000,
         });
+        console.log(motelList);
         setPagination({ ...pagination, count: motelList.count });
         setLimitMotels(motelList.motel);
-
+        setFavourite(motelList.favourite);
         setTimeout(() => {
           setLoading(false);
         }, 1000);
@@ -142,13 +152,13 @@ function Categories() {
     acreage && acreage[1],
   ]);
 
-  useEffect(() => {
-    const fetchAllMotel = async () => {
-      const allMotel = await motelApi.getAllMotels();
-      findLatAndLng(allMotel.motel);
-    };
-    fetchAllMotel();
-  }, []);
+  // useEffect(() => {
+  //   const fetchAllMotel = async () => {
+  //     const allMotel = await motelApi.getAllMotels();
+  //     findLatAndLng(allMotel.motel);
+  //   };
+  //   fetchAllMotel();
+  // }, []);
 
   window.addEventListener('scroll', toggleopacity);
   const findLatAndLng = (listmotels) => {
@@ -194,9 +204,10 @@ function Categories() {
         <Grid item md={7} sm={12} xs={12}>
           {limitMotels?.map((result) => {
             return loading ? (
-              <Skeleton variant="rectangular" width="100%" height={130} sx={{ margin: '6px 0' }} />
+              <SkeletonMotelItem />
             ) : (
               <MotelItem
+                isLove={favourite.filter((item) => item.IdMotel == result.IdMotel)[0] ? true : false}
                 avatar={result?.Avatar?.includes('http') ? result?.Avatar : `${STATIC_HOST}avatars/${result.Avatar}`}
                 time={{
                   mon: result.month,

@@ -327,6 +327,9 @@ export default function Header({ socket }) {
                     <Link to={infoUser?.activeStatus == 1 ? '/profile' : '/login'}>Trang cá nhân</Link>
                   </MenuItem>
                   <MenuItem>
+                    <Link to={infoUser?.activeStatus == 1 ? '/favourite' : '/login'}>Tin yêu thích</Link>
+                  </MenuItem>
+                  <MenuItem>
                     <Link to="/settings/account">Thay đổi mật khẩu</Link>
                   </MenuItem>
                   {user.IdAuthority == 2 && (

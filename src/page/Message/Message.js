@@ -1,14 +1,18 @@
 import { DeleteForever } from '@mui/icons-material';
-import { FormControl, Grid, InputBase } from '@mui/material';
+import { Grid, InputBase } from '@mui/material';
 import { Box } from '@mui/system';
 import clsx from 'clsx';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import messageApi from '~/api/MessageApi';
-import Header from '~/components/Header';
-import { SearchIcon } from '~/components/Icon';
-import { GALLERY_ICON, LOCATION_ICON, MESSAGE_ICON, PLUSCIRCLE_ICON } from '~/constants';
+
 import theme from '~/theme';
+import Header from '~/components/Header';
+import messageApi from '~/api/MessageApi';
+import { SearchIcon } from '~/components/Icon';
+import { useDelayTimeout } from '~/hooks/Delay';
+import { useRemovePunctuation } from '~/hooks/RemovePunctuation';
+import { GALLERY_ICON, LOCATION_ICON, MESSAGE_ICON, PLUSCIRCLE_ICON } from '~/constants';
+
 import ChatBox from './components/ChatBox';
 import InfoMotel from './components/InfoMotel';
 import InfoUser from './components/InfoUser';
@@ -17,6 +21,8 @@ import Questions from './components/Question/Questions';
 import styles from './Message.module.scss';
 
 export default function Message({ socket }) {
+  const delay = useDelayTimeout();
+  const removePunctuation = useRemovePunctuation();
   const [messageList, setMessageList] = useState([]);
   const [chat, setChat] = useState([]);
   const [idHost, setIdHost] = useState();
@@ -44,6 +50,7 @@ export default function Message({ socket }) {
       }
     });
     await console.log(listMessage);
+    refListMessage.current = listMessage;
     await setMessageList(listMessage);
   };
   useEffect(() => {
@@ -114,7 +121,6 @@ export default function Message({ socket }) {
       }
     });
     await messageApi.add(newMessage);
-    // const messageUserList = await messageApi.add(newMessage);
     fetchChat();
     fetchMessage();
     document.chat.messages.value = '';
@@ -130,38 +136,22 @@ export default function Message({ socket }) {
   };
 
   const handleChangeMessageList = (e) => {
-    const nameUser = e.target.value;
-    console.log(nameUser);
-    const listmessage = messageList.filter((item) => {
-      // console.log('item.name: ', item.Name);
-      // console.log('userName: ', nameUser);
-      return item.Name.toUpperCase().includes(nameUser.toUpperCase());
+    delay(() => {
+      const nameUser = removePunctuation(e.target.value).trim();
+      console.log(nameUser);
+      const listmessage = refListMessage.current.filter((item) => {
+        const name = removePunctuation(item.Name);
+        console.log(name.toUpperCase().includes(nameUser.toUpperCase()));
+        return name.toUpperCase().includes(nameUser.toUpperCase());
+      });
+      console.log('listmessage: ', listmessage);
+      setMessageList(listmessage);
+      if (!nameUser) {
+        setMessageList(refListMessage.current);
+      }
     });
-    // console.log('listmessage: ', listmessage);
-
-    setMessageList(listmessage);
-    // if (!nameUser) {
-    //   setMessageList(refListMessage.current);
-    // }
-    // listmessage[0] ? setMessageList(listmessage) : setMessageList(refListMessage.current);
-
-    // setNameUser(nameUser);
-    // const fetchMessage = async () => {
-    //   const messageUserList = await messageApi.getMessageByNameUser({ nameUser, IdUser: idUser });
-    //   setMessageList(messageUserList.message);
-    //   console.log(messageUserList.message);
-    // };
-    // fetchMessage();
   };
 
-  const handleSearchMessage = () => {
-    // const fetchMessage = async () => {
-    //   const messageUserList = await messageApi.getMessageByNameUser({ nameUser, IdUser: idUser });
-    //   setMessageList(messageUserList.message);
-    //   console.log(messageUserList.message);
-    // };
-    // fetchMessage();
-  };
   return (
     <>
       <Header />
@@ -222,19 +212,13 @@ export default function Message({ socket }) {
                     },
                   }}
                 >
-                  <span type="search" onSearch={() => handleSearchMessage()}>
+                  <span type="search">
                     <SearchIcon />
                   </span>
                   <InputBase onChange={handleChangeMessageList} placeholder="Nhập từ khóa..." sx={{ width: '100%' }}>
                     Tìm kiếm
                   </InputBase>
                 </Box>
-                {/* <h5 style={{ fontSize: '1rem', margin: 0, paddingLeft: '2px' }}>Chat</h5>
-                <Box sx={{ display: 'flex' }}>
-                  <ItemButton active content={'Tất cả'} />
-                  <ItemButton content={'Tôi mua'} />
-                  <ItemButton content={'Tôi bán'} />
-                </Box> */}
               </Box>
               <Box
                 sx={{
