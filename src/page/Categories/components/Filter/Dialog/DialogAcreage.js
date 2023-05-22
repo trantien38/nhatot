@@ -93,9 +93,9 @@ function DialogAcreage({ open, Transition, handleClose, handleDeleteFilter }) {
         }}
         onClick={handleClose}
       >
-        {/* <Link to={`?acreage=${value[0]}-${value[1]}`}> */}
-        <Button linkTo={`?acreage=${value[0]}-${value[1]}`} orange text="Áp dụng" />
-        {/* </Link> */}
+        <Link to={`?acreage=${value[0]}-${value[1]}`}>
+          <Button orange text="Áp dụng" />
+        </Link>
       </Box>
     </Dialog>
   );

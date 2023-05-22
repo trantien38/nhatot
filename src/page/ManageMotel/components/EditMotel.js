@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Grid, Slide, TextField } from '@mui/material';
+import { Box, Grid, Slide, TextField } from '@mui/material';
 import { set } from 'lodash';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Toaster } from 'react-hot-toast';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -23,7 +23,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 function EditMotel({ socket }) {
   const { editSlug } = useParams();
   const [name, id] = editSlug.split('-');
-
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [openAddress, setOpenAddress] = useState(false);
   const [addressDetail, setAddressDetail] = useState('');
@@ -33,39 +33,52 @@ function EditMotel({ socket }) {
   const [province, setProvince] = useState('');
   const [image, setImage] = useState([]);
   const [video, setVideo] = useState([]);
+  const refMedia = useRef([]);
+  const [titleImage, setTitleImage] = useState('Đăng từ 3 đến 12 hình');
+  const [titleVideo, setTitleVideo] = useState('Tải lên video');
   const [description, setDescription] = useState('');
-  const [title, setTitle] = useState('');
-  const [status, setStatus] = useState('');
-  const [price, setPrice] = useState('');
-  const [acreage, setAcreage] = useState('');
-  const [deposits, setDeposits] = useState('');
+  const { IdUser, Name } = JSON?.parse(localStorage?.getItem(StorageKeys?.USER));
 
   useEffect(() => {
     const fetchMotel = async () => {
-      const motelItem = await motelApi.getInfoMotel(id);
-      console.log(motelItem);
-
-      const images = motelItem.media.filter((item) => item.Type == 'image');
-      const videos = motelItem.media.filter((item) => item.Type == 'video');
-      console.log(images);
-      console.log(videos);
-      setImage(images);
-      setVideo(videos);
-      setTitle(motelItem.motel[0].Title);
-      setStatus(motelItem.motel[0].Status);
-      setPrice(motelItem.motel[0].Price);
-      setAcreage(motelItem.motel[0].Acreage);
-      setDeposits(motelItem.motel[0].Deposits);
+      await motelApi
+        .getInfoMotel({ IdMotel: id, IdUser })
+        .then((motelItem) => {
+          console.log({ motelItem });
+          reset({
+            title: motelItem.motel[0].Title,
+            interiorStatus: motelItem.motel[0].Status,
+            acreage: motelItem.motel[0].Acreage,
+            price: motelItem.motel[0].Price,
+            deposits: motelItem.motel[0].Deposits,
+          });
+          const images = motelItem.media.filter((item) => item.Type == 'image');
+          const videos = motelItem.media.filter((item) => item.Type == 'video');
+          setAddressDetail(
+            `${motelItem?.motel[0]?.Address}, ${motelItem?.motel[0]?.WardPrefix} ${motelItem?.motel[0]?.WardName}, ${motelItem?.motel[0]?.DistrictPrefix} ${motelItem?.motel[0]?.DistrictName}, Tp.${motelItem?.motel[0]?.ProvinceName}`,
+          );
+          setAddress(`${motelItem?.motel[0]?.Address}`);
+          setWard(`${motelItem?.motel[0]?.WardName}`);
+          setDistrict(`${motelItem?.motel[0]?.DistrictName}`);
+          setProvince(`${motelItem?.motel[0]?.ProvinceName}`);
+          console.log(
+            `${motelItem?.motel[0]?.Address}, ${motelItem?.motel[0]?.WardPrefix} ${motelItem?.motel[0]?.WardName}, ${motelItem?.motel[0]?.DistrictPrefix} ${motelItem?.motel[0]?.DistrictName}, Tp.${motelItem?.motel[0]?.ProvinceName}`,
+          );
+          setImage(images);
+          setTitleImage(`Tải lên ${images.length} hình ảnh`);
+          setTitleVideo(`Tải lên ${videos.length} video`);
+          setVideo(videos);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
       //   setMotel(motelItem.motel);
-      //   setAddress(
-      //     `${motelItem?.motel[0]?.Address}, ${motelItem?.motel[0]?.WardPrefix} ${motelItem?.motel[0]?.WardName}, ${motelItem?.motel[0]?.DistrictPrefix} ${motelItem?.motel[0]?.DistrictName}, Tp.${motelItem?.motel[0]?.ProvinceName}`,
-      //   );
+      //
       //   setLoading(false);
     };
     fetchMotel();
   }, [id]);
 
-  const { IdUser, Name } = JSON?.parse(localStorage?.getItem(StorageKeys?.USER));
   const schema = yup.object().shape({
     interiorStatus: yup.string().required('Vui lòng nhập tình trạng nội thất'),
     // description: yup.string().required('Vui lòng nhập mô tả').min(20, 'Mô tả quá ngắn'),
@@ -77,6 +90,7 @@ function EditMotel({ socket }) {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
@@ -92,7 +106,7 @@ function EditMotel({ socket }) {
 
   const handleChangeImage = (data) => {
     console.log(data);
-    const datas = [];
+    const datas = [...image];
     const a = [...data];
     a.map((item, index) => {
       datas.push(data[index]);
@@ -101,10 +115,11 @@ function EditMotel({ socket }) {
     });
     console.log(datas);
     setImage(datas);
+    setTitleImage(`Tải lên ${datas.length} hình ảnh`);
   };
 
   const handleChangeVideo = (data) => {
-    const datas = [];
+    const datas = [...video];
     const a = [...data];
     a.map((item, index) => {
       datas.push(data[index]);
@@ -113,6 +128,7 @@ function EditMotel({ socket }) {
     });
     console.log(datas);
     setVideo(datas);
+    setTitleVideo(`Tải lên ${datas.length} video`);
   };
 
   const handleChangeDescription = (values) => {
@@ -121,12 +137,26 @@ function EditMotel({ socket }) {
 
   const handleOnSubmit = async (values) => {
     const formData = new FormData();
-    for (const single_file of image) {
-      formData.append('media', single_file, single_file.name);
+    console.log(image);
+    console.log(video);
+    if (image.length > 0) {
+      for (const single_file of image) {
+        if (single_file.name) {
+          console.log(single_file.name);
+          formData.append('media', single_file, single_file.name);
+        }
+      }
     }
-    for (const single_file of video) {
-      formData.append('media', single_file, single_file.name);
+    if (video.length > 0) {
+      for (const single_file of video) {
+        if (single_file.name) {
+          console.log(single_file.name);
+          formData.append('media', single_file, single_file.name);
+        }
+      }
     }
+
+    formData.append('mediaDelete', JSON.stringify(refMedia.current));
     formData.append('acreage', values.acreage);
     formData.append('address', address);
     formData.append('deposits', values.deposits);
@@ -137,27 +167,34 @@ function EditMotel({ socket }) {
     formData.append('province', province);
     formData.append('title', values.title);
     formData.append('ward', ward);
-    // formData.append('notifi', `${Name} vừa đăng phòng trọ mới`);
-
-    const addMotel = await motelApi.add(formData);
-    toastMessage.success(addMotel.notifi);
-
-    // socket.emit('post-motel', { msg: `${Name} vừa đăng phòng trọ mới`, IdUser });
-
-    // setTimeout(() => {
-    //   navigate('/manage-motel');
-    // }, 1500);
+    formData.append('IdMotel', id);
+    formData.append('notifi', `${Name} vừa đăng phòng trọ mới`);
+    console.log('delete media: ', refMedia.current);
+    const addMotel = await motelApi.update(formData);
+    toastMessage.success(addMotel.msg);
+    setTimeout(() => {
+      navigate('/manage-motel');
+    }, 1500);
   };
   const handleDeleteImage = (src) => {
     console.log(src);
-    const newImages = image.filter((item) => item !== src);
+    if (src.srcMedia) {
+      refMedia.current.push(src.srcMedia);
+    }
+    const newImages = image.filter((item) => item.srcMedia !== src.srcMedia || item !== src);
     setImage(newImages);
+    setTitleImage(`Tải lên ${newImages.length} hình ảnh`);
   };
   const handleDeleteVideo = (src) => {
     console.log(src);
-    const newVideos = video.filter((item) => item !== src);
+    console.log(video);
+
+    const newVideos = video.filter((item) => item.srcMedia !== src.srcMedia || item !== src);
+    if (src.srcMedia) {
+      refMedia.current.push(src.srcMedia);
+    }
     setVideo(newVideos);
-    console.log(newVideos);
+    setTitleVideo(`Tải lên ${newVideos.length} video`);
   };
   const handleClickOpenAddress = () => {
     setOpenAddress(true);
@@ -174,6 +211,8 @@ function EditMotel({ socket }) {
     setAddressDetail(`${dataChild.detailAddress}, ${dataChild.ward}, ${dataChild.district}, ${dataChild.province}`);
   };
 
+  if (loading) return <h1>loading...</h1>;
+
   return (
     <Grid container spacing-md-1 component="form" onSubmit={handleSubmit(handleOnSubmit)} sx={{ marginTop: '12px' }}>
       <Toaster />
@@ -189,14 +228,14 @@ function EditMotel({ socket }) {
               name="media"
               _name="image"
               iconImage
-              title="Đăng từ 3 đến 12 hình"
+              title={titleImage}
               content="hình ảnh"
               info
             />
           </Grid>
           <hr />
           <Grid item md={12} sm={12} xs={5.8}>
-            <UploadItem callback={handleChangeVideo} name="media" _name="video" iconVideo title="Tải lên video" content="video" />
+            <UploadItem title={titleVideo} callback={handleChangeVideo} name="media" _name="video" iconVideo content="video" />
           </Grid>
         </Grid>
       </Grid>
@@ -204,31 +243,76 @@ function EditMotel({ socket }) {
         <Grid item md={4} sm={8.5} sx={{ marginTop: '16px', padding: '0 10px' }}>
           <Grid container spacing={1}>
             {image[0]
-              ? image.map((srcImage) => {
+              ? image.map((srcImage, index) => {
                   return (
-                    <Grid item md={6} sm={4} xs={6} height="130px">
-                      <img width="100%" height="120px" src={`${STATIC_HOST}motels/${srcImage.srcMedia}`} />
-                      <span onClick={() => handleDeleteImage(srcImage)}>
-                        <AddIcon style={{ transform: 'rotate(45deg)', marginTop: '-111px', marginLeft: '138px' }} />
-                      </span>
+                    <Grid key={index} item md={6} sm={4} xs={6} sx={{ position: 'relative', height: '130px' }}>
+                      <img
+                        width="100%"
+                        height="120px"
+                        src={srcImage.name ? URL.createObjectURL(srcImage) : `${STATIC_HOST}motels/${srcImage.srcMedia}`}
+                      />
+                      <Box
+                        onClick={() => handleDeleteImage(srcImage)}
+                        sx={{
+                          position: 'absolute',
+                          top: '131px',
+                          right: '171px',
+                          '& svg:hover': {
+                            padding: '8px',
+                            borderRadius: '50%',
+                            backgroundColor: 'red',
+                            margin: '10px 35px 0 -11px',
+                          },
+                        }}
+                      >
+                        <AddIcon
+                          style={{
+                            transform: 'rotate(45deg)',
+                            marginTop: '-111px',
+                            marginLeft: '138px',
+                          }}
+                        />
+                      </Box>
                     </Grid>
                   );
                 })
               : ''}
-            {video[0]
-              ? video.map((srcVideo) => {
-                  return (
-                    <Grid item md={6} sm={4} xs={6} height="130px">
-                      <video width="100%" height="120" controls>
-                        <source src={`${STATIC_HOST}motels/${srcVideo.srcMedia}`} type="video/mp4" />
-                      </video>
-                      <span onClick={() => handleDeleteVideo(srcVideo)}>
-                        <AddIcon style={{ transform: 'rotate(45deg)', marginTop: '-111px', marginLeft: '138px' }} />
-                      </span>
-                    </Grid>
-                  );
-                })
-              : ''}
+            {video[0] &&
+              video.map((srcVideo) => {
+                return (
+                  <Grid
+                    item
+                    md={6}
+                    key={srcVideo.name || srcVideo.srcMedia}
+                    sm={4}
+                    xs={6}
+                    sx={{ position: 'relative', height: '130px' }}
+                  >
+                    <video width="100%" height="120" controls>
+                      <source
+                        src={srcVideo.srcMedia ? `${STATIC_HOST}motels/${srcVideo.srcMedia}` : URL.createObjectURL(srcVideo)}
+                        type="video/mp4"
+                      />
+                    </video>
+                    <Box
+                      onClick={() => handleDeleteVideo(srcVideo)}
+                      sx={{
+                        position: 'absolute',
+                        top: '131px',
+                        right: '171px',
+                        '& svg:hover': {
+                          padding: '8px',
+                          borderRadius: '50%',
+                          backgroundColor: 'red',
+                          margin: '10px 35px 0 -11px',
+                        },
+                      }}
+                    >
+                      <AddIcon style={{ transform: 'rotate(45deg)', marginTop: '-111px', marginLeft: '138px' }} />
+                    </Box>
+                  </Grid>
+                );
+              })}
           </Grid>
         </Grid>
       )}
@@ -257,7 +341,8 @@ function EditMotel({ socket }) {
                   fontSize: 18,
                 },
               }}
-            //   value={title}
+              //   value={title}
+
               label="Tiêu đề"
               type="text"
               name="title"

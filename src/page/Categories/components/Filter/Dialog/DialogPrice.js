@@ -101,9 +101,9 @@ function DialogPrice({ open, Transition, handleClose, handleDeleteFilter }) {
         }}
         onClick={handleClose}
       >
-        {/* <Link to={`?price=${value[0]}-${value[1]}`}> */}
-          <Button linkTo={`?price=${value[0]}-${value[1]}`} orange text="Áp dụng" />
-        {/* </Link> */}
+        <Link to={`?price=${value[0]}-${value[1]}`}>
+          <Button orange text="Áp dụng" />
+        </Link>
       </Box>
     </Dialog>
   );

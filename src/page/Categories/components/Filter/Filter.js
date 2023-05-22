@@ -97,15 +97,13 @@ function Filter({ address, listMotel, handlePageChange, pagination, pageSize, pr
 
         <Box className={styles.filter} onClick={handleClickOpenAddress}>
           <img src={LOCATION_FILTER} />
-          <span>&nbsp;{address || 'Toàn quốc'}</span>
-          {/* style={{ paddingBottom: '3px' }}
-style={{ paddingBottom: '3px' }} */}
+          <span style={{ paddingBottom: '3px' }}>&nbsp;{address || 'Toàn quốc'}</span>
           <ArrowDropDown />
         </Box>
         <DialogAddress open={openAddress} Transition={Transition} handleClose={handleCloseAddress} />
         <Box className={styles.filter} onClick={handleClickOpenListMap}>
           <span className={styles.filter_span}></span>
-          <span>Tìm quanh đây</span>
+          <span style={{ paddingBottom: '3px' }}>Tìm quanh đây</span>
           <ArrowDropDown />
         </Box>
         <DialogListMap open={openListMap} Transition={Transition} handleClose={handleCloseListMap} listMotel={listMotel} />

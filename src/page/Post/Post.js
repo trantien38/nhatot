@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Grid, Slide, TextField } from '@mui/material';
+import { Box, Grid, Slide, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Toaster } from 'react-hot-toast';
@@ -20,9 +20,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 function Post({ socket }) {
   const navigate = useNavigate();
-  const [titleImage, setTitleImage] = useState('Đăng từ 3 đến 12 hình');
-  const [titleVideo, setTitleVideo] = useState('Tải lên video');
-
   const [openAddress, setOpenAddress] = useState(false);
   const [addressDetail, setAddressDetail] = useState('');
   const [address, setAddress] = useState('');
@@ -32,7 +29,8 @@ function Post({ socket }) {
   const [image, setImage] = useState([]);
   const [video, setVideo] = useState([]);
   const [description, setDescription] = useState('');
-
+  const [titleImage, setTitleImage] = useState('Đăng từ 3 đến 12 hình');
+  const [titleVideo, setTitleVideo] = useState('Tải lên video');
   const { IdUser, Name } = JSON?.parse(localStorage?.getItem(StorageKeys?.USER));
   const schema = yup.object().shape({
     interiorStatus: yup.string().required('Vui lòng nhập tình trạng nội thất'),
@@ -41,11 +39,9 @@ function Post({ socket }) {
     price: yup.string().required('Vui lòng nhập giá'),
     deposits: yup.string().required('Vui lòng nhập số tiền cọc'),
     title: yup.string().required('Vui lòng nhập tiêu đề'),
-    addressDetail: yup.string().required('Vui lòng nhập địa chỉ'),
   });
   const {
     control,
-    setValue,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({
@@ -55,7 +51,6 @@ function Post({ socket }) {
       price: '',
       deposits: '',
       title: '',
-      addressDetail: '',
       // description: '',
     },
     resolver: yupResolver(schema),
@@ -63,7 +58,7 @@ function Post({ socket }) {
 
   const handleChangeImage = (data) => {
     console.log(data);
-    const datas = [];
+    const datas = [...image];
     const a = [...data];
     a.map((item, index) => {
       datas.push(data[index]);
@@ -72,11 +67,11 @@ function Post({ socket }) {
     });
     console.log(datas);
     setImage(datas);
-    setTitleImage(`Tải lên ${data.length} hình ảnh`);
+    setTitleImage(`Tải lên ${datas.length} hình ảnh`);
   };
 
   const handleChangeVideo = (data) => {
-    const datas = [];
+    const datas = [...video];
     const a = [...data];
     a.map((item, index) => {
       datas.push(data[index]);
@@ -85,7 +80,7 @@ function Post({ socket }) {
     });
     console.log(datas);
     setVideo(datas);
-    setTitleVideo(`Tải lên ${data.length} video`);
+    setTitleVideo(`Tải lên ${datas.length} video`);
   };
 
   const handleChangeDescription = (values) => {
@@ -93,6 +88,7 @@ function Post({ socket }) {
   };
 
   const handleOnSubmit = async (values) => {
+    console.log('submit motel');
     const formData = new FormData();
     for (const single_file of image) {
       formData.append('media', single_file, single_file.name);
@@ -111,22 +107,21 @@ function Post({ socket }) {
     formData.append('title', values.title);
     formData.append('ward', ward);
     formData.append('notifi', `${Name} vừa đăng phòng trọ mới`);
-    if (addressDetail)
-      if (!description) {
-        toastMessage.error('Nhập mô tả chi tiết');
-      } else if (!image[0]) {
-        toastMessage.error('Tải ảnh lên nào');
-      } else if (!video[0]) {
-        toastMessage.error('Tải video lên nào');
-      } else {
-        const addMotel = await motelApi.add(formData);
-        toastMessage.success(addMotel.msg);
-        socket.emit('post-motel', { msg: `${Name} vừa đăng phòng trọ mới`, IdUser });
-      }
-
-    // setTimeout(() => {
-    //   navigate('/cho-thue-phong-tro');
-    // }, 1500);
+    // if (addressDetail)
+    if (!description) {
+      toastMessage.error('Nhập mô tả chi tiết');
+    } else if (!image[0]) {
+      toastMessage.error('Tải ảnh lên nào');
+    } else if (!video[0]) {
+      toastMessage.error('Tải video lên nào');
+    } else {
+      const addMotel = await motelApi.add(formData);
+      toastMessage.success(addMotel.msg);
+      socket.emit('post-motel', { msg: `${Name} vừa đăng phòng trọ mới`, IdUser });
+      setTimeout(() => {
+        navigate('/cho-thue-phong-tro');
+      }, 1000);
+    }
   };
   const handleDeleteImage = (src) => {
     console.log(src);
@@ -137,10 +132,11 @@ function Post({ socket }) {
   };
   const handleDeleteVideo = (src) => {
     console.log(src);
+    console.log(video);
     const newVideos = video.filter((item) => item !== src);
+    console.log(newVideos);
     setVideo(newVideos);
     setTitleVideo(`Tải lên ${newVideos.length} video`);
-    console.log(newVideos);
   };
   const handleClickOpenAddress = () => {
     setOpenAddress(true);
@@ -187,34 +183,26 @@ function Post({ socket }) {
         <Grid item md={4} sm={8.5} sx={{ marginTop: '16px', padding: '0 10px' }}>
           <Grid container spacing={1}>
             {image[0]
-              ? image.map((src) => {
+              ? image.map((src, index) => {
                   return (
-                    <Grid
-                      key={src.name}
-                      item
-                      md={6}
-                      sm={4}
-                      xs={6}
-                      height="130px"
-                      sx={{
-                        '& > span': {
-                          marginTop: '-120px',
-                          marginLeft: '123px',
-                          display: 'block',
-                          '&:hover': {
-                            backgroundColor: '#b6b0b0',
+                    <Grid key={index} item md={6} sm={4} xs={6} sx={{ position: 'relative', height: '130px' }}>
+                      <img width="100%" height="120px" src={URL.createObjectURL(src)} alt="image" />
+                      <Box
+                        onClick={() => handleDeleteImage(src)}
+                        sx={{
+                          position: 'absolute',
+                          top: '131px',
+                          right: '171px',
+                          '& svg:hover': {
+                            padding: '8px',
                             borderRadius: '50%',
-                            width: '38px !important',
-                            height: '38px !important',
-                            cursor: 'pointer',
+                            backgroundColor: 'red',
+                            margin: '10px 35px 0 -11px',
                           },
-                        },
-                      }}
-                    >
-                      <img width="100%" height="120px" src={URL.createObjectURL(src)} />
-                      <span onClick={() => handleDeleteImage(src)}>
-                        <AddIcon style={{ transform: 'rotate(45deg)', marginTop: '10px', marginLeft: '10px' }} />
-                      </span>
+                        }}
+                      >
+                        <AddIcon style={{ transform: 'rotate(45deg)', marginTop: '-111px', marginLeft: '138px' }} />
+                      </Box>
                     </Grid>
                   );
                 })
@@ -222,34 +210,26 @@ function Post({ socket }) {
             {video[0]
               ? video.map((srcVideo) => {
                   return (
-                    <Grid
-                      key={srcVideo.name}
-                      item
-                      md={6}
-                      sm={4}
-                      xs={6}
-                      height="130px"
-                      sx={{
-                        '& > span': {
-                          marginTop: '-120px',
-                          marginLeft: '123px',
-                          display: 'block',
-                          '&:hover': {
-                            backgroundColor: '#b6b0b0',
-                            borderRadius: '50%',
-                            width: '38px !important',
-                            height: '38px !important',
-                            cursor: 'pointer',
-                          },
-                        },
-                      }}
-                    >
+                    <Grid key={srcVideo.name} item md={6} sm={4} xs={6} sx={{ position: 'relative', height: '130px' }}>
                       <video width="100%" height="120" controls>
                         <source src={URL.createObjectURL(srcVideo)} type="video/mp4" />
                       </video>
-                      <span onClick={() => handleDeleteVideo(srcVideo)}>
-                        <AddIcon style={{ transform: 'rotate(45deg)', marginTop: '10px', marginLeft: '10px' }} />
-                      </span>
+                      <Box
+                        onClick={() => handleDeleteVideo(srcVideo)}
+                        sx={{
+                          position: 'absolute',
+                          top: '131px',
+                          right: '171px',
+                          '& svg:hover': {
+                            padding: '8px',
+                            borderRadius: '50%',
+                            backgroundColor: 'red',
+                            margin: '10px 35px 0 -11px',
+                          },
+                        }}
+                      >
+                        <AddIcon style={{ transform: 'rotate(45deg)', marginTop: '-111px', marginLeft: '138px' }} />
+                      </Box>
                     </Grid>
                   );
                 })
@@ -371,9 +351,10 @@ function Post({ socket }) {
               control={control}
             />
           </Grid>
+
           <Grid
             sx={{
-              margin: '16px 0 32px 0',
+              marginBottom: '16px',
             }}
             item
             md={12}
@@ -381,38 +362,14 @@ function Post({ socket }) {
             xs={12}
             onClick={handleClickOpenAddress}
           >
-            <InputField
-              sx={{
-                fontSize: 2,
-                color: 'red',
-                '& label': {
-                  fontSize: 14,
-                },
-                '& svg': {
-                  fontSize: 18,
-                },
-              }}
-              setF
-              label="Địa chỉ"
-              type="string"
-              name="addressDetail"
-              setValue={addressDetail}
-              errors={errors}
-              required
-              control={control}
-            />
-            {/* <TextField
+            <TextField
               label="Địa chỉ"
               id="outlined-basic"
-              name="addressDetail"
-              errors={errors}
-              control={control}
-              // required
               //   onChange={handleChangeAddress}
               value={addressDetail}
               variant="outlined"
               fullWidth
-            /> */}
+            />
           </Grid>
           <DialogDetailAddress
             Address={address}

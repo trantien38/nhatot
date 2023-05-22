@@ -72,7 +72,7 @@ export default function Header({ socket }) {
 
   useEffect(() => {
     socket?.on('follow', (data) => {
-      if (data.IdFollowing == infoUser?.IdUser) {
+      if (data.IdFollowing === infoUser?.IdUser) {
         console.log(data, infoUser?.IdUser);
         toastMessage.success(data.msg);
         // setTimeout(() => {
@@ -84,7 +84,7 @@ export default function Header({ socket }) {
     });
     socket?.on('unfollow', (data) => {
       console.log(data, infoUser?.IdUser);
-      if (data.IdFollowing == infoUser?.IdUser) {
+      if (data.IdFollowing === infoUser?.IdUser) {
         // const newNotifis = notifis.filter((notifi) => {
         //   console.log(notifi.nameFollow);
         //   console.log(data.nameFollow);
@@ -100,9 +100,8 @@ export default function Header({ socket }) {
     socket?.on('post_motel', (data) => {
       console.log(data);
       data.followers.map((item) => {
-        if (infoUser?.IdUser == item.IdFollowers) {
+        if (infoUser?.IdUser === item.IdFollowers) {
           toastMessage.success(data.notifi);
-
           fetchNotifi();
         }
       });
@@ -115,7 +114,9 @@ export default function Header({ socket }) {
     setNotifis(listNotifi.notifi);
   };
   useEffect(() => {
-    fetchNotifi();
+    if (infoUser?.IdUser) {
+      fetchNotifi();
+    }
   }, []);
 
   const handleDeleteNotifi = async (notifi) => {
@@ -132,10 +133,7 @@ export default function Header({ socket }) {
             to="/"
             style={{ margin: 0, padding: 0, alignItems: 'center', height: '100%', display: 'flex', justifyContent: 'center' }}
           >
-            <img
-              src={LOGO_APP}
-              style={{ height: '100%', cursor: 'pointer' }}
-            />
+            <img src={LOGO_APP} style={{ height: '100%', cursor: 'pointer' }} />
           </Link>
         </Grid>
         <Grid item md={10.4} display={{ md: 'block', sm: 'none', xs: 'none' }} sx={{ padding: '0' }}>
@@ -156,7 +154,7 @@ export default function Header({ socket }) {
               <Item icon={<Home className={styles.item_icon} />} text={'Nhà trọ'} />
               {/* <Item icon={<Face4Icon className={styles.item_icon} />} text={'Nhà trọ'} /> */}
             </Link>
-            <Link to={infoUser?.activeStatus == 1 ? `/message-${user?.IdUser}` : '/login'}>
+            <Link to={infoUser?.activeStatus === 1 ? `/message-${user?.IdUser}` : '/login'}>
               <Item icon={<MarkUnreadChatAltIcon className={styles.item_icon} />} text={'Chat'} />
             </Link>
             <Link
@@ -209,8 +207,9 @@ export default function Header({ socket }) {
                     }}
                   >
                     {notifis?.length > 0 ? (
-                      notifis.map((notifi) => (
+                      notifis.map((notifi, index) => (
                         <Box
+                          key={index}
                           sx={{
                             display: 'flex',
                             alignItems: 'center',
@@ -324,15 +323,15 @@ export default function Header({ socket }) {
               {user && (
                 <div>
                   <MenuItem>
-                    <Link to={infoUser?.activeStatus == 1 ? '/profile' : '/login'}>Trang cá nhân</Link>
+                    <Link to={infoUser?.activeStatus === 1 ? '/profile' : '/login'}>Trang cá nhân</Link>
                   </MenuItem>
                   <MenuItem>
-                    <Link to={infoUser?.activeStatus == 1 ? '/favourite' : '/login'}>Tin yêu thích</Link>
+                    <Link to={infoUser?.activeStatus === 1 ? '/favourite' : '/login'}>Tin yêu thích</Link>
                   </MenuItem>
                   <MenuItem>
                     <Link to="/settings/account">Thay đổi mật khẩu</Link>
                   </MenuItem>
-                  {user.IdAuthority == 2 && (
+                  {user.IdAuthority === 2 && (
                     <MenuItem>
                       <Link to="/manage-motel">Quản lý nhà trọ</Link>
                     </MenuItem>

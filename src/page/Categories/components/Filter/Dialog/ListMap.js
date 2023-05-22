@@ -39,15 +39,19 @@ function ListMap({ listMotel }) {
   Geocode.setApiKey(StorageKeys.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
 
   useEffect(() => {
-    Geocode.fromAddress(addressUser).then(
-      (response) => {
-        setCoordinates(response.results[0].geometry.location);
-        // console.log(response.results[0].geometry.location);
-      },
-      (error) => {
-        console.error(error);
-      },
-    );
+    try {
+      Geocode.fromAddress(addressUser).then(
+        (response) => {
+          setCoordinates(response.results[0].geometry.location);
+          // console.log(response.results[0].geometry.location);
+        },
+        (error) => {
+          console.error(error);
+        },
+      );
+    } catch (error) {
+      console.log(error);
+    }
   }, [addressUser]);
   // };
   // useEffect(() => {

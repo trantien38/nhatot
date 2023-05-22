@@ -8,16 +8,17 @@ const userApi = {
     const url = './user/deleteFavourite';
     return axiosClient.post(url, data);
   },
+
   register(data) {
-    const url = './user/register';
+    const url = './auth/register';
     return axiosClient.post(url, data);
   },
   login(data) {
-    const url = './user/login';
+    const url = './auth/login';
     return axiosClient.post(url, data);
   },
   changePassword(data) {
-    const url = '/user/changePassword';
+    const url = '/auth/changePassword';
     return axiosClient.post(url, data);
   },
   changeAvatar(formData) {
@@ -26,15 +27,15 @@ const userApi = {
         'content-type': 'multipart/form-data',
       },
     };
-    const url = '/user/changeAvatar';
+    const url = '/auth/changeAvatar';
     return axiosClient.post(url, formData, config);
   },
   changeInfoUser(data) {
-    const url = '/user/changeInfoUser';
+    const url = '/auth/changeInfoUser';
     return axiosClient.post(url, data);
   },
   logout(data) {
-    const url = './user/logout';
+    const url = './auth/logout';
     return axiosClient.post(url, data);
   },
   getInfoUser(data) {

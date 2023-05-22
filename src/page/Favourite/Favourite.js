@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import motelApi from '~/api/MotelApi';
-import Button from '~/components/Button/Button';
-import { SAVEAD_ICON, STATIC_HOST } from '~/constants';
+import NoFavourite from '~/components/NoData/NoFavourite';
+import { STATIC_HOST } from '~/constants';
 import StorageKeys from '~/constants/storage-keys';
 import MotelItem from '../Categories/components/MotelItem/MotelItem';
 
@@ -29,9 +29,10 @@ function Favourite() {
     >
       <h2>Tin đăng đã lưu ({listMotel.length})</h2>
       {listMotel[0] ? (
-        listMotel?.map((result) => {
+        listMotel?.map((result, index) => {
           return (
             <MotelItem
+              key={index}
               isLove
               avatar={result?.Avatar?.includes('http') ? result?.Avatar : `${STATIC_HOST}avatars/${result.Avatar}`}
               time={{
@@ -53,27 +54,7 @@ function Favourite() {
           );
         })
       ) : (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            '& span': {
-              color: 'rgb(155, 155, 155)',
-              display: 'flex',
-              alignItems: 'center',
-            },
-          }}
-        >
-          <p>Bạn chưa yêu thích nhà trọ nào!</p>
-          <span>
-            Hãy bấm nút &nbsp;
-            <img src={SAVEAD_ICON} /> &nbsp; ở tin đăng để lưu và xem lại sau.
-          </span>
-          <p>
-            <Button linkTo="/cho-thue-phong-tro" orange text="Bắt đầu tìm kiếm" />
-          </p>
-        </Box>
+        <NoFavourite />
       )}
     </Box>
   );

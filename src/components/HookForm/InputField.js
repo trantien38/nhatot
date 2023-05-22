@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Controller } from 'react-hook-form';
 
 function InputField(props) {
-  const { placeholder, label, control, value, name, errors, size = 'small', type = 'text', sx } = props;
+  const { placeholder, label, control, name, errors, size = 'small', type = 'text', sx } = props;
   const hasError = errors[name];
   // console.log(hasError);
   // console.log(errors);
@@ -23,13 +23,17 @@ function InputField(props) {
     <Controller
       name={name}
       control={control}
-      render={({ field }) => (
+      render={({ field: { value, onChange } }) => (
         <FormControl fullWidth size={size} sx={sx}>
           <TextField
-            {...field}
             variant="outlined"
             margin="normal"
             fullWidth
+            onChange={(e) => {
+              const value = e.target.value;
+
+              onChange(value);
+            }}
             label={label}
             size={size}
             type={isShowPassword ? 'text' : type}

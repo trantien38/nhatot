@@ -2,7 +2,9 @@ import { Box } from '@mui/material';
 import React, { useState } from 'react';
 import AddIcon from '~/components/AddIcon';
 function UploadItem({ iconImage, iconVideo, title, info, callback, content, _name }) {
-  const handleChangeImage = (e) => {
+  // const [titles, setTitles] = useState(title);
+  const handleChangeMedia = (e) => {
+    // setTitles(`Tải lên ${e.target.files.length} ${content}`);
     console.log(e.target.files);
     callback(e.target.files);
   };
@@ -61,7 +63,7 @@ function UploadItem({ iconImage, iconVideo, title, info, callback, content, _nam
           name="media"
           multiple
           style={{ display: 'none' }}
-          onChange={handleChangeImage}
+          onChange={handleChangeMedia}
         />
         <label htmlFor={_name}>
           {iconImage && (

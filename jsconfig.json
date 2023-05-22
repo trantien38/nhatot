@@ -1,8 +1,11 @@
 {
-    "compilerOptions": {
-        "baseUrl": ".",
-        "paths": {
-            "~/*": ["src/*"]
-        }
+  "compilerOptions": {
+    "module": "es6",
+    "moduleResolution": "node",
+    "target": "es6",
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["src/*"]
     }
+  }
 }

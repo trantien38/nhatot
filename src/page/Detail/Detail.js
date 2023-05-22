@@ -21,6 +21,7 @@ import {
   LOCATION_GRAY_ICON,
   PHONE_ICON,
   PRICE_ICON,
+  RED_HEART,
   REPORT_ICON,
   SAVEAD_ICON,
   SHARE_ICON,
@@ -36,6 +37,8 @@ import DialogMap from './components/DialogMap';
 import ImageItem from './components/ImageItem';
 import styles from './Detail.module.scss';
 import messageApi from '~/api/MessageApi';
+import userApi from '~/api/UserApi';
+import { toastMessage } from '~/utils/toast';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
@@ -47,11 +50,13 @@ function Detail({ socket }) {
   const [motel, setMotel] = useState([]);
   const [media, setMedia] = useState([]);
   const [openMap, setOpenMap] = useState(false);
-  const params = useParams();
+  const { IdMotel } = useParams();
   const user = JSON.parse(localStorage?.getItem(StorageKeys.USER));
-  const activeStatus = JSON.parse(localStorage.getItem(StorageKeys?.USER))?.activeStatus == 1;
+  const activeStatus = JSON.parse(localStorage.getItem(StorageKeys?.USER))?.activeStatus === 1;
   const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(true);
+  const [icon, setIcon] = useState('');
+
   const handleOpenMap = () => {
     setOpenMap(true);
   };
@@ -59,44 +64,44 @@ function Detail({ socket }) {
     setOpenMap(false);
   };
   useEffect(() => {
-    const fetchMotel = async () => {
-      const motelItem = await motelApi.getInfoMotel(params.IdMotel);
+    (async () => {
+      const motelItem = await motelApi.getInfoMotel({ IdMotel, IdUser: user.IdUser });
       console.log(motelItem);
       setMotel(motelItem.motel);
+      console.log(motelItem.favourite[0] ? RED_HEART : SAVEAD_ICON);
+      await setIcon(motelItem.favourite[0] ? RED_HEART : SAVEAD_ICON);
       setAddress(
         `${motelItem?.motel[0]?.Address}, ${motelItem?.motel[0]?.WardPrefix} ${motelItem?.motel[0]?.WardName}, ${motelItem?.motel[0]?.DistrictPrefix} ${motelItem?.motel[0]?.DistrictName}, Tp.${motelItem?.motel[0]?.ProvinceName}`,
       );
-      setLoading(false);
-    };
-    fetchMotel();
-  }, [params.IdMotel]);
+      await setLoading(false);
+    })();
+  }, [IdMotel]);
 
   useEffect(() => {
     const fetchMedia = async () => {
-      const medias = await motelApi.getMediaMotel(params.IdMotel);
+      const medias = await motelApi.getMediaMotel(IdMotel);
       setMedia(medias.media);
       console.log(medias.media);
       setLoading(false);
     };
     fetchMedia();
-  }, [params.IdMotel]);
+  }, [IdMotel]);
 
   const handleChangeImage = (srcMedia, type) => () => {
     const elementImage = document.querySelector('.srcimage');
     const elementVideo = document.querySelector('.srcvideo');
-    if (type == 'image') {
+    if (type === 'image') {
       elementImage.style.display = 'block';
       elementVideo.style.display = 'none';
       elementVideo.pause();
       elementImage.src = srcMedia;
     }
-    if (type == 'video') {
+    if (type === 'video') {
       elementImage.style.display = 'none';
       elementVideo.style.display = 'block';
       elementVideo.src = srcMedia;
     }
   };
-  if (loading) return <DetailSkeleton />;
 
   const settings = {
     infinite: true,
@@ -105,10 +110,10 @@ function Detail({ socket }) {
   };
 
   const handleCreateRoom = async () => {
-    console.log({ IdMotel: params.IdMotel, IdRenter: user.IdUser, IdHost: motel[0].IdUser });
-    const { room } = await messageApi.createRoom({ IdMotel: params.IdMotel, IdRenter: user.IdUser, IdHost: motel[0].IdUser });
-    console.log(room);
-    navigate(`/message-${user.IdUser}/${room[0].IdRoom}`);
+    console.log({ IdMotel: IdMotel, IdRenter: user.IdUser, IdHost: motel[0].IdUser });
+    const { IdRoom } = await messageApi.createRoom({ IdMotel: IdMotel, IdRenter: user.IdUser, IdHost: motel[0].IdUser });
+    console.log(IdRoom);
+    navigate(`/message-${user.IdUser}/${IdRoom}`);
   };
   const handleChangeMessage = async (newMessage) => {
     socket.emit('new_message', newMessage);
@@ -118,34 +123,52 @@ function Detail({ socket }) {
     const messageUserList = await messageApi.add(newMessage);
   };
   const handleSubmitQuestion = async (Content) => {
-    const { room } = await messageApi.createRoom({ IdMotel: params.IdMotel, IdRenter: user.IdUser, IdHost: motel[0].IdUser });
-    console.log(room[0].IdRoom);
+    const { IdRoom } = await messageApi.createRoom({ IdMotel: IdMotel, IdRenter: user.IdUser, IdHost: motel[0].IdUser });
+    console.log(IdRoom);
     const newMessage = {
       Content,
       IdUser: user.IdUser,
-      IdRoom: room[0].IdRoom,
+      IdRoom,
     };
     handleChangeMessage(newMessage);
     setTimeout(() => {
-      navigate(`/message-${user.IdUser}/${room[0].IdRoom}`);
+      navigate(`/message-${user.IdUser}/${IdRoom}`);
     }, 1000);
   };
+
+  const handleSaveMotel = async (e) => {
+    console.log(e.target)
+    if (e.target.src === SAVEAD_ICON) {
+      console.log({ IdMotel, IdUser: user.IdUser });
+      const addFavourite = await userApi.addFavourite({ IdMotel, IdUser: user.IdUser });
+      console.log(addFavourite);
+      toastMessage.success(addFavourite.msg);
+      setIcon(RED_HEART);
+    } else {
+      const deleteFavourite = await userApi.deleteFavourite({ IdMotel, IdUser: user.IdUser });
+      toastMessage.success(deleteFavourite.msg);
+      setIcon(SAVEAD_ICON);
+    }
+  };
+
+  if (loading) return <DetailSkeleton />;
+
   return (
     <Grid container>
       <Grid item md={8} sm={12} xs={12}>
         <Box sx={{ backgroundColor: '#eee' }}>
           <Box sx={{ padding: '0 120px' }}>
-            {/* {motel[0].Type == 'image' && ( */}
+            {/* {motel[0].Type === 'image' && ( */}
             <img
               className={clsx(styles.img, 'srcimage')}
               src={media[0]?.srcMedia?.includes('http') ? media[0]?.srcMedia : `${STATIC_HOST}motels/${media[0]?.srcMedia}`}
-              style={media[0]?.Type == 'video' ? { display: 'none' } : {}}
+              style={media[0]?.Type === 'video' ? { display: 'none' } : {}}
             />
             {/* )}
-            {motel[0].Type == 'video' && ( */}
+            {motel[0].Type === 'video' && ( */}
             <video
               className={clsx(styles.img, 'srcvideo')}
-              style={media[0]?.Type == 'image' ? { display: 'none' } : {}}
+              style={media[0]?.Type === 'image' ? { display: 'none' } : {}}
               width="100%"
               height="120"
               controls
@@ -213,7 +236,9 @@ function Detail({ socket }) {
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <DetailItem icon={SHARE_ICON} title="Chia sẻ" />
-              <DetailItem sx={{ '&:hover': { cursor: 'pointer' } }} icon={SAVEAD_ICON} title="Lưu tin" />
+              <span onClick={handleSaveMotel}>
+                <DetailItem sx={{ '&:hover': { cursor: 'pointer' } }} icon={icon} title="Lưu tin" />
+              </span>
             </Box>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -319,9 +344,6 @@ function Detail({ socket }) {
                 display: 'flex',
                 width: '100%',
                 justifyContent: 'space-between',
-                '& a': {
-                  padding: '2px',
-                },
               }}
             >
               <b>{motel[0]?.Name}</b>
@@ -337,9 +359,9 @@ function Detail({ socket }) {
             </Box>
             <Box>
               <DetailItem
-                icon={motel[0]?.activeStatus == 1 ? GREEN_DOT : GREY_DOT}
+                icon={motel[0]?.activeStatus === 1 ? GREEN_DOT : GREY_DOT}
                 title={
-                  motel[0]?.activeStatus == 1
+                  motel[0]?.activeStatus === 1
                     ? 'Đang hoạt động'
                     : motel[0]?.mOperatingTimeonth
                     ? `Hoạt động ${motel[0]?.monthOperatingTime} tháng trước`

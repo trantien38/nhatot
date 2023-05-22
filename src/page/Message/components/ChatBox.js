@@ -20,12 +20,12 @@ function ChatBox({ chat, IdUser }) {
       <ul id="chatbox">
         <p>{chat[0] && title}</p>
         {chat[0] ? (
-          chat.map((result) => {
+          chat.map((result, index) => {
             if (result.IdUser == IdUser) {
               if (`${result?.day} tháng ${result?.month} năm ${result?.year}` !== title) {
                 title = `${result?.day} tháng ${result?.month} năm ${result?.year}`;
                 return (
-                  <>
+                  <Box key={index}>
                     <p>{`${result.day} tháng ${result.month} năm ${result.year}`}</p>
                     <li key={result.IdMessage} className={styles.messageRenter}>
                       <Box
@@ -75,7 +75,7 @@ function ChatBox({ chat, IdUser }) {
                       </Box>
                       <Box></Box>
                     </li>
-                  </>
+                  </Box>
                 );
               } else {
                 return (

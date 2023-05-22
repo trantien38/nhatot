@@ -36,17 +36,25 @@ export default function Button({
     [styles.btn_orange]: orange,
   });
   return (
-    <Link
-      style={{
-        margin: 0,
-        padding: 0,
-      }}
-      to={linkTo}
-    >
-      <button type={type} className={classes}>
-        {text}
-      </button>
-    </Link>
+    <>
+      {linkTo ? (
+        <Link
+          style={{
+            margin: 0,
+            padding: 0,
+          }}
+          to={linkTo}
+        >
+          <button type={type} className={classes}>
+            {text}
+          </button>
+        </Link>
+      ) : (
+        <button type={type} className={classes}>
+          {text}
+        </button>
+      )}
+    </>
   );
 }
 

@@ -5,13 +5,13 @@ import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import theme from '~/theme';
-import Header from '~/components/Header';
 import messageApi from '~/api/MessageApi';
+import Header from '~/components/Header';
 import { SearchIcon } from '~/components/Icon';
-import { useDelayTimeout } from '~/hooks/Delay';
-import { useRemovePunctuation } from '~/hooks/RemovePunctuation';
 import { GALLERY_ICON, LOCATION_ICON, MESSAGE_ICON, PLUSCIRCLE_ICON } from '~/constants';
+import { useDelayTimeout } from '~/hooks/useDelayTimeout';
+import { useRemovePunctuation } from '~/hooks/useRemovePunctuation';
+import theme from '~/theme';
 
 import ChatBox from './components/ChatBox';
 import InfoMotel from './components/InfoMotel';
@@ -21,17 +21,17 @@ import Questions from './components/Question/Questions';
 import styles from './Message.module.scss';
 
 export default function Message({ socket }) {
-  const delay = useDelayTimeout();
-  const removePunctuation = useRemovePunctuation();
   const [messageList, setMessageList] = useState([]);
   const [chat, setChat] = useState([]);
   const [idHost, setIdHost] = useState();
   const [state, setState] = useState([]);
   const { messageUserSlug } = useParams();
   const [mu, idUser] = messageUserSlug.split('-');
-  const params = useParams();
-  const [nameUser, setNameUser] = useState('');
+  const { IdRoom } = useParams();
   const refListMessage = useRef([]);
+
+  const delay = useDelayTimeout();
+  const removePunctuation = useRemovePunctuation();
 
   // fetch data message list
   const fetchMessage = async () => {
@@ -49,8 +49,8 @@ export default function Message({ socket }) {
         listMessage.push(item);
       }
     });
-    await console.log(listMessage);
     refListMessage.current = listMessage;
+    await console.log(listMessage);
     await setMessageList(listMessage);
   };
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function Message({ socket }) {
 
   // fetch data chat box
   const fetchChat = async () => {
-    const chatList = await messageApi.getAllMessagesUserInMotel(params.IdRoom);
+    const chatList = await messageApi.getAllMessagesUserInMotel(IdRoom);
     setChat(chatList.message);
     // console.log(chatList.message);
     setTimeout(() => {
@@ -69,10 +69,10 @@ export default function Message({ socket }) {
     }, 100);
   };
   useEffect(() => {
-    if (params.IdRoom) {
+    if (IdRoom) {
       fetchChat();
     }
-  }, [params.IdRoom]);
+  }, [IdRoom]);
 
   // change icon
   const handleChangeIcon = () => {
@@ -106,7 +106,7 @@ export default function Message({ socket }) {
     const newMessage = {
       Content,
       IdUser: idUser,
-      IdRoom: params.IdRoom,
+      IdRoom: IdRoom,
     };
     handleChangeMessage(newMessage);
   };
@@ -130,7 +130,7 @@ export default function Message({ socket }) {
     const newMessage = {
       Content,
       IdUser: idUser,
-      IdRoom: params.IdRoom,
+      IdRoom: IdRoom,
     };
     handleChangeMessage(newMessage);
   };
@@ -141,6 +141,7 @@ export default function Message({ socket }) {
       console.log(nameUser);
       const listmessage = refListMessage.current.filter((item) => {
         const name = removePunctuation(item.Name);
+        console.log(name);
         console.log(name.toUpperCase().includes(nameUser.toUpperCase()));
         return name.toUpperCase().includes(nameUser.toUpperCase());
       });
@@ -149,7 +150,7 @@ export default function Message({ socket }) {
       if (!nameUser) {
         setMessageList(refListMessage.current);
       }
-    });
+    }, 500);
   };
 
   return (
@@ -171,13 +172,13 @@ export default function Message({ socket }) {
           <Grid
             item
             md={4}
-            sm={params.IdRoom ? 0 : 12}
-            xs={params.IdRoom ? 0 : 12}
+            sm={IdRoom ? 0 : 12}
+            xs={IdRoom ? 0 : 12}
             sx={{
               overflow: 'auto',
               height: '100%',
             }}
-            display={{ md: 'block', sm: params.IdRoom ? 'none' : 0, xs: params.IdRoom ? 'none' : 0 }}
+            display={{ md: 'block', sm: IdRoom ? 'none' : 0, xs: IdRoom ? 'none' : 0 }}
           >
             <Box
               sx={{
@@ -197,28 +198,30 @@ export default function Message({ socket }) {
                   alignItems: 'center',
                 }}
               >
-                <Box
-                  sx={{
-                    border: '1px solid gray',
-                    borderRadius: '10px',
-                    width: '100%',
-                    display: 'flex',
-                    '& span': {
-                      fontSize: '18px',
-                      lineHeight: '100%',
+                {messageList[0] && (
+                  <Box
+                    sx={{
+                      border: '1px solid gray',
+                      borderRadius: '10px',
+                      width: '100%',
                       display: 'flex',
-                      alignItems: 'center',
-                      padding: '0 8px',
-                    },
-                  }}
-                >
-                  <span type="search">
-                    <SearchIcon />
-                  </span>
-                  <InputBase onChange={handleChangeMessageList} placeholder="Nhập từ khóa..." sx={{ width: '100%' }}>
-                    Tìm kiếm
-                  </InputBase>
-                </Box>
+                      '& span': {
+                        fontSize: '18px',
+                        lineHeight: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '0 8px',
+                      },
+                    }}
+                  >
+                    <span type="search">
+                      <SearchIcon />
+                    </span>
+                    <InputBase onChange={handleChangeMessageList} placeholder="Nhập từ khóa..." sx={{ width: '100%' }}>
+                      Tìm kiếm
+                    </InputBase>
+                  </Box>
+                )}
               </Box>
               <Box
                 sx={{
@@ -251,21 +254,21 @@ export default function Message({ socket }) {
           <Grid
             item
             md={8}
-            sm={params.IdRoom ? 12 : 0}
-            xs={params.IdRoom ? 12 : 0}
+            sm={IdRoom ? 12 : 0}
+            xs={IdRoom ? 12 : 0}
             display={{
               md: 'block',
-              sm: params.IdRoom ? 'block' : 'none',
-              xs: params.IdRoom ? 'block' : 'none',
+              sm: IdRoom ? 'block' : 'none',
+              xs: IdRoom ? 'block' : 'none',
             }}
             sx={{ height: '100%' }}
           >
-            <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-              <Box>
-                <InfoUser IdUser={idUser} IdRoom={params.IdRoom} data={messageList} callBackGetIdHost={callBackGetIdHost} />
-                <InfoMotel IdRoom={params.IdRoom} callBackGetIdHost={callBackGetIdHost} />
-              </Box>
-              {params.IdRoom && (
+            {IdRoom ? (
+              <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                <Box>
+                  <InfoUser IdUser={idUser} IdRoom={IdRoom} data={messageList} callBackGetIdHost={callBackGetIdHost} />
+                  <InfoMotel IdRoom={IdRoom} callBackGetIdHost={callBackGetIdHost} />
+                </Box>
                 <Box
                   sx={{
                     display: 'flex',
@@ -298,9 +301,24 @@ export default function Message({ socket }) {
                           alt="open"
                           src={PLUSCIRCLE_ICON}
                         />
-                        <img style={{ display: 'none' }} className={clsx(styles.messageIcon, 'threeIcon')} src={MESSAGE_ICON} />
-                        <img style={{ display: 'none' }} className={clsx(styles.messageIcon, 'threeIcon')} src={GALLERY_ICON} />
-                        <img style={{ display: 'none' }} className={clsx(styles.messageIcon, 'threeIcon')} src={LOCATION_ICON} />
+                        <img
+                          alt="icon"
+                          style={{ display: 'none' }}
+                          className={clsx(styles.messageIcon, 'threeIcon')}
+                          src={MESSAGE_ICON}
+                        />
+                        <img
+                          alt="icon"
+                          style={{ display: 'none' }}
+                          className={clsx(styles.messageIcon, 'threeIcon')}
+                          src={GALLERY_ICON}
+                        />
+                        <img
+                          alt="icon"
+                          style={{ display: 'none' }}
+                          className={clsx(styles.messageIcon, 'threeIcon')}
+                          src={LOCATION_ICON}
+                        />
                         <input
                           className={styles.inputMessage}
                           placeholder="Nhập tin nhắn..."
@@ -313,8 +331,15 @@ export default function Message({ socket }) {
                     </Box>
                   </Box>
                 </Box>
-              )}
-            </Box>
+              </Box>
+            ) : (
+              <Box sx={{ padding: '50px', height: 'calc(100% - 100px)' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <img alt="icon" style={{ width: '70%' }} src="https://chat.chotot.com/emptyRoom.png" />
+                </Box>
+                <p style={{ textAlign: 'center', color: '#333', fontWeight: 700 }}>Liên hệ để biết thêm thông tin chi tiết</p>
+              </Box>
+            )}
           </Grid>
         </Grid>
       </Box>

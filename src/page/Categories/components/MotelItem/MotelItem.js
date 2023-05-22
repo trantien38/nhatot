@@ -1,19 +1,20 @@
 import { Grid } from '@mui/material';
-import { Box } from '@mui/system';
 import { useState } from 'react';
-import { Toaster } from 'react-hot-toast';
+import { Box } from '@mui/system';
 import { Link } from 'react-router-dom';
-import userApi from '~/api/UserApi';
-
 import { AVATAR_DEFAULT, RED_HEART, SAVEAD_ICON } from '~/constants';
 import StorageKeys from '~/constants/storage-keys';
+import styles from './MotelItem.module.scss';
 import { toastMessage } from '~/utils/toast';
+import { Toaster } from 'react-hot-toast';
+import userApi from '~/api/UserApi';
 
 function MotelItem(props) {
   const { time, avatar, name, title, acreage, price, img, address, IdMotel, isLove } = props;
   const infoUser = JSON.parse(localStorage.getItem(StorageKeys.USER));
   const [icon, setIcon] = useState(isLove ? RED_HEART : SAVEAD_ICON);
   const handleChangeIcon = async (e) => {
+    console.log(123);
     if (e.target.src == SAVEAD_ICON) {
       console.log({ IdMotel, IdUser: infoUser.IdUser });
       const addFavourite = await userApi.addFavourite({ IdMotel, IdUser: infoUser.IdUser });
@@ -28,18 +29,7 @@ function MotelItem(props) {
     }
   };
   return (
-    <Box
-      sx={{
-        backgroundColor: '#fff',
-        borderTop: '1px solid #f4f4f4',
-        '&:hover': {
-          zIndex: 1,
-          boxShadow: '0 1px 8px 0 rgb(0 0 0 / 30%)',
-        },
-        position: 'relative',
-        padding: '8px 12px',
-      }}
-    >
+    <Box className={styles.motelItem}>
       <Toaster />
       <Link to={`/detail/${IdMotel}`}>
         <Grid container>
@@ -57,8 +47,6 @@ function MotelItem(props) {
                 paddingLeft: '12px',
                 '& > h3,p': {
                   margin: 0,
-                  color: '#222222',
-                  fontWeight: 'normal',
                 },
                 '& >p': {
                   color: '#c90927',
@@ -68,10 +56,7 @@ function MotelItem(props) {
                 },
                 '&>span': {
                   fontSize: '14px',
-                  padding: '6px 0',
-                },
-                '& span': {
-                  color: '#9B9B9B',
+                  padding: '4px 0',
                 },
               }}
             >
@@ -82,31 +67,33 @@ function MotelItem(props) {
               <Box
                 sx={{
                   display: 'flex',
-                  alignItems: 'center',
-                  '& span': { fontSize: '14px', display: 'flex', alignItems: 'center' },
+                  '& span': { fontSize: '14px' },
+                  '& img': { marginRight: '6px', display: 'flex', alignItems: 'center' },
                 }}
               >
                 <span>
                   <img
-                    style={{ width: '16px', height: '16px', borderRadius: '50%', marginRight: '4px' }}
+                    style={{ width: '16px', height: '16px', borderRadius: '50%' }}
                     src={avatar || AVATAR_DEFAULT}
+                    alt="avatar"
                   />
                 </span>
                 <span>{name || 'Môi giới'}</span>&nbsp; - &nbsp;
                 <span>
                   {time.month
-                    ? `Đăng ${time.month} tháng trước`
+                    ? ` ${time.month} tháng trước`
                     : time.week
-                    ? `Đăng ${time.week} tuần trước`
+                    ? ` ${time.week} tuần trước`
                     : time.day
-                    ? `Đăng ${time.day} ngày trước`
+                    ? ` ${time.day} ngày trước`
                     : time.hour
-                    ? `Đăng ${time.hour} giờ trước`
+                    ? ` ${time.hour} giờ trước`
                     : time.minute
-                    ? `Đăng ${time.minute} phút trước`
-                    : `Đăng ${time.second} giây trước`}
+                    ? `${time.minute} phút trước`
+                    : `${time.second} giây trước`}
                 </span>
-                &nbsp; - &nbsp;<span> {address}</span>
+                &nbsp;-&nbsp;
+                <span> {address}</span>
               </Box>
             </Box>
           </Grid>

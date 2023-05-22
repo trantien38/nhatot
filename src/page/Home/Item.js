@@ -8,7 +8,6 @@ function Item({ src, title, content }) {
       md={4}
       sx={{
         display: 'flex',
-        
         '& > img': {
           marginRight: '12px',
           width: '80px',

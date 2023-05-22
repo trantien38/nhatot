@@ -68,7 +68,7 @@ let routes = () => [
         path: '/profile',
         element: <Profile />,
       },
-      {
+          {
         path: '/favourite',
         element: <Favourite />,
       },
