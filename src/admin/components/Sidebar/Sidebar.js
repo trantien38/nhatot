@@ -1,3 +1,11 @@
+import {
+  FeedOutlined,
+  HelpOutline,
+  Home,
+  PersonPinCircleOutlined,
+  VerifiedUserOutlined,
+  ViewCarousel,
+} from '@mui/icons-material';
 import { Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { LOGO_APP } from '~/constants';
@@ -6,56 +14,47 @@ import styles from './Sidebar.module.scss';
 function Sidebar() {
   return (
     <Box className={styles.sidebar}>
-      <Box sx={{ margin: ' 0 80px', cursor: 'pointer', height: '60px' }}>
+      <Box sx={{ margin: '0 80px', cursor: 'pointer', height: '60px', fontSize: '14px' }}>
         <img width={'100%'} src={LOGO_APP} />
       </Box>
       <Box className={styles.sidebar_scrollbar}>
         <nav>
           <ul>
             <li>
-              <Link to="/admin">Thống kê</Link>
+              <Link to="/admin/dashboard">
+                <Home />
+                <span>Thống kê</span>
+              </Link>
             </li>
             <li>
-              <Link to="/admin/user/list">Quản lý tài khoản</Link>
-              {/* <ul className="ul-1">
-                <li>
-                  <Link to="/admin/user/list">User list</Link>
-                </li>
-                <li>
-                  <Link to="/admin/user/add">User add</Link>
-                </li>
-                <li>
-                  <Link to="/admin/user/edit">User edit</Link>
-                </li>
-              </ul> */}
+              <Link to="/admin/user/list">
+                <PersonPinCircleOutlined />
+                <span>Quản lý người dùng</span>
+              </Link>
             </li>
             <li>
-              <Link to="/admin/question/list">Quản lý questions</Link>
-              {/* <ul className="ul-2">
-                <li>
-                  <Link to="/admin/question/list">Question list</Link>
-                </li>
-                <li>
-                  <Link to="/admin/question/add">Question add</Link>
-                </li>
-                <li>
-                  <Link to="/admin/question/edit">Question edit</Link>
-                </li>
-              </ul> */}
+              <Link to="/admin/question/list">
+                <HelpOutline />
+                <span>Quản lý questions</span>
+              </Link>
             </li>
             <li>
-              <Link to="/admin/banner/list">Quản lý banners</Link>
-              {/* <ul className="ul-3">
-                <li>
-                  <Link to="/admin/banner/list">Banner list</Link>
-                </li>
-                <li>
-                  <Link to="/admin/banner/add">Banner add</Link>
-                </li>
-                <li>
-                  <Link to="/admin/banner/edit">Banner edit</Link>
-                </li>
-              </ul> */}
+              <Link to="/admin/banner/list">
+                <ViewCarousel />
+                <span>Quản lý banners</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/admin/question/list">
+                <FeedOutlined />
+                <span>Phê duyệt tin đăng</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/admin/question/list">
+                <VerifiedUserOutlined />
+                <span>Phê duyệt tài khoản chủ trọ</span>
+              </Link>
             </li>
           </ul>
         </nav>

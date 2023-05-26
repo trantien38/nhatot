@@ -18,13 +18,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
 });
 
-function Filter({ address, listMotel, handlePageChange, pagination, pageSize, price, acreage }) {
+function Filter({ address, onChangeFilters, filters }) {
+  const { price, acreage, count, quantity } = filters;
+  console.log(count, quantity);
   const [openAddress, setOpenAddress] = useState(false);
   const [openPrice, setOpenPrice] = useState(false);
   const [openAcreage, setOpenAcreage] = useState(false);
   const [openListMap, setOpenListMap] = useState(false);
-  // const [price, setPrice] = useState('');
-  // const [acreage, setAcreage] = useState('');
   const navigate = useNavigate();
   const handleClickOpenAddress = () => {
     setOpenAddress(true);
@@ -62,6 +62,15 @@ function Filter({ address, listMotel, handlePageChange, pagination, pageSize, pr
     setOpenListMap(false);
   };
 
+  const handleChange = (event, value) => {
+    console.log({ value });
+    const start = value === 1 ? 0 : (value - 1) * quantity;
+    onChangeFilters({
+      ...filters,
+      start,
+    });
+  };
+
   return (
     <Box
       sx={{
@@ -96,7 +105,7 @@ function Filter({ address, listMotel, handlePageChange, pagination, pageSize, pr
         </Box> */}
 
         <Box className={styles.filter} onClick={handleClickOpenAddress}>
-          <img src={LOCATION_FILTER} />
+          <img src={LOCATION_FILTER} alt="" />
           <span style={{ paddingBottom: '3px' }}>&nbsp;{address || 'Toàn quốc'}</span>
           <ArrowDropDown />
         </Box>
@@ -106,7 +115,8 @@ function Filter({ address, listMotel, handlePageChange, pagination, pageSize, pr
           <span style={{ paddingBottom: '3px' }}>Tìm quanh đây</span>
           <ArrowDropDown />
         </Box>
-        <DialogListMap open={openListMap} Transition={Transition} handleClose={handleCloseListMap} listMotel={listMotel} />
+        <DialogListMap open={openListMap} Transition={Transition} handleClose={handleCloseListMap} />
+
         {/* <Box className={styles.filter}>
           <span className={styles.filter_span}></span>
           <span style={{ paddingBottom: '3px' }}>Phòng trọ</span>
@@ -117,7 +127,7 @@ function Filter({ address, listMotel, handlePageChange, pagination, pageSize, pr
           <Button
             filter
             text={
-              price && price[0]
+              price[0] != 0 || price[1] != 18286286
                 ? `
           ${new Intl.NumberFormat().format(price[0])}đ - ${new Intl.NumberFormat().format(price[1])}đ`
                 : 'Giá +'
@@ -129,28 +139,22 @@ function Filter({ address, listMotel, handlePageChange, pagination, pageSize, pr
           Transition={Transition}
           handleDeleteFilter={handleDeleteFilter}
           handleClose={handleClosePrice}
+          onChangeFilters={onChangeFilters}
+          filters={filters}
         />
 
         <Box onClick={handleClickOpenAcreage}>
-          <Button filter text={acreage && acreage[0] ? `${acreage[0]}m2 - ${acreage[1]}m2` : 'Diện tích +'} />
+          <Button filter text={acreage[0] != 0 || acreage[1] != 88 ? `${acreage[0]}m2 - ${acreage[1]}m2` : 'Diện tích +'} />
         </Box>
         <DialogAcreage
           open={openAcreage}
           Transition={Transition}
           handleDeleteFilter={handleDeleteFilter}
           handleClose={handleCloseAcreage}
+          onChangeFilters={onChangeFilters}
+          filters={filters}
         />
-        {/* <Box>
-          <Button filter text="Số phòng ngủ +" />
-        </Box>
-        <Box>
-          <Button filter text="Tin có video +" />
-        </Box>
-        <Box>
-          <Button filter text="Loại hình nhà ở +" />
-        </Box> */}
       </Box>
-      {/* <Box> */}
       <Box
         sx={{
           display: 'flex',
@@ -164,14 +168,13 @@ function Filter({ address, listMotel, handlePageChange, pagination, pageSize, pr
         }}
       >
         <Pagination
-          onChange={handlePageChange}
-          count={Math.ceil(pagination.count / pageSize)}
+          onChange={handleChange}
+          count={Math.ceil(count / quantity)}
           variant="outlined"
           shape="rounded"
           color="primary"
         />
       </Box>
-      {/* </Box> */}
     </Box>
   );
 }

@@ -25,8 +25,8 @@ export default function Questions(props) {
     <Box sx={{ padding: '0 12px' }}>
       <ul className={styles.questionList}>
         {question.map((result) => (
-          <li key={result.id} className={styles.question} onClick={handleSubmit}>
-            {result.content}
+          <li key={result.IdQuestion} className={styles.question} onClick={handleSubmit}>
+            {result.Content}
           </li>
         ))}
       </ul>

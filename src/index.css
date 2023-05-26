@@ -8,6 +8,8 @@ body {
 }
 p,
 b,
+a,
+li,
 span {
   font-size: 14px;
 }

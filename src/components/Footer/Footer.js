@@ -1,6 +1,7 @@
-import { Facebook, Instagram, LinkedIn, Telegram, YouTube } from '@mui/icons-material';
-import { Grid, Link, List, ListItem } from '@mui/material';
+import { Grid, List, ListItem } from '@mui/material';
 import { Box } from '@mui/system';
+import { Link } from 'react-router-dom';
+import images from '~/assets/images';
 import { APP_HUAWEI, APP_STORE, GOOGLE_PLAY, QR_IMAGE, QR_SOURCE } from '~/constants';
 import styles from './Footer.module.scss';
 export default function Footer() {
@@ -11,24 +12,10 @@ export default function Footer() {
       }}
     >
       <div className={styles.footer}>
-        <Grid container sx={{ padding: '8px' }}>
-          <Grid item md={2} sm={6} xs={12} display={{ sm: '', xs: '' }}>
+        <Grid container sx={{ padding: '8px' }} spacing={2}>
+          <Grid item md={3} sm={6} xs={6} display={{ sm: '', xs: '' }}>
             <p>HỖ TRỢ KHÁCH HÀNG</p>
-            <List
-              sx={{
-                paddingBottom: '0.6rem',
-                '& .css-1p823my-MuiListItem-root': {
-                  fontSize: '1rem',
-                  padding: '0 1rem!important',
-                  width: 'inherit!important',
-                  '& a': {
-                    color: 'var(--color-8e8e8e)',
-                    textDecoration: 'none',
-                    color: '#777777 !important',
-                  },
-                },
-              }}
-            >
+            <List>
               <ListItem>
                 <Link to="/">Trung tâm hỗ trợ</Link>
               </ListItem>
@@ -43,132 +30,72 @@ export default function Footer() {
               </ListItem>
             </List>
           </Grid>
-          <Grid item md={2} sm={6} xs={12} display={{ sm: '', xs: '' }}>
+          <Grid item md={2.5} sm={6} xs={6} display={{ sm: '', xs: '' }}>
             <p>VỀ NHÀ TỐT</p>
-            <List
-              sx={{
-                paddingBottom: '2rem',
-                '& .css-1p823my-MuiListItem-root': {
-                  fontSize: '1rem',
-                  padding: '0 1rem!important',
-                  width: 'inherit!important',
-                  '& a': {
-                    color: 'var(--color-8e8e8e)',
-                    textDecoration: 'none',
-                    color: '#777777 !important',
-                  },
-                },
-              }}
-            >
+            <List>
               <ListItem>
-                <Link top="/">Giới thiệu</Link>
+                <Link to="/">Giới thiệu</Link>
               </ListItem>
               <ListItem>
-                <Link top="/">Tuyển dụng</Link>
+                <Link to="/">Tuyển dụng</Link>
               </ListItem>
               <ListItem>
-                <Link top="/">Truyền thông</Link>
+                <Link to="/">Truyền thông</Link>
               </ListItem>
               <ListItem>
-                <Link top="/">Blog</Link>
+                <Link to="/">Blog</Link>
               </ListItem>
             </List>
           </Grid>
-          <Grid item md={4} sm={6} xs={12} display={{ sm: '', xs: '' }}>
+          <Grid item md={3.5} sm={6} xs={7} display={{ sm: '', xs: '' }}>
             <p style={{ padding: 0 }}>TẢI ỨNG DỤNG NHÀ TỐT</p>
-            <Box>
-              <Grid container>
-                <Grid item md={6} sm={5} xs={6}>
-                  <source type="image/webp" srcSet={QR_SOURCE}></source>
-                  <img
-                    alt="Chợ Tốt"
-                    // className="aw__ifuk1ky"
-                    src={QR_IMAGE}
-                    width="100"
-                    height="100"
-                  />
-                </Grid>
-                <Grid item md={6} sm={7} xs={6}>
-                  <Grid container>
-                    <Grid item sm={12} xs={12}>
-                      <img alt="App Store" src={APP_STORE} className={styles.footer_img} />
-                    </Grid>
-                    <Grid item sm={12} xs={12}>
-                      <img alt="Google Play" src={GOOGLE_PLAY} className={styles.footer_img} />
-                    </Grid>
-                    <Grid item sm={12} xs={12}>
-                      <img alt="App Huawei" src={APP_HUAWEI} className={styles.footer_img} />
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
+            <Box sx={{ paddingTop: '8px', display: 'flex', justifyContent: 'center' }}>
+              <Box sx={{ marginRight: '8px' }}>
+                <source type="image/webp" srcSet={QR_SOURCE}></source>
+                <img alt="Chợ Tốt" src={QR_IMAGE} width="100" height="100" />
+              </Box>
+              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                <img alt="App Store" src={APP_STORE} className={styles.footer_img} />
+                <img alt="Google Play" src={GOOGLE_PLAY} className={styles.footer_img} />
+                <img alt="App Huawei" src={APP_HUAWEI} className={styles.footer_img} />
+              </Box>
             </Box>
           </Grid>
-          <Grid item md={4} sm={6} xs={12} display={{ sm: '', xs: '' }}>
+          <Grid item md={3} sm={6} xs={5} display={{ sm: '', xs: '' }}>
             <p style={{ paddingLeft: '8px' }}>LIÊN KẾT</p>
-            <List
-              sx={{
-                display: 'flex',
-                paddingBottom: '2rem',
-                '& .css-1p823my-MuiListItem-root': {
-                  fontSize: '1rem',
-                  padding: '0 1rem!important',
-                  width: 'inherit!important',
-                  '& a': {
-                    color: 'var(--color-8e8e8e)',
-                    textDecoration: 'none',
-                  },
-                },
-              }}
-            >
-              <ListItem sx={{ padding: 0 }}>
-                <Link>
-                  <Facebook sx={{ fontSize: '28px' }} />
+            <Grid container spacing={3} sx={{ paddingTop: '8px' }}>
+              <Grid item md={2.4} sm={2.5} xs={2.5}>
+                <Link to="/">
+                  <img src={images.facebook} alt="Facebook" width={28} />
                 </Link>
-              </ListItem>
-              <ListItem sx={{ padding: 0 }}>
-                <Link>
-                  <YouTube sx={{ fontSize: '28px' }} />
+              </Grid>
+
+              <Grid item md={2.4} sm={2.5} xs={2.5}>
+                <Link to="/">
+                  <img src={images.youtube} alt="YouTube" width={28} />
                 </Link>
-              </ListItem>
-              <ListItem sx={{ padding: 0 }}>
-                <Link>
-                  <LinkedIn sx={{ fontSize: '28px' }} />
+              </Grid>
+
+              <Grid item md={2.4} sm={2.5} xs={2.5}>
+                <Link to="/">
+                  <img src={images.linkedin} alt="LinkedIn" width={28} />
                 </Link>
-              </ListItem>
-              <ListItem sx={{ padding: 0 }}>
-                <Link>
-                  <Instagram sx={{ fontSize: '28px' }} />
+              </Grid>
+              <Grid item md={2.4} sm={2.5} xs={2.5}>
+                <Link to="/">
+                  <img src={images.instagram} alt="Instagram" width={28} />
                 </Link>
-              </ListItem>
-              <ListItem sx={{ padding: 0 }}>
-                <Link>
-                  <Telegram sx={{ fontSize: '28px' }} />
+              </Grid>
+
+              <Grid item md={2.4} sm={2.5} xs={2.5}>
+                <Link to="/">
+                  <img src={images.telegram} alt="Telegram" width={28} />
                 </Link>
-              </ListItem>
-            </List>
+              </Grid>
+            </Grid>
           </Grid>
-          <hr
-            style={{
-              height: '1px',
-              borderTop: '1px solid #E8E8E8',
-              width: '100%',
-              backgroundColor: 'currentColor',
-              border: 0,
-              color: '#e8e8e8',
-              margin: '8px 0',
-              opacity: 1,
-            }}
-          />
-          <span
-            style={{
-              textAlign: 'center',
-              fontSize: '0.8rem',
-              color: '#777777 !important',
-              width: '100%',
-              padding: '8px',
-            }}
-          >
+          <hr className={styles.hr} />
+          <span className={styles.span}>
             CÔNG TY TNHH NHÀ TỐT - Người đại diện theo pháp luật: Trần Y Tiến; GPDKKD: 0312120782 do sở KH & ĐT TP.Đà Nẵng cấp
             ngày 11/01/2023;
             <br />

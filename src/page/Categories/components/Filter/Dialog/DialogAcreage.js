@@ -1,24 +1,30 @@
 import { Box, Dialog, Slider } from '@mui/material';
 import React from 'react';
+import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Button from '~/components/Button/Button';
 import { BACK_ICON } from '~/constants';
 function valuetext(value) {
   return `${value}°C`;
 }
-function DialogAcreage({ open, Transition, handleClose, handleDeleteFilter }) {
-  const [value, setValue] = React.useState([0, 20]);
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+function DialogAcreage({ open, Transition, handleClose, handleDeleteFilter, onChangeFilters, filters }) {
+  const { acreage } = filters;
+  const [acreageSlide, setAcreageSlide] = useState(acreage);
+
+  const handleChangeFilters = () => {
+    onChangeFilters({
+      ...filters,
+      acreage: acreageSlide,
+    });
+    handleClose();
   };
+
+  const handleChange = (e) => {
+    setAcreageSlide(e.target.value);
+  };
+
   return (
-    <Dialog
-      open={open}
-      //   TransitionComponent={Transition}
-      //   keepMounted
-      onClose={handleClose}
-      //   aria-describedby="alert-dialog-slide-description"
-    >
+    <Dialog open={open} onClose={handleClose}>
       <Box
         sx={{
           padding: '0 17px',
@@ -69,14 +75,14 @@ function DialogAcreage({ open, Transition, handleClose, handleDeleteFilter }) {
             fontWeight: 400,
             color: '#222',
           }}
-        >{`Diện tích từ ${value[0]} m2 đến ${value[1]} m2`}</Box>
+        >{`Diện tích từ ${acreageSlide[0]} m2 đến ${acreageSlide[1]} m2`}</Box>
         <Box sx={{ width: 480 }}>
           <Slider
             min={0}
             max={100}
-            step={1}
+            step={5}
             getAriaLabel={() => 'Temperature range'}
-            value={value}
+            value={acreageSlide}
             onChange={handleChange}
             valueLabelDisplay="auto"
             getAriaValueText={valuetext}
@@ -91,11 +97,8 @@ function DialogAcreage({ open, Transition, handleClose, handleDeleteFilter }) {
             padding: 0,
           },
         }}
-        onClick={handleClose}
       >
-        <Link to={`?acreage=${value[0]}-${value[1]}`}>
-          <Button orange text="Áp dụng" />
-        </Link>
+        <Button orange text="Áp dụng" onClickButton={() => handleChangeFilters()} />
       </Box>
     </Dialog>
   );

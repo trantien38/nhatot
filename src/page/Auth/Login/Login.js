@@ -19,21 +19,23 @@ export const Login = () => {
   }, []);
   const dispatch = useDispatch();
   const handleSubmit = async (values) => {
-    try {
-      console.log('Form submit: ', values);
-      const action = loginUser(values);
-      const resultAction = await dispatch(action);
-      const user = unwrapResult(resultAction);
-      toastMessage.success('Đăng nhập tài khoản thành công');
+    // try {
+    console.log('Form submit: ', values);
+    const action = loginUser(values);
+    const resultAction = await dispatch(action);
+    const user = unwrapResult(resultAction);
+    console.log(user);
+    if (user) {
+      toastMessage.success(user.msg);
+
       setTimeout(() => {
-        if (user) {
-          navigate('/');
-        }
+        navigate('/');
       }, 2000);
-    } catch (error) {
-      toastMessage.error('Tài khoản hoặc mật khẩu chưa chính xác');
-      console.log('Failed to login: ', error);
     }
+    // } catch (error) {
+    //   toastMessage.error('Tài khoản hoặc mật khẩu chưa chính xác');
+    //   console.log('Failed to login: ', error);
+    // }
   };
   return (
     <>

@@ -20,6 +20,7 @@ export default function Button({
   orange,
   text = 'click me 2',
   type = 'button',
+  onClickButton,
 }) {
   const classes = clsx(styles.btn, {
     [styles.btn_primary]: primary,
@@ -50,7 +51,7 @@ export default function Button({
           </button>
         </Link>
       ) : (
-        <button type={type} className={classes}>
+        <button type={type} className={classes} onClick={onClickButton}>
           {text}
         </button>
       )}

@@ -2,7 +2,10 @@ import { Box } from '@mui/material';
 import React from 'react';
 import Button from '../Button/Button';
 
-function NoMotel() {
+function NoMotel({ handleChangeMotel }) {
+  const handleResetFilter = () => {
+    handleChangeMotel();
+  };
   return (
     <Box
       sx={{
@@ -31,7 +34,7 @@ function NoMotel() {
         Không tìm thấy tin đăng cho những gì bạn đã lọc. Hãy thay đổi <br /> tiêu chí Lọc hoặc Bỏ lọc.
       </p>
       <Box sx={{ width: '80px', margin: 'auto' }}>
-        <Button linkTo="/cho-thue-phong-tro" orange text="Bỏ lọc" />
+        <Button onClickButton={() => handleResetFilter()} orange text="Bỏ lọc" />
       </Box>
     </Box>
   );

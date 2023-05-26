@@ -1,10 +1,15 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button } from '@mui/material';
+import { GoogleLogin } from '@react-oauth/google';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 import InputField from '~/components/HookForm/InputField';
 import { APPLE_ICON, FACEBOOK_ICON, GOOGLE_ICON, LOGIN_BACKGROUND, LOGIN_LOGO } from '~/constants';
+
+import React, { useState, useEffect } from 'react';
+import { googleLogout, useGoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
 
 function LoginForm(props) {
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -35,6 +40,46 @@ function LoginForm(props) {
       await onSubmit(values);
     }
   };
+
+  // LOGIN GOOGLE
+
+  // const responseMessage = (response) => {
+  //   console.log(response);
+  // };
+  // const errorMessage = (error) => {
+  //   console.log(error);
+  // };
+
+  // const [user, setUser] = useState([]);
+  // const [profile, setProfile] = useState([]);
+
+  // const login = useGoogleLogin({
+  //   onSuccess: (codeResponse) => setUser(codeResponse),
+  //   onError: (error) => console.log('Login Failed:', error),
+  // });
+
+  // useEffect(() => {
+  //   if (user) {
+  //     axios
+  //       .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+  //         headers: {
+  //           Authorization: `Bearer ${user.access_token}`,
+  //           Accept: 'application/json',
+  //         },
+  //       })
+  //       .then((res) => {
+  //         setProfile(res.data);
+  //         console.log(res.data);
+  //       })
+  //       .catch((err) => console.log(err));
+  //   }
+  // }, [user]);
+  // // log out function to log the user out of google and set the profile array to null
+  // const logOut = () => {
+  //   googleLogout();
+  //   setProfile(null);
+  // };
+
   return (
     <Box
       sx={{
@@ -66,7 +111,7 @@ function LoginForm(props) {
         <Box
           sx={{
             transform: 'translateX(-50%)',
-            bottom: '20px',
+            bottom: '12px',
             left: '50%',
             width: '340px',
             background: '#fff',
@@ -104,7 +149,7 @@ function LoginForm(props) {
                     },
                   }}
                 >
-                  <img src={LOGIN_LOGO} />
+                  <img src={LOGIN_LOGO} alt="Login logo" />
                 </Box>
               </Box>
               <Box>
@@ -219,14 +264,29 @@ function LoginForm(props) {
                 },
               }}
             >
-              <Link style={{}}>
-                <img src={FACEBOOK_ICON} />
+              <Link>
+                <img src={FACEBOOK_ICON} alt='Facebook Icon' />
+              </Link>
+              <Link style={{ margin: '0 26px' }}>
+                <img src={GOOGLE_ICON} alt="Goodle Icon"  />
+                {/* <img src={GOOGLE_ICON} onClick={()=>login()} /> */}
+                {/* <GoogleLogin onSuccess={responseMessage} onError={errorMessage} /> */}
+                {/* {profile ? (
+                  <div>
+                    <img src={profile.picture} alt="user image" />
+                    <h3>User Logged in</h3>
+                    <p>Name: {profile.name}</p>
+                    <p>Email Address: {profile.email}</p>
+                    <br />
+                    <br />
+                    <button onClick={logOut}>Log out</button>
+                  </div>
+                ) : (
+                  <button onClick={() => login()}>Sign in with Google 🚀 </button>
+                )} */}
               </Link>
               <Link>
-                <img src={GOOGLE_ICON} />
-              </Link>
-              <Link>
-                <img src={APPLE_ICON} />
+                <img src={APPLE_ICON} alt="Apple Icon" />
               </Link>
             </Box>
             <Box
@@ -242,7 +302,9 @@ function LoginForm(props) {
                 },
               }}
             >
-              Ban chưa có tài khoản?<Link to={'/register'}>Đăng ký ngay</Link>
+              {/* <p> */}
+              Bạn chưa có tài khoản? &nbsp;<Link to={'/register'}>Đăng ký ngay</Link>
+              {/* </p> */}
             </Box>
           </Box>
         </Box>

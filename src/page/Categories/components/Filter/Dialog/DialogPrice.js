@@ -1,26 +1,29 @@
 import { Box, Dialog, Slider } from '@mui/material';
 import React from 'react';
+import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Button from '~/components/Button/Button';
 import { BACK_ICON } from '~/constants';
 function valuetext(value) {
   return `${value}°C`;
 }
-function DialogPrice({ open, Transition, handleClose, handleDeleteFilter }) {
-  const [value, setValue] = React.useState([0, 3000000]);
+function DialogPrice({ open, Transition, handleClose, handleDeleteFilter, onChangeFilters, filters }) {
+  const { price } = filters;
+  const [priceSlide, setPriceSlide] = useState(price);
+  const handleChangeFilters = () => {
+    onChangeFilters({
+      ...filters,
+      price: priceSlide,
+    });
+    handleClose();
+  };
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const handleChange = (e) => {
+    setPriceSlide(e.target.value);
   };
 
   return (
-    <Dialog
-      open={open}
-      //   TransitionComponent={Transition}
-      //   keepMounted
-      onClose={handleClose}
-      //   aria-describedby="alert-dialog-slide-description"
-    >
+    <Dialog open={open} onClose={handleClose}>
       <Box
         sx={{
           padding: '0 17px',
@@ -71,10 +74,10 @@ function DialogPrice({ open, Transition, handleClose, handleDeleteFilter }) {
             fontWeight: 400,
             color: '#222',
           }}
-        >{`Giá từ ${value[0].toLocaleString('vi', {
+        >{`Giá từ ${priceSlide[0]?.toLocaleString('vi', {
           style: 'currency',
           currency: 'VND',
-        })} đến ${value[1].toLocaleString('vi', {
+        })} đến ${priceSlide[1]?.toLocaleString('vi', {
           style: 'currency',
           currency: 'VND',
         })}`}</Box>
@@ -84,7 +87,7 @@ function DialogPrice({ open, Transition, handleClose, handleDeleteFilter }) {
             max={20000000}
             step={500000}
             getAriaLabel={() => 'Temperature range'}
-            value={value}
+            value={priceSlide}
             onChange={handleChange}
             valueLabelDisplay="auto"
             getAriaValueText={valuetext}
@@ -99,11 +102,8 @@ function DialogPrice({ open, Transition, handleClose, handleDeleteFilter }) {
             padding: 0,
           },
         }}
-        onClick={handleClose}
       >
-        <Link to={`?price=${value[0]}-${value[1]}`}>
-          <Button orange text="Áp dụng" />
-        </Link>
+        <Button orange text="Áp dụng" onClickButton={() => handleChangeFilters()} />
       </Box>
     </Dialog>
   );

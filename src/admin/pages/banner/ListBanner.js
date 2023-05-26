@@ -1,53 +1,87 @@
 import { Delete, Edit } from '@mui/icons-material';
-import { Box } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import React, { useState, useEffect } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
-import bannerApi from '~/api/BannerApi';
+import adminApi from '~/api/AdminApi';
+import { toastMessage } from '~/utils/toast';
 import BannerToolbar from './BannerToolbar';
 
-const columns = [
-  { field: 'id', headerName: 'ID', width: 38 },
-  { field: 'img', headerName: 'Image', width: 330 },
-  { field: 'active', headerName: 'Active', width: 80 },
-  {
-    field: 'actions',
-    type: 'actions',
-    headerName: 'Actions',
-    width: 100,
-    cellClassName: 'actions',
-    getActions: ({ id }) => {
-      return [
-        <Link to={`/admin/banner/edit-${id}`}>
-          <GridActionsCellItem icon={<Edit />} label="Edit" className="textPrimary" color="inherit" />
-        </Link>,
-        // <Link onClick={handleSubmit(id)}>
-        //   <GridActionsCellItem icon={<Delete />} label="Delete" color="inherit" />
-        // </Link>,
-      ];
-    },
-  },
-];
 export const ListBanner = () => {
   const height = window.innerHeight;
   const [banners, setBanners] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
-  useEffect(() => {
-    console.log('useeffect');
-    const fetchBanners = async () => {
-      console.log('useeffect2');
+  const [open, setOpen] = useState(false);
+  const [idBanner, setIdBanner] = useState();
 
-      const bannerList = await bannerApi.getAll();
-      // setBanners(bannerList.banner);
+  const columns = [
+    { field: 'IdBanner', headerName: 'ID', width: 38 },
+    { field: 'srcBanner', headerName: 'Image', width: 230 },
+    { field: 'Active', headerName: 'Active', width: 80 },
+    {
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
+      width: 100,
+      cellClassName: 'actions',
+      getActions: ({ id }) => {
+        return [
+          <Link to={`/admin/banner/edit-${id}`}>
+            <GridActionsCellItem
+              sx={{ '& svg': { width: '23px', height: '23px' } }}
+              icon={<Edit />}
+              label="Edit"
+              className="textPrimary"
+              color="inherit"
+            />
+          </Link>,
+          <Link onClick={() => handleClickOpen(id)}>
+            <GridActionsCellItem
+              sx={{ '& svg': { width: '23px', height: '23px' } }}
+              icon={<Delete sx={{ color: 'red' }} />}
+              label="Delete"
+              color="inherit"
+            />
+          </Link>,
+        ];
+      },
+    },
+  ];
+
+  useEffect(() => {
+    (async () => {
+      const bannerList = await adminApi.adminGetAllBanner();
+      setBanners(bannerList.banner);
       console.log(bannerList);
-    };
-    fetchBanners();
+    })();
   }, []);
+
+  const handleClickOpen = (id) => {
+    console.log(id);
+    setOpen(true);
+    setIdBanner(id);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSubmit = async (id) => {
+    console.log(id);
+    const removeBanner = await adminApi.removeBanner(idBanner);
+    setOpen(false);
+    setBanners(removeBanner.banner);
+    toastMessage.success(removeBanner.msg);
+    console.log(removeBanner.banner);
+  };
+
   return (
-    <Box sx={{ margin: '0 30px 0 46px' }}>
-      <div style={{ height: `calc(${height}px - 120px)`, width: '100%' }}>
+    <Box>
+      <Toaster />
+      <Box sx={{ height: `calc(${height}px - 120px)`, width: '100%' }}>
         <DataGrid
-          getRowId={(questions) => questions.id}
+          getRowId={(banners) => banners.IdBanner}
           rows={banners}
           rowModesModel={rowModesModel}
           columns={columns}
@@ -60,8 +94,25 @@ export const ListBanner = () => {
           slotProps={{
             toolbar: { setBanners, setRowModesModel },
           }}
+          sx={{ fontSize: '14px' }}
         />
-      </div>
+      </Box>
+      <Dialog open={open} onClose={handleClose} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
+        <DialogTitle id="alert-dialog-title">{'Xác nhận xóa banner này?'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description" sx={{ fontSize: '14px' }}>
+            Hành động này không thể được hoàn tác. Bạn có muốn tiếp tục?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ '& button': { fontSize: '14px' } }}>
+          <Button sx={{ '&:hover': { backgroundColor: 'red', color: 'white' } }} onClick={() => handleSubmit(idBanner)}>
+            Xóa
+          </Button>
+          <Button onClick={handleClose} autoFocus>
+            Hủy bỏ
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

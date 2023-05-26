@@ -10,6 +10,8 @@ const notifiApi = {
     const url = `/deleteNotifi/${data.IdNotifi}`;
     return axiosClient.post(url, data);
   },
+
+
 };
 
 export default notifiApi;

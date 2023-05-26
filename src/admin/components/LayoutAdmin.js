@@ -9,7 +9,7 @@ export default function LayoutAdmin() {
       <Sidebar />
       <div>
         <Navbar />
-        <Box sx={{ marginTop: '100px', marginLeft: '300px' }}>
+        <Box sx={{ marginTop: '86px', marginLeft: '280px', padding: '0 30px' }}>
           <Outlet />
         </Box>
       </div>

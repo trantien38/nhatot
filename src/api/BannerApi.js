@@ -1,29 +1,24 @@
-import { Update } from '@mui/icons-material';
 import axiosClient from './axiosClient';
 
+const config = {
+  headers: {
+    'content-type': 'multipart/form-data',
+  },
+};
 const bannerApi = {
-  getSrcBanner(params) {
+  getSrcBanner() {
     const url = '/banner:active';
-    return axiosClient.get(url, { params });
-  },
-  getAll(params) {
-    const url = '/banners';
-    console.log('useeffect3')
-    return axiosClient.get(url, { params });
-  },
-  get(id) {
-    const url = `/banner/${id}`;
     return axiosClient.get(url);
   },
-  add(data) {
-    const config = {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    };
+  getAll() {
+    const url = '/banners';
+    return axiosClient.get(url);
+  },
+  
+  
+  add(formData) {
     const url = '/banner';
-    console.log(data.get('file'));
-    return axiosClient.post(url, data);
+    return axiosClient.post(url, formData, config);
   },
   update(data) {
     const url = `/banner/${data.id}`;

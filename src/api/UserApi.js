@@ -1,20 +1,21 @@
 import axiosClient from './axiosClient';
 const userApi = {
+
   addFavourite(data) {
-    const url = './user/addFavourite';
+    const url = '/user/addFavourite';
     return axiosClient.post(url, data);
   },
   deleteFavourite(data) {
-    const url = './user/deleteFavourite';
+    const url = '/user/deleteFavourite';
     return axiosClient.post(url, data);
   },
 
   register(data) {
-    const url = './auth/register';
+    const url = '/auth/register';
     return axiosClient.post(url, data);
   },
   login(data) {
-    const url = './auth/login';
+    const url = '/auth/login';
     return axiosClient.post(url, data);
   },
   changePassword(data) {
@@ -54,11 +55,6 @@ const userApi = {
     return axiosClient.post(url, data);
   },
 
-  // ADMIN
-  getAllUser() {
-    const url = 'users';
-    return axiosClient.get(url);
-  },
 };
 
 export default userApi;

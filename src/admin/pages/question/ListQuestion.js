@@ -2,15 +2,24 @@ import { Delete, Edit } from '@mui/icons-material';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import React, { useState, useEffect } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import questionApi from '~/api/QuestionApi';
+import { toastMessage } from '~/utils/toast';
 import QuestionToolbar from './QuestionToolbar';
 
 export const ListQuestion = () => {
+  const [open, setOpen] = useState(false);
+  const height = window.innerHeight;
+  const [questions, setQuestions] = useState([]);
+  const [rowModesModel, setRowModesModel] = useState({});
+  const [idQuestion, setIdQuestion] = useState();
+
   const columns = [
-    { field: 'id', headerName: 'ID', width: 38 },
-    { field: 'content', headerName: 'Question', width: 330 },
-    { field: 'active', headerName: 'Active', width: 80 },
+    // { field: 'id', headerName: 'STT', width: 38 },
+    { field: 'IdQuestion', headerName: 'ID', width: 168 },
+    { field: 'Content', headerName: 'Question', width: 280 },
+    { field: 'Active', headerName: 'Active', width: 80 },
     {
       field: 'actions',
       type: 'actions',
@@ -20,35 +29,32 @@ export const ListQuestion = () => {
       getActions: ({ id }) => {
         return [
           <Link to={`/admin/question/edit-${id}`}>
-            <GridActionsCellItem icon={<Edit />} label="Edit" className="textPrimary" color="inherit" />
+            <GridActionsCellItem
+              sx={{ '& svg': { width: '23px', height: '23px' } }}
+              icon={<Edit />}
+              label="Edit"
+              className="textPrimary"
+              color="inherit"
+            />
           </Link>,
           <Link onClick={() => handleClickOpen(id)}>
-            <GridActionsCellItem icon={<Delete />} label="Delete" color="inherit" />
+            <GridActionsCellItem
+              sx={{ '& svg': { width: '23px', height: '23px' } }}
+              icon={<Delete sx={{ color: 'red' }} />}
+              label="Delete"
+              color="inherit"
+            />
           </Link>,
         ];
       },
     },
   ];
-  const handleSubmit = async (idQuestion) => {
-    console.log(idQuestion);
-    const removeQuestion = await questionApi.remove(idQuestion);
-    setOpen(false);
-    console.log(removeQuestion);
-  };
 
-  const [open, setOpen] = useState(false);
-  const height = window.innerHeight;
-  const [questions, setQuestions] = useState([]);
-  const [rowModesModel, setRowModesModel] = useState({});
-  const [idQuestion, setIdQuestion] = useState();
-  
-  const fetchQuestions = async () => {
-    const questionList = await questionApi.getAll();
-    setQuestions(questionList.question);
-  };
-  
   useEffect(() => {
-    fetchQuestions();
+    (async () => {
+      const questionList = await questionApi.getAll();
+      setQuestions(questionList.question);
+    })();
   }, []);
 
   const handleClickOpen = (id) => {
@@ -61,11 +67,21 @@ export const ListQuestion = () => {
     setOpen(false);
   };
 
+  const handleSubmit = async (idQuestion) => {
+    console.log(idQuestion);
+    const removeQuestion = await questionApi.remove(idQuestion);
+    setOpen(false);
+    setQuestions(removeQuestion.question);
+    toastMessage.success(removeQuestion.msg);
+    console.log(removeQuestion.question);
+  };
+
   return (
-    <Box sx={{ margin: '0 30px 0 46px' }}>
-      <div style={{ height: `calc(${height}px - 120px)`, width: '100%' }}>
+    <Box>
+      <Toaster />
+      <Box sx={{ height: `calc(${height}px - 120px)`, width: '100%' }}>
         <DataGrid
-          getRowId={(questions) => questions.id}
+          getRowId={(questions) => questions.IdQuestion}
           rows={questions}
           rowModesModel={rowModesModel}
           columns={columns}
@@ -78,19 +94,22 @@ export const ListQuestion = () => {
           slotProps={{
             toolbar: { setQuestions, setRowModesModel },
           }}
+          sx={{ fontSize: '14px' }}
         />
-      </div>
+      </Box>
       <Dialog open={open} onClose={handleClose} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
-        <DialogTitle id="alert-dialog-title">{'Confirm delete this question?'}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{'Xác nhận xóa câu hỏi này?'}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            This action cannot be undone. Do you want to continue?
+          <DialogContentText id="alert-dialog-description" sx={{ fontSize: '14px' }}>
+            Hành động này không thể được hoàn tác. Bạn có muốn tiếp tục?
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => handleSubmit(idQuestion)}>Delete</Button>
+        <DialogActions sx={{ '& button': { fontSize: '14px' } }}>
+          <Button sx={{ '&:hover': { backgroundColor: 'red', color: 'white' } }} onClick={() => handleSubmit(idQuestion)}>
+            Xóa
+          </Button>
           <Button onClick={handleClose} autoFocus>
-            Cancel
+            Hủy bỏ
           </Button>
         </DialogActions>
       </Dialog>

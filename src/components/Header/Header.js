@@ -336,6 +336,11 @@ export default function Header({ socket }) {
                       <Link to="/manage-motel">Quản lý nhà trọ</Link>
                     </MenuItem>
                   )}
+                  {user.IdAuthority === 1 && (
+                    <MenuItem>
+                      <Link to="/admin">Trang admin</Link>
+                    </MenuItem>
+                  )}
                   <MenuItem onClick={logout}>
                     <Link to="/">Đăng xuất</Link>
                   </MenuItem>

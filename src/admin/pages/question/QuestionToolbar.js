@@ -4,27 +4,27 @@ import { GridToolbarContainer } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
 import { Slide } from '@mui/material';
 import { Link } from 'react-router-dom';
-import DialogEditUser from '../user/DialogEditUser';
+// import DialogEditUser from '../user/DialogEditUser';
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="down" ref={ref} {...props} />;
-});
+// const Transition = React.forwardRef(function Transition(props, ref) {
+//   return <Slide direction="down" ref={ref} {...props} />;
+// });
 
 function QuestionToolbar() {
-  const [openDialog, setOpenDialog] = useState(false);
+  // const [openDialog, setOpenDialog] = useState(false);
 
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
-  };
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
+  // const handleOpenDialog = () => {
+  //   setOpenDialog(true);
+  // };
+  // const handleCloseDialog = () => {
+  //   setOpenDialog(false);
+  // };
   return (
     <GridToolbarContainer>
       <Button color="primary" startIcon={<Add />}>
         <Link to="/admin/question/add">Thêm question</Link>
       </Button>
-      <DialogEditUser open={openDialog} Transition={Transition} handleClose={handleCloseDialog} />
+      {/* <DialogEditUser open={openDialog} Transition={Transition} handleClose={handleCloseDialog} /> */}
     </GridToolbarContainer>
   );
 }

@@ -18,12 +18,11 @@ export default function Sliders() {
     autoplaySpeed: 2000,
   };
   useEffect(() => {
-    const fetchBanner = async () => {
+    (async () => {
       const bannerList = await bannerApi.getSrcBanner();
       setBanner(bannerList.banner);
       console.log(bannerList);
-    };
-    fetchBanner();
+    })();
   }, []);
 
   return (
@@ -38,7 +37,11 @@ export default function Sliders() {
             {banner &&
               banner.map((result, index) => (
                 <div key={index} className={clsx(styles.slide, 'first')}>
-                  <img src={`${STATIC_HOST}/banners/${result.img}`} style={{ width: '100%' }} alt="HB PTY JUPITER" />
+                  <img
+                    src={`${STATIC_HOST}/banners/${result.srcBanner}`}
+                    style={{ width: '100%', height: '300px' }}
+                    alt="HB PTY JUPITER"
+                  />
                 </div>
               ))}
           </Slider>

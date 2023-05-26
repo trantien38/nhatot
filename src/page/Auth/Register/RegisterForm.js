@@ -74,7 +74,7 @@ function RegisterForm(props) {
         <Box
           sx={{
             transform: 'translateX(-50%)',
-            bottom: '20px',
+            bottom: '38px',
             left: '50%',
             width: '340px',
             background: '#fff',
@@ -112,7 +112,7 @@ function RegisterForm(props) {
                     },
                   }}
                 >
-                  <img src={REGISTER_LOGO} />
+                  <img src={REGISTER_LOGO} alt="Register logo" />
                 </Box>
               </Box>
               <Box>
@@ -218,10 +218,10 @@ function RegisterForm(props) {
                 },
               }}
             >
-              Bằng việc đăng ký, bạn đã đồng ý với
-              <Link to={'/forget-password'}>Điều khoản sử dụng</Link>của chúng tôi
+              Bằng việc đăng ký, bạn đã đồng ý với &nbsp;
+              <Link to={'/'}>Điều khoản sử dụng</Link>&nbsp; của chúng tôi
             </Box>
-            <Box>
+            {/* <Box>
               <p
                 style={{
                   color: '#8c8c8c',
@@ -230,8 +230,8 @@ function RegisterForm(props) {
               >
                 hoặc sử dụng
               </p>
-            </Box>
-            <Box
+            </Box> */}
+            {/* <Box
               sx={{
                 display: 'flex',
                 justifyContent: 'center',
@@ -258,7 +258,7 @@ function RegisterForm(props) {
               <Link>
                 <img src={APPLE_ICON} />
               </Link>
-            </Box>
+            </Box> */}
             <Box
               sx={{
                 fontSize: '.875rem',
@@ -272,7 +272,9 @@ function RegisterForm(props) {
                 },
               }}
             >
-              Ban đã có tài khoản?<Link to={'/login'}>Đăng nhập</Link>
+              <p>
+                Bạn đã có tài khoản?&nbsp;<Link to={'/login'}>Đăng nhập</Link>
+              </p>
             </Box>
           </Box>
         </Box>

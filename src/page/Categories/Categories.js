@@ -1,9 +1,9 @@
 import { KeyboardArrowUp } from '@mui/icons-material';
-import { Box, Grid, Pagination, Skeleton } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import motelApi from '~/api/MotelApi';
-import { STATIC_HOST } from '~/constants';
+import { AVATAR_DEFAULT, RED_HEART, ROOM_DEFAULT, SAVEAD_ICON, STATIC_HOST } from '~/constants';
 import styles from './Categories.module.scss';
 import Filter from './components/Filter/Filter';
 import MotelItem from './components/MotelItem/MotelItem';
@@ -11,35 +11,38 @@ import MotelItem from './components/MotelItem/MotelItem';
 import Geocode from 'react-geocode';
 import StorageKeys from '~/constants/storage-keys';
 import NoMotel from '~/components/NoData/NoMotel';
-
-const pageSize = 8;
+import { isEmpty } from 'lodash';
+import SkeletonMotelItem from '~/components/Skeleton/SkeletonMotelItem';
+import userApi from '~/api/UserApi';
+import { toastMessage } from '~/utils/toast';
+import { Toaster } from 'react-hot-toast';
 
 function Categories() {
   const infoUser = JSON.parse(localStorage.getItem(StorageKeys.USER));
-
+  const [filters, setFilters] = useState({
+    price: [0, 18286286],
+    acreage: [0, 88],
+    count: 0,
+    start: 0,
+    quantity: 2,
+    page: 1,
+  });
   const [loading, setLoading] = useState(true);
   const [opacity, setOpacity] = useState(0);
   const [limitMotels, setLimitMotels] = useState([]);
   const [favourite, setFavourite] = useState([]);
-  const [pagination, setPagination] = useState({
-    count: 0,
-    start: 0,
-    quantity: pageSize,
-  });
-  const [listLatAndLng, setListLatAndLng] = useState([]);
   const { IdProvince, IdDistrict, IdWard } = useParams();
-  const [searchParams] = useSearchParams();
-  const price = searchParams?.get('price')?.split('-');
-  const acreage = searchParams?.get('acreage')?.split('-');
 
-  // const toggleopacity = () => {
-  //   const scrolled = document.documentElement.scrollTop;
-  //   if (scrolled > 380) {
-  //     setOpacity(1);
-  //   } else {
-  //     setOpacity(0);
-  //   }
-  // };
+  const toggleOpacity = () => {
+    const scrolled = document.documentElement.scrollTop;
+    if (scrolled > 380) {
+      setOpacity(1);
+    } else {
+      setOpacity(0);
+    }
+  };
+
+  window.addEventListener('scroll', toggleOpacity);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -48,152 +51,132 @@ function Categories() {
     });
   };
 
-  const handlePageChange = (event, page) => {
-    console.log(page);
-    const start = (page - 1) * pageSize;
-    setPagination({ ...pagination, start });
+  const handleChangeFilters = (values) => {
+    setFilters(values);
+  };
+
+  const handleChangeFavourite = async (data) => {
+    console.log(data);
+    if (data.src == SAVEAD_ICON) {
+      const addFavourite = await userApi.addFavourite({ IdMotel: data.IdMotel, IdUser: infoUser?.IdUser });
+      console.log(addFavourite);
+      toastMessage.success(addFavourite.msg);
+      setFavourite(addFavourite.favourite);
+    } else {
+      const deleteFavourite = await userApi.deleteFavourite({ IdMotel: data.IdMotel, IdUser: infoUser?.IdUser });
+      toastMessage.success(deleteFavourite.msg);
+      setFavourite(deleteFavourite.favourite);
+    }
+  };
+  const handleChangeMotel = () => {
+    setFilters({
+      price: [0, 18286286],
+      acreage: [0, 88],
+      count: 0,
+      start: 0,
+      quantity: 2,
+      page: 1,
+    });
   };
 
   useEffect(() => {
-    const acreageMin = (acreage && acreage[0] * 1) || 0;
-    const acreageMax = (acreage && acreage[1] * 1) || 1000;
-    const priceMin = (price && price[0] / 1000000) || 0;
-    const priceMax = (price && price[1] / 1000000) || 1000;
+    const { price, acreage, start, quantity } = filters;
+    const [acreageMin, acreageMax] = acreage;
+
+    const priceMin = price[0] / 1000000;
+    const priceMax = price[1] / 1000000;
     if (IdWard) {
-      const fetchMotels = async () => {
+      (async () => {
         const motelList = await motelApi.getMotelsByIdWard({
-          IdUser: infoUser.IdUser,
+          IdUser: infoUser?.IdUser,
           IdWard,
-          start: pagination.start,
-          quantity: pagination.quantity,
+          start,
+          quantity,
           priceMin,
           priceMax,
           acreageMin,
           acreageMax,
         });
-        setPagination({ ...pagination, count: motelList.count });
-        console.log(motelList);
+        filters.count = motelList.count;
         setLimitMotels(motelList.motel);
         setFavourite(motelList.favourite);
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000);
-      };
-      fetchMotels();
+        setLoading(false);
+      })();
     } else if (IdDistrict) {
-      const fetchMotels = async () => {
+      (async () => {
         const motelList = await motelApi.getMotelsByIdDistrict({
-          IdUser: infoUser.IdUser,
+          IdUser: infoUser?.IdUser,
           IdDistrict,
-          start: pagination.start,
-          quantity: pagination.quantity,
+          start,
+          quantity,
           priceMin,
           priceMax,
           acreageMin,
           acreageMax,
         });
-        setPagination({ ...pagination, count: motelList.count });
         console.log(motelList);
         setFavourite(motelList.favourite);
-
+        filters.count = motelList.count;
         setLimitMotels(motelList.motel);
 
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000);
-      };
-      fetchMotels();
+        setLoading(false);
+      })();
     } else if (IdProvince) {
-      const fetchMotels = async () => {
+      (async () => {
         const motelList = await motelApi.getMotelsByIdProvince({
-          IdUser: infoUser.IdUser,
+          IdUser: infoUser?.IdUser,
           IdProvince,
-          start: pagination.start,
-          quantity: pagination.quantity,
+          start,
+          quantity,
           priceMin,
           priceMax,
           acreageMin,
           acreageMax,
         });
         console.log(motelList);
-        setPagination({ ...pagination, count: motelList.count });
+        filters.count = motelList.count;
         setLimitMotels(motelList.motel);
         setFavourite(motelList.favourite);
-
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000);
-      };
-      fetchMotels();
+        setLoading(false);
+      })();
     } else {
-      const fetchMotels = async () => {
+      (async () => {
         const motelList = await motelApi.getLimitMotels({
-          IdUser: infoUser.IdUser,
-          start: pagination.start,
-          quantity: pagination.quantity,
+          IdUser: infoUser?.IdUser,
+          start,
+          quantity,
           priceMin,
           priceMax,
           acreageMin,
           acreageMax,
         });
-
         console.log(motelList);
-        setPagination({ ...pagination, count: motelList.count });
+        filters.count = motelList.count;
         setLimitMotels(motelList.motel);
         setFavourite(motelList.favourite);
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000);
-      };
-      fetchMotels();
+        setLoading(false);
+      })();
     }
-  }, [
-    IdWard,
-    IdDistrict,
-    IdProvince,
-    pagination.start,
-    price && price[0],
-    price && price[1],
-    acreage && acreage[0],
-    acreage && acreage[1],
-  ]);
+  }, [IdWard, IdDistrict, IdProvince, filters]);
 
   useEffect(() => {
-    const fetchAllMotel = async () => {
+    (async () => {
       const allMotel = await motelApi.getAllMotels();
-      // findLatAndLng(allMotel.motel);
-    };
-    fetchAllMotel();
+    })();
   }, []);
 
-  // window.addEventListener('scroll', toggleopacity);
-  // const findLatAndLng = (listmotels) => {
-  //   const ListLatAndLng = [];
-  //   Geocode.setRegion('au');
-  //   Geocode.setLocationType('ROOFTOP');
-  //   Geocode.setApiKey(StorageKeys.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
-  //   listmotels.map((motel) => {
-  //     Geocode.fromAddress(`${motel?.Address}, ${motel?.WardName}, ${motel?.DistrictName}, ${motel?.ProvinceName}`).then(
-  //       (response) => {
-  //         ListLatAndLng.push({ ...motel, latAndLng: response.results[0].geometry.location });
-  //         // console.log(response.results[0].geometry.location);
-  //       },
-  //       (error) => {
-  //         console.error(error);
-  //       },
-  //     );
-  //     // console.log(`${motel?.Address}, ${motel?.WardName}, ${motel?.DistrictName}, ${motel?.ProvinceName}`);
-  //   });
-  //   setListLatAndLng(ListLatAndLng);
-  // };
+  console.log(window.location);
+  console.log(favourite);
+  limitMotels?.map((result, index) => {
+    console.log(favourite.filter((item) => item.IdMotel == result.IdMotel)[0] ? true : false);
+  });
 
   return (
     <Box>
+      <Toaster />
       <Filter
-        handlePageChange={handlePageChange}
-        pagination={pagination}
-        pageSize={pageSize}
-        listMotel={listLatAndLng}
+        onChangeFilters={handleChangeFilters}
+        // listMotel={listLatAndLng}
         address={
           IdWard
             ? limitMotels[0]?.WardName
@@ -203,47 +186,40 @@ function Categories() {
             ? limitMotels[0]?.ProvinceName
             : ''
         }
-        price={price}
-        acreage={acreage}
+        filters={filters}
       />
       <Grid container className={styles.motelList}>
         <Grid item md={7} sm={12} xs={12}>
-          {limitMotels[0] ? (
-            limitMotels?.map((result, index) => {
-              return loading ? (
-                <Skeleton key={index} variant="rectangular" width="100%" height={130} sx={{ margin: '6px 0' }} />
-              ) : (
-                <MotelItem
-                  key={index}
-                  isLove={favourite.filter((item) => item.IdMotel == result.IdMotel)[0] ? true : false}
-                  avatar={result?.Avatar?.includes('http') ? result?.Avatar : `${STATIC_HOST}avatars/${result.Avatar}`}
-                  time={{
-                    mon: result.month,
-                    week: result.week,
-                    day: result.day,
-                    hour: result.hour,
-                    minute: result.minute,
-                    second: result.second,
-                  }}
-                  name={result.Name}
-                  title={result.Title}
-                  acreage={result.Acreage}
-                  price={result.Price}
-                  img={result?.srcMedia?.includes('http') ? result.srcMedia : `${STATIC_HOST}motels/${result.srcMedia}`}
-                  address={
-                    IdDistrict
-                      ? `${result.WardPrefix} ${result.WardName}`
-                      : IdProvince
-                      ? `${result.DistrictPrefix} ${result.DistrictName}`
-                      : result.ProvinceName
-                  }
-                  IdMotel={result.IdMotel}
-                />
-              );
-            })
-          ) : (
-            <NoMotel />
-          )}
+          {limitMotels?.map((result, index) => {
+            return loading ? (
+              <SkeletonMotelItem />
+            ) : isEmpty(limitMotels[0]) ? (
+              <NoMotel handleChangeMotel={handleChangeMotel} />
+            ) : (
+              <MotelItem
+                onChangeFavourite={handleChangeFavourite}
+                key={index}
+                isLove={favourite.filter((item) => item.IdMotel == result.IdMotel)[0] ? RED_HEART : SAVEAD_ICON}
+                time={{
+                  mon: result.month,
+                  week: result.week,
+                  day: result.day,
+                  hour: result.hour,
+                  minute: result.minute,
+                  second: result.second,
+                }}
+                address={
+                  IdDistrict
+                    ? `${result.WardPrefix} ${result.WardName}`
+                    : IdProvince
+                    ? `${result.DistrictPrefix} ${result.DistrictName}`
+                    : result.ProvinceName
+                }
+                model={result}
+              />
+            );
+          })}
+          {/*  {isEmpty(limitMotels) && !loading && <NoMotel handleChangeMotel={handleChangeMotel} />} */}
         </Grid>
         <Grid item md={5}>
           <button

@@ -5,15 +5,26 @@ import { Box, Button, ButtonGroup, Flex, HStack, IconButton, Input, SkeletonText
 import StorageKeys from '~/constants/storage-keys';
 import Geocode from 'react-geocode';
 import iconMarker from '~/assets/images/markerIcon-removebg-preview.png';
-import { toast, Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import { toastMessage } from '~/utils/toast';
 import { Link } from 'react-router-dom';
 import theme from '~/theme';
+import motelApi from '~/api/MotelApi';
 
-const center = { lat: 16.047199, lng: 108.219955 };
+// const center = { lat: 16.047199, lng: 108.219955 };
 
-function ListMap({ listMotel }) {
-  const [motels, setMotels] = useState(listMotel);
+function ListMap() {
+  const [motels, setMotels] = useState(null);
+
+  const [listLatAndLng, setListLatAndLng] = useState([]);
+  useEffect(() => {
+    const fetchAllMotel = async () => {
+      const allMotel = await motelApi.getAllMotels();
+      // findLatAndLng(allMotel.motel);
+    };
+    fetchAllMotel();
+  }, []);
+
   const refMotels = useRef([]);
   const infoUser = JSON.parse(localStorage.getItem(StorageKeys?.USER));
   const addressUser = `${infoUser?.Address}, ${infoUser?.WardName}, ${infoUser?.DistrictName}, ${infoUser?.ProvinceName}`;
@@ -25,6 +36,7 @@ function ListMap({ listMotel }) {
   const [destination, setDestination] = useState('');
   const [radius, setRadius] = useState();
   const [markerLoaded, setMarkerLoaded] = useState(false);
+  const [location, setLocation] = useState('');
 
   /** @type React.MutableRefObject<HTMLInputElement> */
   const originRef = useRef();
@@ -35,7 +47,7 @@ function ListMap({ listMotel }) {
   const [coordinates, setCoordinates] = useState(null);
   Geocode.setRegion('au');
   Geocode.setLocationType('ROOFTOP');
-  // const findLatAndLng = () => {
+
   Geocode.setApiKey(StorageKeys.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
 
   useEffect(() => {
@@ -53,17 +65,15 @@ function ListMap({ listMotel }) {
       console.log(error);
     }
   }, [addressUser]);
-  // };
-  // useEffect(() => {
-  //   findLatAndLng();
-  // }, [addressUser]);
+
   // convert address to lat, lng
   useEffect(() => {
-    function findAroundHere() {
-      listMotel.map(async (motel) => {
+    (() => {
+      listLatAndLng?.map(async (motel) => {
         // eslint-disable-next-line no-undef
         const directionsService = new google.maps.DirectionsService();
         const results = await directionsService.route({
+          // const results =  directionsService.route({
           origin: addressUser,
           // destination: `${motel[0]?.Address}, ${motel[0]?.WardName}, ${motel[0]?.DistrictName}, ${motel[0]?.ProvinceName}`,
           destination: `${motel?.Address}, ${motel?.WardName}, ${motel?.DistrictName}, ${motel?.ProvinceName}`,
@@ -80,12 +90,12 @@ function ListMap({ listMotel }) {
           // setMotels([...motels, motel])
         }
       });
-      setTimeout(async () => {
-        await console.log(refMotels.current);
-        await setMotels(refMotels.current);
+
+      setTimeout(() => {
+        console.log(refMotels.current);
+        setMotels(refMotels.current);
       }, 1500);
-    }
-    findAroundHere();
+    })();
   }, [radius]);
 
   // setDestination(address);
@@ -118,6 +128,10 @@ function ListMap({ listMotel }) {
     refMotels.current = [];
   }
 
+  const handleChangeLocation = (e) => {
+    console.log(e.target.value);
+    setLocation(e.target.value);
+  };
   const handleChangeOrigin = (e) => {
     setOrigin(e.target.value);
   };
@@ -126,6 +140,9 @@ function ListMap({ listMotel }) {
     setDestination(e.target.value);
   };
   const handleChangeRadius = (e) => {
+    console.log(e.target.value);
+    console.log(location);
+
     refMotels.current = [];
     setRadius(e.target.value);
   };
@@ -137,6 +154,26 @@ function ListMap({ listMotel }) {
     console.log(infoElement);
     // setMarkerLoaded(true);
   };
+
+  // const findLatAndLng = (listmotels) => {
+  //   const ListLatAndLng = [];
+  //   Geocode.setRegion('au');
+  //   Geocode.setLocationType('ROOFTOP');
+  //   Geocode.setApiKey(StorageKeys.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
+  //   listmotels.map((motel) => {
+  //     Geocode.fromAddress(`${motel?.Address}, ${motel?.WardName}, ${motel?.DistrictName}, ${motel?.ProvinceName}`).then(
+  //       (response) => {
+  //         ListLatAndLng.push({ ...motel, latAndLng: response.results[0].geometry.location });
+  //         // console.log(response.results[0].geometry.location);
+  //       },
+  //       (error) => {
+  //         console.error(error);
+  //       },
+  //     );
+  //     // console.log(`${motel?.Address}, ${motel?.WardName}, ${motel?.DistrictName}, ${motel?.ProvinceName}`);
+  //   });
+  //   setListLatAndLng(ListLatAndLng);
+  // };
 
   return (
     <Flex position="relative" flexDirection="column" alignItems="center" h="600px" w="900px">
@@ -205,10 +242,17 @@ function ListMap({ listMotel }) {
         <HStack spacing={2} justifyContent="space-between">
           <Box flexGrow={6}>
             <Autocomplete>
+              <Input type="text" onChange={handleChangeLocation} value={location} placeholder="Nhập vị trí" ref={originRef} />
+            </Autocomplete>
+          </Box>
+        </HStack>
+        <HStack spacing={2} mt={8} justifyContent="space-between">
+          <Box flexGrow={6}>
+            <Autocomplete>
               <Input type="text" onChange={handleChangeOrigin} value={origin} placeholder="Điểm đi" ref={originRef} />
             </Autocomplete>
           </Box>
-          <Box sx={{ width: '120px' }}>
+          <Box sx={{ width: '118px', '& input': { margin: 0 } }}>
             <Autocomplete>
               <Input
                 type="text"
@@ -240,6 +284,7 @@ function ListMap({ listMotel }) {
             </ButtonGroup>
           </Box>
         </HStack>
+
         <HStack spacing={4} mt={4} justifyContent="space-between">
           <Text sx={{ margin: '6px 0' }}>Khoảng cách ước tính: {distance} </Text>
           <Text>Thời gian ước tính: {duration} </Text>

@@ -39,6 +39,8 @@ import styles from './Detail.module.scss';
 import messageApi from '~/api/MessageApi';
 import userApi from '~/api/UserApi';
 import { toastMessage } from '~/utils/toast';
+import { isEmpty } from 'lodash';
+import { Toaster } from 'react-hot-toast';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
@@ -65,7 +67,7 @@ function Detail({ socket }) {
   };
   useEffect(() => {
     (async () => {
-      const motelItem = await motelApi.getInfoMotel({ IdMotel, IdUser: user.IdUser });
+      const motelItem = await motelApi.getInfoMotel({ IdMotel, IdUser: user?.IdUser });
       console.log(motelItem);
       setMotel(motelItem.motel);
       console.log(motelItem.favourite[0] ? RED_HEART : SAVEAD_ICON);
@@ -110,10 +112,14 @@ function Detail({ socket }) {
   };
 
   const handleCreateRoom = async () => {
-    console.log({ IdMotel: IdMotel, IdRenter: user.IdUser, IdHost: motel[0].IdUser });
-    const { IdRoom } = await messageApi.createRoom({ IdMotel: IdMotel, IdRenter: user.IdUser, IdHost: motel[0].IdUser });
-    console.log(IdRoom);
-    navigate(`/message-${user.IdUser}/${IdRoom}`);
+    if (isEmpty(user?.IdUser)) {
+      toastMessage.error('Hãy đăng nhập để nhắn tin');
+    } else {
+      console.log({ IdMotel: IdMotel, IdRenter: user.IdUser, IdHost: motel[0].IdUser });
+      const { IdRoom } = await messageApi.createRoom({ IdMotel: IdMotel, IdRenter: user?.IdUser, IdHost: motel[0].IdUser });
+      console.log(IdRoom);
+      navigate(`/message-${user.IdUser}/${IdRoom}`);
+    }
   };
   const handleChangeMessage = async (newMessage) => {
     socket.emit('new_message', newMessage);
@@ -123,31 +129,39 @@ function Detail({ socket }) {
     const messageUserList = await messageApi.add(newMessage);
   };
   const handleSubmitQuestion = async (Content) => {
-    const { IdRoom } = await messageApi.createRoom({ IdMotel: IdMotel, IdRenter: user.IdUser, IdHost: motel[0].IdUser });
-    console.log(IdRoom);
-    const newMessage = {
-      Content,
-      IdUser: user.IdUser,
-      IdRoom,
-    };
-    handleChangeMessage(newMessage);
-    setTimeout(() => {
-      navigate(`/message-${user.IdUser}/${IdRoom}`);
-    }, 1000);
+    if (isEmpty(user)) {
+      toastMessage.error('Bạn phải đăng nhập mới nhắn tin được');
+    } else {
+      const { IdRoom } = await messageApi.createRoom({ IdMotel: IdMotel, IdRenter: user.IdUser, IdHost: motel[0].IdUser });
+      console.log(IdRoom);
+      const newMessage = {
+        Content,
+        IdUser: user.IdUser,
+        IdRoom,
+      };
+      handleChangeMessage(newMessage);
+      setTimeout(() => {
+        navigate(`/message-${user.IdUser}/${IdRoom}`);
+      }, 1000);
+    }
   };
 
   const handleSaveMotel = async (e) => {
-    console.log(e.target)
-    if (e.target.src === SAVEAD_ICON) {
-      console.log({ IdMotel, IdUser: user.IdUser });
-      const addFavourite = await userApi.addFavourite({ IdMotel, IdUser: user.IdUser });
-      console.log(addFavourite);
-      toastMessage.success(addFavourite.msg);
-      setIcon(RED_HEART);
+    if (isEmpty(user)) {
+      toastMessage.error('Hãy đăng nhập để lưu tin');
     } else {
-      const deleteFavourite = await userApi.deleteFavourite({ IdMotel, IdUser: user.IdUser });
-      toastMessage.success(deleteFavourite.msg);
-      setIcon(SAVEAD_ICON);
+      console.log(e.target);
+      if (e.target.src === SAVEAD_ICON) {
+        console.log({ IdMotel, IdUser: user.IdUser });
+        const addFavourite = await userApi.addFavourite({ IdMotel, IdUser: user.IdUser });
+        console.log(addFavourite);
+        toastMessage.success(addFavourite.msg);
+        setIcon(RED_HEART);
+      } else {
+        const deleteFavourite = await userApi.deleteFavourite({ IdMotel, IdUser: user.IdUser });
+        toastMessage.success(deleteFavourite.msg);
+        setIcon(SAVEAD_ICON);
+      }
     }
   };
 
@@ -155,6 +169,7 @@ function Detail({ socket }) {
 
   return (
     <Grid container>
+      <Toaster />
       <Grid item md={8} sm={12} xs={12}>
         <Box sx={{ backgroundColor: '#eee' }}>
           <Box sx={{ padding: '0 120px' }}>

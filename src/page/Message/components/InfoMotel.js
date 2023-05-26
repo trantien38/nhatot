@@ -14,7 +14,7 @@ function InfoMotel({ callBackGetIdHost, IdRoom }) {
       console.log(IdRoom);
       console.log(InfoMotels.motel);
       setInfoMotel(InfoMotels?.motel);
-      callBackGetIdHost(InfoMotels?.motel[0]?.IdUser);
+      // callBackGetIdHost(InfoMotels?.motel[0]?.IdUser);
     })();
   }, [IdRoom]);
   
