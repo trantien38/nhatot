@@ -11,8 +11,12 @@ const StorageKeys = {
   // NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: 'AIzaSyBS6lGj7CsMDE5O9bMEf3I3anmfn34OBlA', //7
 
   NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: 'AIzaSyDb5xOZiLOJAtKJWj4spvQf3UEQvE-3sc4', // Sỹ bùi
+  // NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: 'AIzaSyA4U7NiEGbOGvkdyaVJ1tbKAAWBB9uz7uA', // Quang Huy
+  // NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: 'AIzaSyCPgjso1A3rEuIAg2SdNz9fhHtBzkBZzF4', // Quang Huy 2
+  // NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: 'AIzaSyCBtdOlSHheuzu_nmuOku_BIzc4_q2Gx5E', // Quang Huy 3
   // NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: 'AIzaSyAcygHzAe_KRtKoqMEv4gyF05YXeUZl4gc', // Trần Tiến
   // NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: 'AIzaSyBBe98uaYmZZ1pYXM8WGfr3mmRTTf3NBxA', // wiro
+  // NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: 'AIzaSyCuS20tP_3x_HeCequgVkVm6oKuonAhtW4', // youtube
 
   // twitter
   // NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: 'AIzaSyA3bsDl1xddiU_w38hA-fsGea8kWsp5uJM', // wiro

@@ -4,7 +4,8 @@
   position: fixed;
   top: 0;
   // z-index: 1000;
-  background: rgb(226, 216, 216);
+  // background: rgb(226, 216, 216);
+  background: rgb(119, 114, 114);
 }
 
 .sidebar_scrollbar {
@@ -18,14 +19,16 @@
   & > nav > ul {
     padding: 0;
   }
-  & > nav > ul > li {
+  & > nav > ul > li  span {
+    // color: #16bfc6;
+    color: #fff;
   }
   & > nav > ul > li > p {
     padding: 12px;
     margin: 0;
   }
   & > nav > ul > li > a {
-    padding: 12px 0 12px 24px;
+    padding: 12px 0 12px 18px;
     width: 100%;
 
     // width: calc(100% - 24px);
@@ -35,7 +38,7 @@
     margin: 0;
   }
   & > nav > ul > li > a:hover {
-    background-color: orange;
+    background-color: rgb(169, 158, 138);
   }
 
   & > nav > ul > li > p {

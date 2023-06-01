@@ -85,24 +85,7 @@ export const EditQuestion = () => {
     >
       <Toaster />
       <Grid item md={12} sm={12} xs={12}>
-        <InputField
-          sx={{
-            fontSize: 2,
-            color: 'red',
-            '& label': {
-              fontSize: 14,
-            },
-            '& svg': {
-              fontSize: 18,
-            },
-          }}
-          label="Question"
-          name="question"
-          type="text"
-          errors={errors}
-          required
-          control={control}
-        />
+        <InputField label="Question" name="question" type="text" errors={errors} required control={control} />
       </Grid>
 
       <Grid item md={12} sm={12} xs={12}>

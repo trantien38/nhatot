@@ -18,6 +18,8 @@ function MotelItem(props) {
   } = props;
 
   console.log(isLove);
+
+  
   const infoUser = JSON.parse(localStorage.getItem(StorageKeys.USER));
   const handleChangeIcon = async (e) => {
     if (!infoUser?.IdUser) {
@@ -31,13 +33,13 @@ function MotelItem(props) {
       <Toaster />
       <Link to={`/detail/${IdMotel}`}>
         <Grid container>
-          <Grid item>
+          <Grid item sx={{ width: '110px' }}>
             <img
-              style={{ width: '110px', height: '110px' }}
+              style={{ width: '100%', height: '110px' }}
               src={!srcMedia ? AVATAR_DEFAULT : `${STATIC_HOST}motels/${srcMedia}`}
             />
           </Grid>
-          <Grid item>
+          <Grid item sx={{ width: 'calc(100% - 110px)' }}>
             <Box className={styles.item}>
               <h3>{Title || 'Cho thuê phòng trọ'}</h3>
               <span>{Acreage}m2</span>

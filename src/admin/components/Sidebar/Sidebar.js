@@ -22,40 +22,70 @@ function Sidebar() {
           <ul>
             <li>
               <Link to="/admin/dashboard">
-                <Home />
+                <Home
+                  sx={{
+                    // color: 'blue',
+                    color: '#16bfc6',
+                  }}
+                />
                 <span>Thống kê</span>
               </Link>
             </li>
             <li>
               <Link to="/admin/user/list">
-                <PersonPinCircleOutlined />
+                <PersonPinCircleOutlined
+                  sx={{
+                    // color: 'blue',
+                    color: '#16bfc6',
+                  }}
+                />
                 <span>Quản lý người dùng</span>
               </Link>
             </li>
             <li>
               <Link to="/admin/question/list">
-                <HelpOutline />
+                <HelpOutline
+                  sx={{
+                    // color: 'blue',
+                    color: '#16bfc6',
+                  }}
+                />
                 <span>Quản lý questions</span>
               </Link>
             </li>
             <li>
               <Link to="/admin/banner/list">
-                <ViewCarousel />
+                <ViewCarousel
+                  sx={{
+                    // color: 'blue',
+                    color: '#16bfc6',
+                  }}
+                />
                 <span>Quản lý banners</span>
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link to="/admin/question/list">
-                <FeedOutlined />
+                <FeedOutlined
+                  sx={{
+                    // color: 'blue',
+                    color: '#16bfc6'
+                  }}
+                />
                 <span>Phê duyệt tin đăng</span>
               </Link>
             </li>
             <li>
               <Link to="/admin/question/list">
-                <VerifiedUserOutlined />
+                <VerifiedUserOutlined
+                  sx={{
+                    // color: 'blue',
+                    color: '#16bfc6'
+                  }}
+                />
                 <span>Phê duyệt tài khoản chủ trọ</span>
               </Link>
-            </li>
+            </li> */}
           </ul>
         </nav>
       </Box>

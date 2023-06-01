@@ -51,7 +51,6 @@ function SkeletonMotelItem() {
             </span>
             <br />
             <br />
-            <br />
             <Box sx={{ display: 'flex', alignItems: 'center', '& span': { fontSize: '14px' } }}>
               <Skeleton variant="rectangular" width={210} height={20} />
             </Box>

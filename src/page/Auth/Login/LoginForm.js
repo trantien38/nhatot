@@ -19,7 +19,7 @@ function LoginForm(props) {
       .required('Vui lòng nhập số điện thoại')
       .matches(phoneRegExp, 'Số điện thoại không hợp lệ')
       .min(10, 'Số điện thoại phải đủ 10 số')
-      .max(10, 'Số điện thoại phải đủ 10 số'),
+      .max(10, 'Số điện thoại vượt quá 10 số'),
     password: yup.string().required('Vui lòng nhập mật khẩu').min(6, 'Mật khẩu tối thiểu 6 ký tự'),
   });
   const {
@@ -43,43 +43,44 @@ function LoginForm(props) {
 
   // LOGIN GOOGLE
 
-  // const responseMessage = (response) => {
-  //   console.log(response);
-  // };
-  // const errorMessage = (error) => {
-  //   console.log(error);
-  // };
+  const responseMessage = (response) => {
+    console.log(response);
+  };
+  const errorMessage = (error) => {
+    console.log(error);
+  };
 
-  // const [user, setUser] = useState([]);
-  // const [profile, setProfile] = useState([]);
+  const [user, setUser] = useState([]);
+  const [profile, setProfile] = useState([]);
 
-  // const login = useGoogleLogin({
-  //   onSuccess: (codeResponse) => setUser(codeResponse),
-  //   onError: (error) => console.log('Login Failed:', error),
-  // });
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => setUser(codeResponse),
+    onError: (error) => console.log('Login Failed:', error),
+  });
 
-  // useEffect(() => {
-  //   if (user) {
-  //     axios
-  //       .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
-  //         headers: {
-  //           Authorization: `Bearer ${user.access_token}`,
-  //           Accept: 'application/json',
-  //         },
-  //       })
-  //       .then((res) => {
-  //         setProfile(res.data);
-  //         console.log(res.data);
-  //       })
-  //       .catch((err) => console.log(err));
-  //   }
-  // }, [user]);
-  // // log out function to log the user out of google and set the profile array to null
-  // const logOut = () => {
-  //   googleLogout();
-  //   setProfile(null);
-  // };
+  useEffect(() => {
+    if (user) {
+      axios
+        .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+            Accept: 'application/json',
+          },
+        })
+        .then((res) => {
+          setProfile(res.data);
+          console.log(res.data);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [user]);
+  // log out function to log the user out of google and set the profile array to null
+  const logOut = () => {
+    googleLogout();
+    setProfile(null);
+  };
 
+  // LOGIN GOOGLE
   return (
     <Box
       sx={{
@@ -153,44 +154,10 @@ function LoginForm(props) {
                 </Box>
               </Box>
               <Box>
-                <InputField
-                  sx={{
-                    fontSize: 2,
-                    color: 'red',
-                    '& label': {
-                      fontSize: 14,
-                    },
-                    '& svg': {
-                      fontSize: 18,
-                    },
-                  }}
-                  label="Số điện thoại"
-                  name="phoneNumber"
-                  type="text"
-                  errors={errors}
-                  required
-                  control={control}
-                />
+                <InputField label="Số điện thoại" name="phoneNumber" type="text" errors={errors} required control={control} />
               </Box>
               <Box>
-                <InputField
-                  sx={{
-                    fontSize: 2,
-                    color: 'red',
-                    '& label': {
-                      fontSize: 14,
-                    },
-                    '& svg': {
-                      fontSize: 18,
-                    },
-                  }}
-                  label="Mật khẩu"
-                  type="password"
-                  name="password"
-                  errors={errors}
-                  required
-                  control={control}
-                />
+                <InputField label="Mật khẩu" type="password" name="password" errors={errors} required control={control} />
               </Box>
               <Button
                 sx={{
@@ -252,7 +219,7 @@ function LoginForm(props) {
                 justifyContent: 'center',
                 '& a': {
                   padding: 0,
-                  marginBottom: '40px',
+                  marginBottom: '30px',
                 },
                 '& img': {
                   cursor: 'pointer',
@@ -265,11 +232,11 @@ function LoginForm(props) {
               }}
             >
               <Link>
-                <img src={FACEBOOK_ICON} alt='Facebook Icon' />
+                <img src={FACEBOOK_ICON} alt="Facebook Icon" />
               </Link>
               <Link style={{ margin: '0 26px' }}>
-                <img src={GOOGLE_ICON} alt="Goodle Icon"  />
-                {/* <img src={GOOGLE_ICON} onClick={()=>login()} /> */}
+                {/* <img src={GOOGLE_ICON} alt="Goodle Icon"  /> */}
+                <img src={GOOGLE_ICON} onClick={() => login()} />
                 {/* <GoogleLogin onSuccess={responseMessage} onError={errorMessage} /> */}
                 {/* {profile ? (
                   <div>
@@ -300,11 +267,14 @@ function LoginForm(props) {
                 '& a:hover': {
                   color: '#4e8bef',
                 },
+                '& p': {
+                  marginTop: 0,
+                },
               }}
             >
-              {/* <p> */}
-              Bạn chưa có tài khoản? &nbsp;<Link to={'/register'}>Đăng ký ngay</Link>
-              {/* </p> */}
+              <p>
+                Bạn chưa có tài khoản? &nbsp;<Link to={'/register'}>Đăng ký ngay</Link>
+              </p>
             </Box>
           </Box>
         </Box>

@@ -23,7 +23,7 @@ function NoFavourite() {
         <img alt="icon" src={SAVEAD_ICON} /> &nbsp; ở tin đăng để lưu và xem lại sau.
       </span>
       <p>
-        <Button linkTo="/cho-thue-phong-tro" orange text="Bắt đầu tìm kiếm" />
+        <Button linkTo="/cho-thue-phong-tro" orange text="Quay lại" />
       </p>
     </Box>
   );

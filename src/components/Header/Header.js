@@ -69,7 +69,6 @@ export default function Header({ socket }) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
   useEffect(() => {
     socket?.on('follow', (data) => {
       if (data.IdFollowing === infoUser?.IdUser) {
@@ -100,7 +99,7 @@ export default function Header({ socket }) {
     socket?.on('post_motel', (data) => {
       console.log(data);
       data.followers.map((item) => {
-        if (infoUser?.IdUser === item.IdFollowers) {
+        if (infoUser?.IdUser == item.IdFollowers) {
           toastMessage.success(data.notifi);
           fetchNotifi();
         }

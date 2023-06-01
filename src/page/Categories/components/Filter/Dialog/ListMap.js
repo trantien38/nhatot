@@ -239,13 +239,13 @@ function ListMap() {
         minW="container.md"
         zIndex="1"
       >
-        <HStack spacing={2} justifyContent="space-between">
+        {/* <HStack spacing={2} justifyContent="space-between">
           <Box flexGrow={6}>
             <Autocomplete>
               <Input type="text" onChange={handleChangeLocation} value={location} placeholder="Nhập vị trí" ref={originRef} />
             </Autocomplete>
           </Box>
-        </HStack>
+        </HStack> */}
         <HStack spacing={2} mt={8} justifyContent="space-between">
           <Box flexGrow={6}>
             <Autocomplete>

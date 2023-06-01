@@ -1,6 +1,7 @@
 import { Delete, Edit, LockClockOutlined, LockOpenOutlined } from '@mui/icons-material';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import moment from 'moment/moment';
 
 import React, { useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
@@ -15,10 +16,15 @@ import EditToolbar from './UserToolbar';
 
 export const ListUser = () => {
   const columns = [
-    { field: 'IdUser', headerName: 'ID', width: 100 },
-    { field: 'Name', headerName: 'Họ và tên', width: 120 },
+    { field: 'IdUser', headerName: 'ID', width: 220 },
+    { field: 'Name', headerName: 'Họ và tên', width: 160 },
     // { field: 'Email', headerName: 'Email', width: 100 },
-    { field: 'BirthDay', headerName: 'Ngày sinh', width: 120 },
+    {
+      field: 'BirthDay',
+      headerName: 'Ngày sinh',
+      width: 120,
+      valueFormatter: (params) => moment(params?.value).format('DD/MM/YYYY'),
+    },
     { field: 'PhoneNumber', headerName: 'Số điện thoại', width: 110 },
     { field: 'Gender', headerName: 'Giới tính', width: 100 },
     { field: 'Address', headerName: 'Địa chỉ', width: 180 },

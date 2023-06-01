@@ -10,34 +10,55 @@ import theme from '~/theme';
 import { toastMessage } from '~/utils/toast';
 import styles from '../Profile.module.scss';
 import Sidebar from './Sidebar';
+import * as yup from 'yup';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 export const EditAccount = () => {
   const navigate = useNavigate();
   const IdUser = JSON.parse(localStorage.getItem(StorageKeys.USER))?.IdUser;
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const handleChangePassword = (e) => {
-    setOldPassword(e.target.value);
-  };
-  const handleChangeNewPassword = (e) => {
-    setNewPassword(e.target.value);
-  };
-  const handleChangeConfirmPassword = (e) => {
-    setConfirmPassword(e.target.value);
-  };
-  const handleSubmit = async () => {
-    if (newPassword == confirmPassword) {
-      const result = await userApi.changePassword({ IdUser, oldPassword, newPassword });
-      console.log(result);
+
+  const schema = yup.object().shape({
+    password: yup.string().required('Vui lòng nhập mật khẩu').min(6, 'Mật khẩu tối thiểu 6 ký tự'),
+    newPassword: yup.string().required('Vui lòng nhập mật khẩu mới').min(6, 'Mật khẩu tối thiểu 6 ký tự'),
+    confirmPassword: yup.string().oneOf([yup.ref('newPassword'), null], 'Mật khẩu nhập lại chưa khớp'),
+  });
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    defaultValues: {
+      password: '',
+      newPassword: '',
+      confirmPassword: '',
+    },
+    resolver: yupResolver(schema),
+  });
+
+  const handleOnSubmit = async (values) => {
+    const { password, newPassword, confirmPassword } = values;
+    console.log({ password, newPassword, confirmPassword, IdUser });
+
+    const result = await userApi.changePassword({ IdUser, oldPassword: password, newPassword });
+    console.log(result);
+
+    if (result.msg == 'Thay đổi mật khẩu thành công') {
       toastMessage.success(result.msg);
       setTimeout(() => {
         navigate('/profile');
       }, 2000);
+    } else {
+      toastMessage.error(result.msg);
     }
   };
+
   return (
-    <Box sx={{ maxWidth: theme.size.browser, margin: 'auto', '& h2': { paddingLeft: '12px' } }}>
+    <Box
+      component="form"
+      onSubmit={handleSubmit(handleOnSubmit)}
+      sx={{ maxWidth: theme.size.browser, margin: 'auto', '& h2': { paddingLeft: '12px' } }}
+    >
       <Toaster />
       <h2>Chỉnh sửa trang cá nhân</h2>
       <Grid container>
@@ -60,69 +81,25 @@ export const EditAccount = () => {
           item
           md={8}
           container
-          spacing={2}
+          spacing={1}
         >
           <Grid item md={12} sm={12} xs={12}>
             <h3>Thay đổi mật khẩu</h3>
           </Grid>
           <Grid item md={12} sm={12} xs={12}>
-            {/* <InputField
-              sx={{
-                fontSize: 2,
-                color: 'red',
-                '& label': {
-                  fontSize: 14,
-                },
-                '& svg': {
-                  fontSize: 18,
-                },
-              }}
-              label="Mật khẩu hiện tại"
-              name="password"
-              type="password"
-              // errors={errors}
-              required
-              // control={control}
-            /> */}
-            <TextField
-              item
-              id="outlined-basic"
-              type="password"
-              required
-              label="Mật khẩu hiện tại"
-              variant="outlined"
-              fullWidth
-              value={oldPassword}
-              onChange={handleChangePassword}
-              // helperText={oldPassword.split('').length < 6 ? 'Mật khẩu tối thiểu 6 ký tự' : ''}
-            />
+            <InputField label="Mật khẩu hiện tại" name="password" type="password" errors={errors} required control={control} />
           </Grid>
           <Grid item md={12} sm={12} xs={12}>
-            <TextField
-              item
-              id="outlined-basic"
-              type="password"
-              required
-              label="Mật khẩu mới"
-              variant="outlined"
-              fullWidth
-              value={newPassword}
-              onChange={handleChangeNewPassword}
-              // helperText={newPassword.split('').length < 6 ? 'Mật khẩu tối thiểu 6 ký tự' : ''}
-            />
+            <InputField label="Mật khẩu mới" name="newPassword" type="password" errors={errors} required control={control} />
           </Grid>
           <Grid item md={12} sm={12} xs={12}>
-            <TextField
-              item
-              id="outlined-basic"
-              type="password"
-              required
+            <InputField
               label="Xác nhận mật khẩu mới"
-              variant="outlined"
-              fullWidth
-              value={confirmPassword}
-              onChange={handleChangeConfirmPassword}
-              helperText={newPassword == confirmPassword ? '' : 'Mật khẩu không khớp'}
+              name="confirmPassword"
+              type="password"
+              errors={errors}
+              required
+              control={control}
             />
           </Grid>
           <Grid item md={12} sm={12} xs={12} onClick={handleSubmit}>

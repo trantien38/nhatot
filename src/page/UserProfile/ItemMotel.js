@@ -27,17 +27,21 @@ function ItemMotel({ result }) {
       }}
     >
       <Link to={`/detail/${result.IdMotel}`}>
-        <img width={'100%'} src={`${STATIC_HOST}motels/${result.srcMedia}`} />
+        <img width={'100%'} height={200} alt="image motel" src={`${STATIC_HOST}motels/${result.srcMedia}`} />
         <Box
           sx={{
             '& p': {
               whiteSpace: 'nowrap',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
+              color: '#222222',
             },
             '& b': {
               color: '#e5193b',
               fontWeight: 700,
+            },
+            '& > .css-15pjl2w': {
+              marginTop: '6px',
             },
           }}
         >

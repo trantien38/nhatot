@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Grid, Slide, TextField } from '@mui/material';
+import { Box, FormControl, Grid, InputLabel, MenuItem, Select, Slide, TextField } from '@mui/material';
 import { set } from 'lodash';
 import React, { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
@@ -21,6 +21,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
 });
 function EditMotel({ socket }) {
+  const [status, setStatus] = useState('');
   const { editSlug } = useParams();
   const [name, id] = editSlug.split('-');
   const [loading, setLoading] = useState(true);
@@ -64,6 +65,7 @@ function EditMotel({ socket }) {
           console.log(
             `${motelItem?.motel[0]?.Address}, ${motelItem?.motel[0]?.WardPrefix} ${motelItem?.motel[0]?.WardName}, ${motelItem?.motel[0]?.DistrictPrefix} ${motelItem?.motel[0]?.DistrictName}, Tp.${motelItem?.motel[0]?.ProvinceName}`,
           );
+          setStatus(motelItem?.motel[0]?.activeStatus);
           setImage(images);
           setTitleImage(`Tải lên ${images.length} hình ảnh`);
           setTitleVideo(`Tải lên ${videos.length} video`);
@@ -130,7 +132,7 @@ function EditMotel({ socket }) {
     setVideo(datas);
     setTitleVideo(`Tải lên ${datas.length} video`);
   };
-
+  const handleChangeStatus = () => {};
   const handleChangeDescription = (values) => {
     setDescription(values);
   };
@@ -219,7 +221,7 @@ function EditMotel({ socket }) {
       <Grid item md={2} sm={3.5} xs={12}>
         <h3>Ảnh/video nhà trọ</h3>
         <p>
-          Xem thêm về<Link>Quy định đăng tin</Link>
+          Xem thêm về<Link>&nbsp;Quy định đăng tin</Link>
         </p>
         <Grid container>
           <Grid item md={12} sm={12} xs={5.8}>
@@ -242,7 +244,7 @@ function EditMotel({ socket }) {
       {(image[0] || video[0]) && (
         <Grid item md={4} sm={8.5} sx={{ marginTop: '16px', padding: '0 10px' }}>
           <Grid container spacing={1}>
-            {image[0]
+            {image.length > 0
               ? image.map((srcImage, index) => {
                   return (
                     <Grid key={index} item md={6} sm={4} xs={6} sx={{ position: 'relative', height: '130px' }}>
@@ -277,7 +279,7 @@ function EditMotel({ socket }) {
                   );
                 })
               : ''}
-            {video[0] &&
+            {video.length > 0 &&
               video.map((srcVideo) => {
                 return (
                   <Grid
@@ -330,40 +332,11 @@ function EditMotel({ socket }) {
           }}
         >
           <Grid item md={12} sm={12} xs={12}>
-            <InputField
-              sx={{
-                fontSize: 2,
-                color: 'red',
-                '& label': {
-                  fontSize: 14,
-                },
-                '& svg': {
-                  fontSize: 18,
-                },
-              }}
-              //   value={title}
-
-              label="Tiêu đề"
-              type="text"
-              name="title"
-              errors={errors}
-              required
-              control={control}
-            />
+            <InputField label="Tiêu đề" type="text" name="title" errors={errors} required control={control} />
           </Grid>
 
           <Grid item md={12} sm={12} xs={12}>
             <InputField
-              sx={{
-                fontSize: 2,
-                color: 'red',
-                '& label': {
-                  fontSize: 14,
-                },
-                '& svg': {
-                  fontSize: 18,
-                },
-              }}
               label="Tình trạng nội thất"
               type="text"
               name="interiorStatus"
@@ -373,69 +346,32 @@ function EditMotel({ socket }) {
             />
           </Grid>
           <Grid item md={12} sm={12} xs={12}>
-            <InputField
-              sx={{
-                fontSize: 2,
-                color: 'red',
-                '& label': {
-                  fontSize: 14,
-                },
-                '& svg': {
-                  fontSize: 18,
-                },
-              }}
-              label="Giá"
-              type="number"
-              name="price"
-              errors={errors}
-              required
-              control={control}
-            />
+            <InputField label="Giá" type="number" name="price" errors={errors} required control={control} />
           </Grid>
           <Grid item md={12} sm={12} xs={12}>
-            <InputField
-              sx={{
-                fontSize: 2,
-                color: 'red',
-                '& label': {
-                  fontSize: 14,
-                },
-                '& svg': {
-                  fontSize: 18,
-                },
-              }}
-              label="Diện tích"
-              type="number"
-              name="acreage"
-              errors={errors}
-              required
-              control={control}
-            />
+            <InputField label="Diện tích" type="number" name="acreage" errors={errors} required control={control} />
           </Grid>
           <Grid item md={12} sm={12} xs={12}>
-            <InputField
-              sx={{
-                fontSize: 2,
-                color: 'red',
-                '& label': {
-                  fontSize: 14,
-                },
-                '& svg': {
-                  fontSize: 18,
-                },
-              }}
-              label="Tiền cọc"
-              type="number"
-              name="deposits"
-              errors={errors}
-              required
-              control={control}
-            />
+            <InputField label="Tiền cọc" type="number" name="deposits" errors={errors} required control={control} />
           </Grid>
-
+          <Grid item md={12} sm={12} xs={12} sx={{ margin: '4px 0' }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Tình trạng</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={status}
+                label="Status"
+                onChange={handleChangeStatus}
+              >
+                <MenuItem value={'1'}>Cho thuê</MenuItem>
+                <MenuItem value={'0'}>Đang cho thuê</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
           <Grid
             sx={{
-              marginBottom: '16px',
+              margin: '16px 0',
             }}
             item
             md={12}

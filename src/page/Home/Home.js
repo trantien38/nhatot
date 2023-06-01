@@ -1,16 +1,28 @@
 import { Grid } from '@mui/material';
 import { Box } from '@mui/system';
 import React from 'react';
+import { useEffect } from 'react';
+import { useState } from 'react';
+import motelApi from '~/api/MotelApi';
 import Sliders from '~/components/Slider/Sliders';
 import Category from './Category';
 import Item from './Item';
 import Menu from './Menu';
 
 export default function Home() {
+  const [motels, setMotels] = useState({});
+
+  useEffect(() => {
+    (async () => {
+      const listMotel = await motelApi.getMotelHomePage();
+      console.log(listMotel.motel);
+      setMotels(listMotel);
+    })();
+  }, []);
   return (
     <>
       <Sliders />
-      <Box
+      {/* <Box
         sx={{
           display: 'flex',
           padding: '20px',
@@ -58,12 +70,11 @@ export default function Home() {
           count={888.888}
           content={'dự án'}
         />
-      </Box>
+      </Box> */}
 
       <Box>
-        <Menu title={'Mua bán bất động sản'} count={99.999} />
-        <Menu title={'Cho thuê bất động sản'} count={28.286} />
-        <Menu title={'Dụ án được quan tâm'} count={86.868} />
+        <Menu data={motels.motelNew} title="Tin đăng mới nhất" />
+        <Menu data={motels.motelFavourite} title="Tin yêu thích nhiều nhất" />
       </Box>
       <Box
         sx={{
@@ -128,20 +139,77 @@ export default function Home() {
 
       <Box>
         <Box sx={{ padding: '8px' }}>
-          <h2>MUA BÁN VÀ CHO THUÊ BẤT ĐỘNG SẢN UY TÍN, NHANH CHÓNG TRÊN NHÀ TỐT</h2>
-          <p>(Nhà Tốt: Nền Tảng Bất động sản được phát triển bởi Chợ Tốt)</p>
+          <h2>CHO THUÊ NHÀ TRỌ UY TÍN, NHANH CHÓNG TRÊN NHÀ TỐT</h2>
+          <h3>Thuê phòng trọ giá rẻ</h3>
           <p>
-            Mua bán và cho thuê bất động sản được xem là một trong những hình thức kinh doanh siêu lợi nhuận, chính vì thế mà các
-            hình thức kinh doanh bất động sản này đang được rất nhiều người quan tâm và đầu tư. Hãy cùng Nhà Tốt - chuyên trang
-            bất động sản thuộc Chợ Tốt tìm hiểu kỹ hơn về các hình thức mua bán, cho thuê bất động sản ngay trên chuyên trang
-            Nhatot.com.
+            Là hình thức kinh doanh khá phổ biến, mức thuê phù hợp với nhiều khách hàng khác nhau. Đặc biệt, phòng trọ TPHCM,
+            phòng trọ giá rẻ Hà Nội rất phù hợp với những đối tượng có thu nhập thấp, lao động tự do… Tuy nhiên, những phòng trọ
+            giá rẻ này sẽ ẩn chứa khá nhiều rủi ro khác nhau.
           </p>
-          <h3>Mua bán và cho thuê bất động sản là gì?</h3>
           <p>
-            Kinh doanh bất động sản hiện nay đang là một trong những phương thức kinh doanh được rất nhiều nhà đầu tư hướng đến,
-            sở dĩ kinh doanh bất động sản được nhiều người lựa chọn là do nó có thể mang tới cho các nhà đầu tư những khoản lợi
-            nhuận siêu hấp dẫn, bởi vì vậy hình thức kinh doanh mua bán và cho thuê bất động sản là được nhiều nhà đầu tư lựa chọn
-            nhất.
+            Phòng trọ giá rẻ có mặt hạn chế về chất lượng phòng, hạ tầng xung quanh, an ninh khu vực… Vị trí xây dựng thường ở khu
+            vực có khu công nghiệp, các trường đại học, vùng ven, ngoại thành. Giá thuê thường từ 1 triệu đến 3 triệu/tháng với
+            diện tích 10m2 đến 25m2.
+          </p>
+
+          <h3>Thuê phòng trọ với giá bình dân</h3>
+          <p>
+            Thuê phòng trọ bình dân thường phù hợp với các bạn nhân viên văn phòng, hộ gia đình có mức thu nhập ổn định. Hoặc có
+            thể là nhóm sinh viên – học sinh có điều kiện kinh tế… Những phòng này thường có vị trí đẹp, tiện đi lại.
+          </p>
+          <p>
+            Giá nhà trọ Thủ Đức bình dân dao động từ 3,5 triệu đến 6 triệu/tháng cho diện tích từ 25m2 đến 50m2. Thông thường
+            những phòng trọ này sẽ được trang bị những tiện nghi cơ bản nhất. Nhiều nơi thuê xong, bạn chỉ cần mang đồ đến ở.
+          </p>
+          <p>
+            Ngoài ra, hình thức cho thuê trọ còn có các căn hộ dịch vụ, ký túc xá, homestay. Mỗi hình thức sẽ có nhiều gia khác
+            nhau tùy thuộc vào vị trí và kinh phí đầu tư.
+          </p>
+          <h2>LƯU Ý NHỮNG ĐIỀU SAU KHI THUÊ TRỌ</h2>
+          <h3>Thuê phòng trọ nên xác định khu vực thuê phòng trước</h3>
+          <p>
+            Bạn phải biết được là mình cần tìm phòng ở khu vực nào? Bạn cần khoanh vùng trước những nơi có thể thuê phòng trọ.
+            Điều này giúp bạn dễ tìm và tìm kiếm hiệu quả hơn. Thông thường, vị trí thuê phòng bạn nên xác định dựa trên các tiêu
+            chí khác nhau. Như thuê gần chỗ bạn làm việc, thuê gần trường học?
+          </p>
+          <p>
+            Vị trí thuê phòng cần phải thuận lợi cho việc di chuyển từ chỗ ở đến chỗ làm, đến trường học. Điều này sẽ giúp bạn
+            tiết kiệm thời gian, công sức đi lại… Và xét về lâu dài thì thuê phòng như thế này sẽ rẻ và có lợi hơn nhiều. Nếu để
+            có thể giảm tối đa chi phí thuê phòng, có thể chọn các địa điểm cho thuê phòng trọ Thủ Đức, thuê phòng trọ quận 1,
+            thuê phòng trọ quận 5, phòng trọ quận 9, phòng trọ quận 3, phòng trọ bình chánh, phòng trọ hóc môn, quận 12. Do đây là
+            các quận nằm ngoài rìa của thành phố Hồ Chí Minh.
+          </p>
+          <h3>Thuê phòng nên chọn nơi có nhiều tiện ích xung quanh</h3>
+          <p>
+            Bạn nên lựa chọn thuê phòng trọ ở những nơi có nhiều tiện ích xung quanh. Cơ bản nhất cũng phải gần chợ, siêu thị,
+            bệnh viện… Nếu gia đình có con nhỏ, bạn nên lựa chọn nơi gần trường học của trẻ.
+          </p>
+          <p>
+            Cần tránh những nơi nhiều quán nhậu, khu vực hẻo lánh hoặc không an ninh, đặc biệt là với các bạn nữ. Khi xem nhà, bạn
+            nên quan sát xem xung quanh khu vực phòng trọ có bị ngập nước khi mưa hay không?
+          </p>
+          <h3>Tìm hiểu các loại chi phí thuê phòng trọ</h3>
+          <p>
+            Giá thuê phòng trọ tùy thuộc vào vị trí, diện tích, không gian. Bên cạnh đó, những phòng đầy đủ tiện nghi thường có
+            giá thuê cao hơn. Ngoài giá thuê phòng mỗi tháng, bạn cần phải tính toán các chi phí kèm theo.
+          </p>
+          <p>
+            Bạn cần phải tìm hiểu phí gửi xe, tiền điện nước, tiền internet, hoặc tiền vệ sinh… Mọi thứ cần phải được tìm hiểu và
+            thỏa thuận rõ với chủ nhà cho thuê. Điều này giúp bạn tránh được những chi phí phát sinh bất ngờ.
+          </p>
+          <h3>Bạn phải kiểm tra chất lượng phòng trọ</h3>
+          <p>
+            Nên đi xem phòng vào buổi sáng, đi chung với bạn bè – không nên đi một mình. Quan sát xem chất lượng ngoại thất, nội
+            thất trong phòng như thế nào? Vì các yếu tố này sẽ ảnh hưởng đến chất lượng sống của bạn sau này.
+          </p>
+          <p>
+            Hãy kiểm tra xem tường nhà có bị nứt không? Cửa phòng, cửa sổ có khóa chắc chắn và có kín đáo hay không? Quan sát và
+            thử xem nhà vệ sinh xem có ổn hay không? Nước sinh hoạt có sạch hay không?
+          </p>
+          <h3>Hãy thỏa thuận giá cho thuê phòng</h3>
+          <p>
+            Bạn nên dựa vào tình hình thực tế để trả giá thuê với chủ phòng trọ. Việc trả giá tiền thuê sẽ giúp bạn thuê được
+            phòng trọ với giá phù hợp nhất.
           </p>
         </Box>
       </Box>

@@ -1,5 +1,6 @@
 import { DeleteForever } from '@mui/icons-material';
-import { Grid, InputBase } from '@mui/material';
+import { alpha, styled } from '@mui/material/styles';
+import { FormControl, Grid, InputBase, InputLabel } from '@mui/material';
 import { Box } from '@mui/system';
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
@@ -19,6 +20,7 @@ import InfoUser from './components/InfoUser';
 import MessageList from './components/MessageList';
 import Questions from './components/Question/Questions';
 import styles from './Message.module.scss';
+import NoSelectRoom from '~/components/NoData/NoSelectRoom';
 
 export default function Message({ socket }) {
   const [messageList, setMessageList] = useState([]);
@@ -32,6 +34,40 @@ export default function Message({ socket }) {
 
   const delay = useDelayTimeout();
   const removePunctuation = useRemovePunctuation();
+
+  const BootstrapInput = styled(InputBase)(({ theme }) => ({
+    'label + &': {
+      marginTop: theme.spacing(3),
+    },
+    '& .MuiInputBase-input': {
+      borderRadius: 4,
+      position: 'relative',
+      backgroundColor: theme.palette.mode === 'light' ? '#F3F6F9' : '#1A2027',
+      border: '1px solid',
+      borderColor: theme.palette.mode === 'light' ? '#E0E3E7' : '#2D3843',
+      fontSize: 16,
+      width: 'auto',
+      padding: '10px 12px',
+      transition: theme.transitions.create(['border-color', 'background-color', 'box-shadow']),
+      // Use the system font instead of the default Roboto font.
+      fontFamily: [
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(','),
+      '&:focus': {
+        boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
+        borderColor: theme.palette.primary.main,
+      },
+    },
+  }));
 
   // fetch data message list
   const fetchMessage = async () => {
@@ -60,7 +96,7 @@ export default function Message({ socket }) {
   // fetch data chat box
   const fetchChat = async () => {
     const chatList = await messageApi.getAllMessagesUserInMotel(IdRoom);
-    setChat(chatList.message);
+    setChat(chatList?.message);
     // console.log(chatList.message);
     setTimeout(() => {
       let chatboxElement = document.getElementById('chatbox');
@@ -69,7 +105,8 @@ export default function Message({ socket }) {
     }, 100);
   };
   useEffect(() => {
-    if (IdRoom) {
+    console.log(IdRoom);
+    if (IdRoom != 'undefined') {
       fetchChat();
     }
   }, [IdRoom]);
@@ -102,12 +139,14 @@ export default function Message({ socket }) {
   // submit message
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const Content = document.chat.messages.value;
+    const Content = document.getElementById('bootstrap-input').value;
+    // const Content = document.chat.messages.value;
     const newMessage = {
       Content,
       IdUser: idUser,
       IdRoom: IdRoom,
     };
+    // console.log(newMessage)
     handleChangeMessage(newMessage);
   };
   const handleChangeMessage = async (newMessage) => {
@@ -123,7 +162,7 @@ export default function Message({ socket }) {
     await messageApi.add(newMessage);
     fetchChat();
     fetchMessage();
-    document.chat.messages.value = '';
+    document.getElementById('bootstrap-input').value = '';
   };
   // submit question
   const handleSubmitQuestion = (Content) => {
@@ -239,11 +278,15 @@ export default function Message({ socket }) {
                   padding: '0 10px 6px 10px',
                   borderTop: '1px solid rgba(0,0,0,.1)',
                   display: 'flex',
+                  width: '50%',
                   alignItems: 'center',
                   '&:hover': {
                     backgroundColor: '#e6e6e6',
                     cursor: 'pointer',
                   },
+                }}
+                onClick={() => {
+                  console.log('xóa chat');
                 }}
               >
                 <DeleteForever />
@@ -301,31 +344,35 @@ export default function Message({ socket }) {
                           alt="open"
                           src={PLUSCIRCLE_ICON}
                         />
-                        <img
+                        {/* <img
                           alt="icon"
                           style={{ display: 'none' }}
                           className={clsx(styles.messageIcon, 'threeIcon')}
                           src={MESSAGE_ICON}
-                        />
+                        /> */}
                         <img
                           alt="icon"
                           style={{ display: 'none' }}
                           className={clsx(styles.messageIcon, 'threeIcon')}
                           src={GALLERY_ICON}
                         />
-                        <img
+                        {/* <img
                           alt="icon"
                           style={{ display: 'none' }}
                           className={clsx(styles.messageIcon, 'threeIcon')}
                           src={LOCATION_ICON}
-                        />
-                        <input
-                          className={styles.inputMessage}
-                          placeholder="Nhập tin nhắn..."
-                          rows="1"
-                          name="messages"
-                          id="message"
-                        />
+                        /> */}
+                        <FormControl
+                          variant="standard"
+                          sx={{
+                            width: '100%',
+                            '& .css-1nmvbe4-MuiInputBase-root': { width: '100%', display: 'block' },
+                            '& input': { width: '100% !important', padding: '6px 12px !important' },
+                          }}
+                        >
+                          <BootstrapInput id="bootstrap-input" />
+                        </FormControl>
+
                         <button type="submit" className={styles.messageSubmit}></button>
                       </form>
                     </Box>
@@ -333,12 +380,7 @@ export default function Message({ socket }) {
                 </Box>
               </Box>
             ) : (
-              <Box sx={{ padding: '50px', height: 'calc(100% - 100px)' }}>
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  <img alt="icon" style={{ width: '70%' }} src="https://chat.chotot.com/emptyRoom.png" />
-                </Box>
-                <p style={{ textAlign: 'center', color: '#333', fontWeight: 700 }}>Liên hệ để biết thêm thông tin chi tiết</p>
-              </Box>
+              <NoSelectRoom />
             )}
           </Grid>
         </Grid>

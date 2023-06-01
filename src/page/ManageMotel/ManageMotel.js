@@ -3,13 +3,12 @@ import { Box } from '@mui/material';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import bannerApi from '~/api/BannerApi';
 import motelApi from '~/api/MotelApi';
 import StorageKeys from '~/constants/storage-keys';
 import MotelToolbar from './components/MotelToolbar';
 
 const columns = [
-  { field: 'IdMotel', headerName: 'ID', width: 38 },
+  { field: 'IdMotel', headerName: 'ID', width: 168 },
   { field: 'Title', headerName: 'Tiêu đề', width: 280 },
   { field: 'Price', headerName: 'Giá thuê', width: 80 },
   { field: 'Acreage', headerName: 'Diện tích', width: 80 },
@@ -28,7 +27,13 @@ const columns = [
     getActions: ({ id }) => {
       return [
         <Link to={`/manage-motel/edit-${id}`}>
-          <GridActionsCellItem icon={<Edit />} label="Edit" className="textPrimary" color="inherit" />
+          <GridActionsCellItem
+            sx={{ '& svg': { width: '23px', height: '23px' } }}
+            icon={<Edit />}
+            label="Edit"
+            className="textPrimary"
+            color="inherit"
+          />
         </Link>,
         // <Link onClick={handleSubmit(id)}>
         //   <GridActionsCellItem icon={<Delete />} label="Delete" color="inherit" />
@@ -58,24 +63,28 @@ export default function ManageMotel() {
   return (
     // <Box sx={{ margin: '0 30px 0 46px' }}>
     <Box>
-      <div style={{ height: `calc(${height}px - 68px)`, width: '100%' }}>
-        <DataGrid
-          getRowId={(motels) => motels.IdMotel}
-          rows={motels}
-          rowModesModel={rowModesModel}
-          columns={columns}
-          pageSize={5}
-          rowsPerPageOptions={[25]}
-          checkboxSelection
-          slots={{
-            toolbar: MotelToolbar,
-          }}
-          slotProps={{
-            toolbar: { setMotels, setRowModesModel },
-          }}
-          sx={{ fontSize: '12px' }}
-        />
-      </div>
+      {/* {motels.length > 0 ? ( */}
+        <Box sx={{ height: `calc(${height}px - 68px)`, width: '100%' }}>
+          <DataGrid
+            getRowId={(motels) => motels.IdMotel}
+            rows={motels}
+            rowModesModel={rowModesModel}
+            columns={columns}
+            pageSize={5}
+            rowsPerPageOptions={[25]}
+            checkboxSelection
+            slots={{
+              toolbar: MotelToolbar,
+            }}
+            slotProps={{
+              toolbar: { setMotels, setRowModesModel },
+            }}
+            sx={{ fontSize: '14px' }}
+          />
+        </Box>
+      {/* ) : (
+        <NoMotel />
+      )} */}
     </Box>
   );
 }

@@ -95,64 +95,13 @@ export const AddUser = () => {
     >
       <Toaster />
       <Grid item md={12} sm={12} xs={12}>
-        <InputField
-          sx={{
-            fontSize: 2,
-            color: 'red',
-            '& label': {
-              fontSize: 14,
-            },
-            '& svg': {
-              fontSize: 18,
-            },
-          }}
-          label="Họ và tên"
-          name="fullName"
-          type="text"
-          errors={errors}
-          required
-          control={control}
-        />
+        <InputField label="Họ và tên" name="fullName" type="text" errors={errors} required control={control} />
       </Grid>
       <Grid item md={12} sm={12} xs={12}>
-        <InputField
-          sx={{
-            fontSize: 2,
-            color: 'red',
-            '& label': {
-              fontSize: 14,
-            },
-            '& svg': {
-              fontSize: 18,
-            },
-          }}
-          label="Số điện thoại"
-          name="phoneNumber"
-          type="text"
-          errors={errors}
-          required
-          control={control}
-        />
+        <InputField label="Số điện thoại" name="phoneNumber" type="text" errors={errors} required control={control} />
       </Grid>
       <Grid item md={12} sm={12} xs={12}>
-        <InputField
-          sx={{
-            fontSize: 2,
-            color: 'red',
-            '& label': {
-              fontSize: 14,
-            },
-            '& svg': {
-              fontSize: 18,
-            },
-          }}
-          label="Mật khẩu"
-          name="password"
-          type="password"
-          errors={errors}
-          required
-          control={control}
-        />
+        <InputField label="Mật khẩu" name="password" type="password" errors={errors} required control={control} />
       </Grid>
       <Grid item md={12} sm={12} xs={12}>
         <FormControl fullWidth>

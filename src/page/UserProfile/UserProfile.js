@@ -2,7 +2,7 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box, Grid, Tab } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import userApi from '~/api/UserApi';
 import Button from '~/components/Button/Button';
 import { AVATAR_DEFAULT, STATIC_HOST } from '~/constants';
@@ -18,6 +18,7 @@ function UserProfile({ socket }) {
   const [following, setFollowing] = useState();
   const infoUser = JSON?.parse(localStorage?.getItem(StorageKeys?.USER));
   const { IdUser } = useParams();
+  const navigate = useNavigate();
   const fetchUser = async () => {
     const users = await userApi.getUser({ IdUser, IdFollowers: infoUser?.IdUser });
     setUser(users.user[0]);
@@ -38,24 +39,31 @@ function UserProfile({ socket }) {
   };
 
   const handleFollow = async (e) => {
-    console.log({ IdFollowing: IdUser, IdFollowers: infoUser?.IdUser });
-    const follow = await userApi.follow({ IdFollowing: IdUser, IdFollowers: infoUser?.IdUser });
-    if (e.target.innerText == 'Theo dõi') {
-      socket.on('connect', () => {
-        console.log('Connected to server!');
-      });
-
-      socket.emit('new_follow', { msg: `${infoUser.Name} vừa theo dõi bạn`, IdFollowing: IdUser });
-
-      setFollow('Đang theo dõi');
-      setFollowers(followers + 1);
-      toastMessage.success(follow.msg);
+    if (!infoUser?.IdUser) {
+      navigate('/login');
     }
-    if (e.target.innerText == 'Đang theo dõi') {
-      socket.emit('un_follow', { msg: `${infoUser.Name} hủy theo dõi bạn`, IdFollowing: IdUser });
-      setFollow('Theo dõi');
-      setFollowers(followers - 1);
-      toastMessage.success(follow.msg);
+    if (IdUser == infoUser?.IdUser) {
+      navigate('/profile');
+    } else {
+      console.log({ IdFollowing: IdUser, IdFollowers: infoUser?.IdUser });
+      const follow = await userApi.follow({ IdFollowing: IdUser, IdFollowers: infoUser?.IdUser });
+      if (e.target.innerText == 'Theo dõi') {
+        socket.on('connect', () => {
+          console.log('Connected to server!');
+        });
+
+        socket.emit('new_follow', { msg: `${infoUser.Name} vừa theo dõi bạn`, IdFollowing: IdUser });
+
+        setFollow('Đang theo dõi');
+        setFollowers(followers + 1);
+        toastMessage.success(follow.msg);
+      }
+      if (e.target.innerText == 'Đang theo dõi') {
+        socket.emit('un_follow', { msg: `${infoUser.Name} hủy theo dõi bạn`, IdFollowing: IdUser });
+        setFollow('Theo dõi');
+        setFollowers(followers - 1);
+        toastMessage.success(follow.msg);
+      }
     }
   };
 
@@ -99,9 +107,11 @@ function UserProfile({ socket }) {
             Đang theo dõi:&nbsp;
             <b>{following}</b>
           </p>
-          <Box onClick={handleFollow}>
-            <Button orange text={follow} />
-          </Box>
+          {IdUser != infoUser?.IdUser && (
+            <Box onClick={handleFollow}>
+              <Button orange text={follow} />
+            </Box>
+          )}
         </Box>
         <Box
           sx={{
@@ -122,7 +132,7 @@ function UserProfile({ socket }) {
             </svg>
             <span>phản hồi chat: 82% (Trong 6 giờ)</span>
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', margin: '12px 0' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', margin: '12px 0', fontSize: '14px' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 25" aria-hidden="true" fill="currentColor">
               <path
                 fill-rule="evenodd"
@@ -136,9 +146,19 @@ function UserProfile({ socket }) {
                 clip-rule="evenodd"
               ></path>
             </svg>
-            Đã tham gia: 2 năm 8 tháng
+            {user?.monthCreateDay
+              ? `Đã tham gia: ${user?.monthCreateDay} tháng trước`
+              : user?.weekCreateDay
+              ? `Đã tham gia: ${user?.weekCreateDay} tuần trước`
+              : user?.dayCreateDay
+              ? `Đã tham gia: ${user?.dayCreateDay} ngày trước`
+              : user?.hourCreateDay
+              ? `Đã tham gia: ${user?.hourCreateDay} giờ trước`
+              : user?.minuteCreateDay
+              ? `Đã tham gia: ${user?.minuteCreateDay} phút trước`
+              : `Đã tham gia: ${user?.secondCreateDay} giây trước`}
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', margin: '12px 0' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', margin: '12px 0', fontSize: '14px' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 25" aria-hidden="true" fill="currentColor">
               <path
                 fill-rule="evenodd"
@@ -153,7 +173,7 @@ function UserProfile({ socket }) {
             </svg>
             Đã xác thực
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', margin: '12px 0' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', margin: '12px 0', fontSize: '14px' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
               <g fill-rule="evenodd" clip-path="url(#clip0_8440_50966)" clip-rule="evenodd">
                 <path d="M12 7.45a2.3 2.3 0 100 4.6 2.3 2.3 0 000-4.6zm-3.7 2.3a3.7 3.7 0 117.4 0 3.7 3.7 0 01-7.4 0z"></path>

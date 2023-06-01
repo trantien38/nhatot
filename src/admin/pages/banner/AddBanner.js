@@ -138,11 +138,11 @@ export const AddBanner = () => {
         </FormControl>
       </Grid>
       <Grid item sx={{ width: '100px', '& button': { borderRadius: '10px' } }} onClick={handleSubmit}>
-        <Button orange text={'Add'} />
+        <Button orange text={'Thêm'} />
       </Grid>
       <Grid item sx={{ width: '100px', '& button': { borderRadius: '10px' } }}>
         <Link to="/admin/banner/list">
-          <Button danger text={'Cancel'} />
+          <Button danger text={'Hủy bỏ'} />
         </Link>
       </Grid>
     </Grid>

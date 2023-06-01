@@ -14,6 +14,7 @@ export const PLUSCIRCLE_ICON = 'https://chat.chotot.com/icons/plusCircle.svg';
 export const MESSAGE_ICON = 'https://chat.chotot.com/icons/message.svg';
 export const GALLERY_ICON = 'https://chat.chotot.com/icons/gallery.svg';
 export const LOCATION_ICON = 'https://chat.chotot.com/icons/location.svg';
+export const DEPOSITS_ICON = 'https://static.chotot.com/storage/icons/logos/ad-param/deposit.png';
 
 export const SHARE_ICON = 'https://static.chotot.com/storage/icons/svg/share-new.svg';
 export const SAVEAD_ICON = 'https://static.chotot.com/storage/icons/saveAd/save-ad.svg';
@@ -50,4 +51,5 @@ export const QR_SOURCE = 'https://static.chotot.com/storage/default/group-qr.web
 export const QR_IMAGE = 'https://static.chotot.com/storage/default/group-qr.jpeg';
 
 export const RED_HEART = 'https://em-content.zobj.net/source/animated-noto-color-emoji/356/red-heart_2764-fe0f.gif';
-export const ROOM_DEFAULT = 'https://watermark.lovepik.com/photo/20211123/large/lovepik-hotel-room-background-map-picture_500806522.jpg';
+export const ROOM_DEFAULT =
+  'https://watermark.lovepik.com/photo/20211123/large/lovepik-hotel-room-background-map-picture_500806522.jpg';

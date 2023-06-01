@@ -57,7 +57,8 @@ export const Profile = () => {
         <Toaster />
         <Box
           sx={{
-            padding: '0 10px',
+            padding: '1px 10px 0 10px',
+            marginTop: '10px',
             '& ol': {
               padding: '8px 0',
               margin: 0,
@@ -79,14 +80,14 @@ export const Profile = () => {
             },
           }}
         >
-          <ol>
+          {/* <ol>
             <li>
               <Link to="/">nhatot.vn</Link>
               &nbsp;
             </li>
             <li>&nbsp;Thông tin cá nhân</li>
-          </ol>
-          <h3>Thông tin cá nhân</h3>
+          </ol> */}
+          <h3>Trang cá nhân</h3>
         </Box>
         <hr />
         <Box>
@@ -116,9 +117,9 @@ export const Profile = () => {
             <Box>
               <ProfileItem title="Họ và tên" content={`${authenticated?.Name}` || 'Tên chưa cung cấp'} edit={true} />
               <ProfileItem title="Số điện thoại" content={`${authenticated?.PhoneNumber}` || 'Tên chưa cung cấp'} edit={true} />
-              <ProfileItem title="Facebook" content="Chưa kết nối Facebook" connect="Kết nối" />
+              {/* <ProfileItem title="Facebook" content="Chưa kết nối Facebook" connect="Kết nối" />
               <ProfileItem title="Google" content="Chưa kết nối Google" connect="Kết nối" />
-              <ProfileItem title="Apple" content="Chưa kết nối Apple" connect="Kết nối" />
+              <ProfileItem title="Apple" content="Chưa kết nối Apple" connect="Kết nối" /> */}
               <ProfileItem title="Email" content={`${authenticated?.Email}` || 'Chưa có thông tin'} edit={true} />
               <ProfileItem title="Địa chỉ" content={`${authenticated?.Address}` || 'Chưa có thông tin'} edit={true} />
               {/* <ProfileItem title="CMND/CCCD/Hộ chiếu" content="Chưa có thông tin" edit={true} />
@@ -132,7 +133,7 @@ export const Profile = () => {
               />
               {/* <ProfileItem title="Mã số thuế" content="Chưa có thông tin" edit={true} />
               <ProfileItem title="Danh mục yêu thích" content={authenticated.favorites || 'Chưa có thông tin'} edit={true} /> */}
-              <ProfileItem title="Mật khẩu" content={authenticated.password || '********'} edit={true} />
+              <ProfileItem title="Mật khẩu" content={authenticated.password || '********'} password={true} />
             </Box>
           </Box>
         </Box>

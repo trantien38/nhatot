@@ -6,6 +6,7 @@ const images = {
   telegram: require('./telegram.jpg'),
   markerIcon: require('./markerIcon.jpg'),
   banners: require('./'),
+  coin: require('./coin.jpg'),
   avatar: 'https://static.chotot.com/storage/chat/member-profile-avatar_140x140.png',
 };
 

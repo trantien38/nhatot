@@ -37,7 +37,7 @@ function Dashboard() {
         label="Nhà trọ"
         column="DistrictName"
       />
-      <DoughnutDashboard title="Thống kê nhà trọ theo phường xã" data={datas.motel_by_ward} label="Nhà trọ" column="WardName" />
+      {/* <DoughnutDashboard title="Thống kê nhà trọ theo phường xã" data={datas.motel_by_ward} label="Nhà trọ" column="WardName" /> */}
       <Grid item md={12} sm={12} xs={12} lg={12}>
         <LineChart total_motel={datas.total_motel} total_motel_month={datas.total_motel_month} />
       </Grid>

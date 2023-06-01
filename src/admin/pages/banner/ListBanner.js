@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import adminApi from '~/api/AdminApi';
+import { STATIC_HOST } from '~/constants';
 import { toastMessage } from '~/utils/toast';
 import BannerToolbar from './BannerToolbar';
 
@@ -16,8 +17,15 @@ export const ListBanner = () => {
   const [idBanner, setIdBanner] = useState();
 
   const columns = [
-    { field: 'IdBanner', headerName: 'ID', width: 38 },
-    { field: 'srcBanner', headerName: 'Image', width: 230 },
+    { field: 'IdBanner', headerName: 'ID', width: 180 },
+    {
+      field: 'srcBanner',
+      headerName: 'Image',
+      width: 230,
+      getActions: ({ id, srcBanner }) => {
+        return [<img src={`${STATIC_HOST}banners/${srcBanner}`} alt="banner" />];
+      },
+    },
     { field: 'Active', headerName: 'Active', width: 80 },
     {
       field: 'actions',
@@ -69,7 +77,7 @@ export const ListBanner = () => {
 
   const handleSubmit = async (id) => {
     console.log(id);
-    const removeBanner = await adminApi.removeBanner(idBanner);
+    const removeBanner = await adminApi.adminRemoveBanner(id);
     setOpen(false);
     setBanners(removeBanner.banner);
     toastMessage.success(removeBanner.msg);

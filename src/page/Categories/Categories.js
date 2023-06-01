@@ -1,7 +1,7 @@
 import { KeyboardArrowUp } from '@mui/icons-material';
 import { Box, Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import motelApi from '~/api/MotelApi';
 import { AVATAR_DEFAULT, RED_HEART, ROOM_DEFAULT, SAVEAD_ICON, STATIC_HOST } from '~/constants';
 import styles from './Categories.module.scss';
@@ -16,15 +16,17 @@ import SkeletonMotelItem from '~/components/Skeleton/SkeletonMotelItem';
 import userApi from '~/api/UserApi';
 import { toastMessage } from '~/utils/toast';
 import { Toaster } from 'react-hot-toast';
+import ListMap from './components/Filter/Dialog/ListMap';
 
 function Categories() {
+  const navigate = useNavigate();
   const infoUser = JSON.parse(localStorage.getItem(StorageKeys.USER));
   const [filters, setFilters] = useState({
     price: [0, 18286286],
     acreage: [0, 88],
     count: 0,
     start: 0,
-    quantity: 2,
+    quantity: 8,
     page: 1,
   });
   const [loading, setLoading] = useState(true);
@@ -74,9 +76,10 @@ function Categories() {
       acreage: [0, 88],
       count: 0,
       start: 0,
-      quantity: 2,
+      quantity: 8,
       page: 1,
     });
+    navigate('/cho-thue-phong-tro');
   };
 
   useEffect(() => {
@@ -159,17 +162,49 @@ function Categories() {
     }
   }, [IdWard, IdDistrict, IdProvince, filters]);
 
-  useEffect(() => {
-    (async () => {
-      const allMotel = await motelApi.getAllMotels();
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     const allMotel = await motelApi.getAllMotels();
+  //   })();
+  // }, []);
 
   console.log(window.location);
   console.log(favourite);
-  limitMotels?.map((result, index) => {
-    console.log(favourite.filter((item) => item.IdMotel == result.IdMotel)[0] ? true : false);
-  });
+
+
+  const renderData = () => {
+    if (loading) return <SkeletonMotelItem />;
+    if (limitMotels.length > 0)
+      return (
+        <>
+          {limitMotels.map((result) => (
+            <MotelItem
+              onChangeFavourite={handleChangeFavourite}
+              key={result.IdMotel}
+              isLove={favourite.filter((item) => item.IdMotel == result.IdMotel)[0] ? RED_HEART : SAVEAD_ICON}
+              time={{
+                mon: result.month,
+                week: result.week,
+                day: result.day,
+                hour: result.hour,
+                minute: result.minute,
+                second: result.second,
+              }}
+              address={
+                IdDistrict
+                  ? `${result.WardPrefix} ${result.WardName}`
+                  : IdProvince
+                  ? `${result.DistrictPrefix} ${result.DistrictName}`
+                  : result.ProvinceName
+              }
+              model={result}
+            />
+          ))}
+        </>
+      );
+
+    return <NoMotel handleChangeMotel={handleChangeMotel} />;
+  };
 
   return (
     <Box>
@@ -190,36 +225,7 @@ function Categories() {
       />
       <Grid container className={styles.motelList}>
         <Grid item md={7} sm={12} xs={12}>
-          {limitMotels?.map((result, index) => {
-            return loading ? (
-              <SkeletonMotelItem />
-            ) : isEmpty(limitMotels[0]) ? (
-              <NoMotel handleChangeMotel={handleChangeMotel} />
-            ) : (
-              <MotelItem
-                onChangeFavourite={handleChangeFavourite}
-                key={index}
-                isLove={favourite.filter((item) => item.IdMotel == result.IdMotel)[0] ? RED_HEART : SAVEAD_ICON}
-                time={{
-                  mon: result.month,
-                  week: result.week,
-                  day: result.day,
-                  hour: result.hour,
-                  minute: result.minute,
-                  second: result.second,
-                }}
-                address={
-                  IdDistrict
-                    ? `${result.WardPrefix} ${result.WardName}`
-                    : IdProvince
-                    ? `${result.DistrictPrefix} ${result.DistrictName}`
-                    : result.ProvinceName
-                }
-                model={result}
-              />
-            );
-          })}
-          {/*  {isEmpty(limitMotels) && !loading && <NoMotel handleChangeMotel={handleChangeMotel} />} */}
+          {renderData()}
         </Grid>
         <Grid item md={5}>
           <button

@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import motelApi from '~/api/MotelApi';
+import SkeletonMessageItem from '~/components/Skeleton/SkeletonMessageItem';
 import { ROOM_DEFAULT, STATIC_HOST } from '~/constants';
 import MessageItem from './MessageItem';
 
 function InfoMotel({ callBackGetIdHost, IdRoom }) {
   const [infoMotel, setInfoMotel] = useState([]);
-
-  console.log(IdRoom);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -14,10 +14,13 @@ function InfoMotel({ callBackGetIdHost, IdRoom }) {
       console.log(IdRoom);
       console.log(InfoMotels.motel);
       setInfoMotel(InfoMotels?.motel);
+      setLoading(false);
       // callBackGetIdHost(InfoMotels?.motel[0]?.IdUser);
     })();
   }, [IdRoom]);
   
+  if (loading) return <SkeletonMessageItem />;
+
   return (
     <MessageItem
       link={`/detail/${infoMotel[0]?.IdMotel}`}

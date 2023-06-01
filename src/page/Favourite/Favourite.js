@@ -37,6 +37,35 @@ function Favourite() {
       setFavourite(deleteFavourite.favourite);
     }
   };
+  const renderData = () => {
+    if (loading) return <SkeletonMotelItem />;
+    else if (listMotel.length > 0) {
+      return (
+        <>
+          {listMotel.map((result) => {
+            console.log(result);
+            return (
+              <MotelItem
+                key={result.IdMotel}
+                onChangeFavourite={handleChangeFavourite}
+                isLove={favourite.filter((item) => item.IdMotel == result.IdMotel)[0] ? RED_HEART : SAVEAD_ICON}
+                time={{
+                  mon: result.month,
+                  week: result.week,
+                  day: result.day,
+                  hour: result.hour,
+                  minute: result.minute,
+                  second: result.second,
+                }}
+                model={result}
+                address={`${result.DistrictPrefix} ${result.DistrictName}`}
+              />
+            );
+          })}
+        </>
+      );
+    } else return <NoFavourite />;
+  };
   return (
     <Box
       sx={{
@@ -48,29 +77,7 @@ function Favourite() {
       }}
     >
       <h2>Tin đăng đã lưu ({listMotel.length})</h2>
-      {listMotel?.map((result, index) => {
-        return loading ? (
-          <SkeletonMotelItem />
-        ) : !listMotel[0] ? (
-          <NoFavourite />
-        ) : (
-          <MotelItem
-            key={index}
-            onChangeFavourite={handleChangeFavourite}
-            isLove={favourite.filter((item) => item.IdMotel == result.IdMotel)[0] ? RED_HEART : SAVEAD_ICON}
-            time={{
-              mon: result.month,
-              week: result.week,
-              day: result.day,
-              hour: result.hour,
-              minute: result.minute,
-              second: result.second,
-            }}
-            model={result}
-            address={`${result.DistrictPrefix} ${result.DistrictName}`}
-          />
-        );
-      })}
+      {renderData()}
     </Box>
   );
 }

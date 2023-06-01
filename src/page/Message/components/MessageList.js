@@ -52,13 +52,13 @@ function MessageList(props) {
   console.log('message list');
   return (
     <div id="list" className={styles.messageList}>
-      {props.messages?.map((result, index) => {
+      {props.messages?.map((result) => {
         return loading ? (
           <SkeletonMessageItem />
         ) : isEmpty(props.messages[0]) ? (
           <NoMessage />
         ) : (
-          <Box key={result?.IdRoom || index}>
+          <Box key={result?.IdRoom}>
             <MessageItem
               link={`/message-${props.idUser}/${result?.IdRoom}`}
               // onClick={result.IdMotel}
@@ -83,6 +83,7 @@ function MessageList(props) {
               }
               title={result?.Title}
               content={result?.Content}
+              IdRoom={result?.IdRoom}
             />
           </Box>
         );

@@ -10,9 +10,9 @@ function Sidebar() {
         <li>
           <Link to="/settings/profile">Thông tin cá nhân</Link>
         </li>
-        <li>
+        {/* <li>
           <Link to="/settings/social">Liên kết mạng xã hội</Link>
-        </li>
+        </li> */}
         <li>
           <Link to="/settings/account">Thay đổi mật khẩu</Link>
         </li>

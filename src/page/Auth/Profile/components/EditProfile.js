@@ -1,5 +1,5 @@
 import { Box, FormControl, Grid, InputLabel, MenuItem, Select, Slide, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import userApi from '~/api/UserApi';
@@ -8,16 +8,20 @@ import StorageKeys from '~/constants/storage-keys';
 import theme from '~/theme';
 import { toastMessage } from '~/utils/toast';
 
+import * as yup from 'yup';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+
 import styles from '../Profile.module.scss';
 import DialogDetailAddress from '../../../../components/DialogDetailAddress';
 import Sidebar from './Sidebar';
+import InputField from '~/components/HookForm/InputField';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
 });
 
 export const EditProfile = () => {
-  const infoUser = JSON.parse(localStorage.getItem(StorageKeys.USER));
   const {
     Name,
     Gender,
@@ -31,31 +35,26 @@ export const EditProfile = () => {
     DistrictPrefix,
     DistrictName,
     ProvinceName,
-  } = infoUser;
+  } = JSON.parse(localStorage.getItem(StorageKeys.USER));
+
   const navigate = useNavigate();
   const [ward, setWard] = useState(WardName);
   const [province, setProvince] = useState(ProvinceName);
-  const [name, setName] = useState(Name);
-  const [email, setEmail] = useState(Email);
-  const [phoneNumber, setPhoneNumber] = useState(PhoneNumber);
   const detailedAddress = `${Address}, ${WardPrefix} ${WardName}, ${DistrictPrefix} ${DistrictName}, ${ProvinceName}`;
   const [road, setRoad] = useState(Address);
   const [address, setAddress] = useState(detailedAddress);
   const [gender, setGender] = useState(Gender);
   const [birthDay, setBirthDay] = useState(BirthDay);
   const [openAddress, setOpenAddress] = useState(false);
-
+  useEffect(() => {
+    reset({
+      name: Name,
+      email: Email,
+      phoneNumber: PhoneNumber,
+    });
+  }, []);
   const handleChangeGender = (event) => {
     setGender(event.target.value);
-  };
-  const handleChangeName = (event) => {
-    setName(event.target.value);
-  };
-  const handleChangeEmail = (event) => {
-    setEmail(event.target.value);
-  };
-  const handleChangePhoneNumber = (event) => {
-    setPhoneNumber(event.target.value);
   };
   const handleChangeAddress = (event) => {
     setAddress(event.target.value);
@@ -79,20 +78,50 @@ export const EditProfile = () => {
     setProvince(value.province);
     setAddress(`${value.detailAddress}, ${value.ward}, ${value.district}, ${value.province}`);
   };
-  const handleSubmit = async () => {
+  const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+
+  const schema = yup.object().shape({
+    name: yup.string().required('Vui lòng nhập họ và tên').min(6, 'Mật khẩu tối thiểu 6 ký tự'),
+    email: yup.string().required('Vui lòng nhập email').min(6, 'Mật khẩu tối thiểu 6 ký tự'),
+    phoneNumber: yup
+      .string()
+      .required('Vui lòng nhập số điện thoại')
+      .matches(phoneRegExp, 'Số điện thoại không hợp lệ')
+      .min(10, 'Số điện thoại phải đủ 10 số')
+      .max(10, 'Số điện thoại vượt quá 10 số'),
+  });
+  const {
+    reset,
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    defaultValues: {
+      name: '',
+      email: '',
+      phoneNumber: '',
+    },
+    resolver: yupResolver(schema),
+  });
+
+  const handleOnSubmit = async (values) => {
+    const { name, phoneNumber, email } = values;
     const result = await userApi.changeInfoUser({ IdUser, name, email, phoneNumber, road, gender, birthDay, ward, province });
     console.log(result.users);
     localStorage.removeItem(StorageKeys.USER);
     localStorage.setItem(StorageKeys.USER, JSON.stringify(result.users));
     toastMessage.success('Cập nhật thông tin cá nhân thành công');
-
     setTimeout(() => {
       navigate('/profile');
-    }, 1500);
+    }, 2000);
   };
 
   return (
-    <Box sx={{ maxWidth: theme.size.browser, margin: 'auto', '& h2': { paddingLeft: '12px' } }}>
+    <Box
+      component="form"
+      onSubmit={handleSubmit(handleOnSubmit)}
+      sx={{ maxWidth: theme.size.browser, margin: 'auto', '& h2': { paddingLeft: '12px' } }}
+    >
       <Toaster />
       <h2>Chỉnh sửa trang cá nhân</h2>
       <Grid container>
@@ -107,58 +136,29 @@ export const EditProfile = () => {
             '& h3': {
               margin: 0,
             },
+            '& p': {
+              fontSize: '14px',
+            },
           }}
           item
           md={8}
           container
-          spacing={2}
+          spacing={1}
         >
           <Grid item md={12} sm={12} xs={12}>
             <h3>Hồ sơ cá nhân</h3>
           </Grid>
           <Grid item md={12} sm={12} xs={12}>
-            <TextField
-              item
-              label="Họ và tên"
-              id="outlined-basic"
-              onChange={handleChangeName}
-              value={name}
-              variant="outlined"
-              fullWidth
-            />
+            <InputField label="Họ và tên" name="name" type="text" errors={errors} required control={control} />
           </Grid>
           <Grid item md={12} sm={12} xs={12}>
-            <TextField
-              item
-              label="Email"
-              id="outlined-basic"
-              onChange={handleChangeEmail}
-              value={email}
-              variant="outlined"
-              fullWidth
-            />
+            <InputField label="Email" name="email" type="text" errors={errors} required control={control} />
           </Grid>
           <Grid item md={12} sm={12} xs={12}>
-            <TextField
-              item
-              label="Số điện thoại"
-              id="outlined-basic"
-              onChange={handleChangePhoneNumber}
-              value={phoneNumber}
-              variant="outlined"
-              fullWidth
-            />
+            <InputField label="Số điện thoại" name="phoneNumber" type="text" errors={errors} required control={control} />
           </Grid>
-          <Grid item md={12} sm={12} xs={12} onClick={handleClickOpenAddress}>
-            <TextField
-              item
-              label="Địa chỉ"
-              id="outlined-basic"
-              onChange={handleChangeAddress}
-              value={address}
-              variant="outlined"
-              fullWidth
-            />
+          <Grid item md={12} sm={12} xs={12} onClick={handleClickOpenAddress} sx={{ margin: '4px 0' }}>
+            <TextField item label="Địa chỉ" id="outlined-basic" value={address} variant="outlined" fullWidth readonly={true} />
           </Grid>
           <DialogDetailAddress
             Address={Address}
@@ -170,7 +170,7 @@ export const EditProfile = () => {
             handleClose={handleCloseAddress}
             callbackParent={callbackParent}
           />
-          <Grid item md={12} sm={12} xs={12}>
+          <Grid item md={12} sm={12} xs={12} sx={{ margin: '4px 0' }}>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Giới tính</InputLabel>
               <Select
@@ -192,8 +192,9 @@ export const EditProfile = () => {
             sm={12}
             xs={12}
             sx={{
+              margin: '4px 0',
               '& input': {
-                width: 'calc(100% - 24px)',
+                width: 'calc(100% - 26px)',
                 height: '52px',
                 padding: '0 12px',
                 borderRadius: '6px',
@@ -209,7 +210,7 @@ export const EditProfile = () => {
             <input type="date" name="" id="customday" value={birthDay} onChange={handleChangeBirthDat} />
           </Grid>
           <Grid item md={12} sm={12} xs={12} onClick={handleSubmit}>
-            <Button orange text={'Lưu thay đổi'} />
+            <Button type="submit" orange text={'Lưu thay đổi'} />
           </Grid>
         </Grid>
       </Grid>

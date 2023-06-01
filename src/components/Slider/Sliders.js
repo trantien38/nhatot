@@ -34,7 +34,7 @@ export default function Sliders() {
       <Box className={styles.slider}>
         <Box className={clsx(styles.slides, 'slides')}>
           <Slider {...settings}>
-            {banner &&
+            {banner.length > 0 &&
               banner.map((result, index) => (
                 <div key={index} className={clsx(styles.slide, 'first')}>
                   <img

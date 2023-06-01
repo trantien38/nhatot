@@ -58,17 +58,3 @@ export default function Button({
     </>
   );
 }
-
-// Gọi button
-{
-  /* <Button primary text='Primary'/>
-<Button secondary text='Secondary'/>
-<Button success text='Success'/>
-<Button danger text='Danger'/>
-<Button warning text='Warning'/>
-<Button info text='Info'/>
-<Button light text='Light'/>
-<Button dark text='Dark'/>
-<Button link text='Link'/>
-<Button disabled text='Disabled'/> */
-}

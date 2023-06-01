@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { EDIT_ICON } from '~/constants';
 
 function ProfileItem(props) {
-  const { title, content, connect, edit } = props;
+  const { title, content, connect, password, edit } = props;
   return (
     <Box
       sx={{
@@ -16,9 +16,14 @@ function ProfileItem(props) {
       <b>{title}</b>
       <Box className={styles.content_icon}>
         <span>{content}</span>
+        {password && (
+          <Link to="/settings/account">
+            <img src={EDIT_ICON} />
+          </Link>
+        )}
         {edit && (
           <Link to="/settings/profile">
-            <img src= {EDIT_ICON}/>
+            <img src={EDIT_ICON} />
           </Link>
         )}
         {connect && (

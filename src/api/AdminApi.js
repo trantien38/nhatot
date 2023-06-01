@@ -1,4 +1,5 @@
 import axiosClient from './axiosClient';
+
 const config = {
   headers: {
     'content-type': 'multipart/form-data',
@@ -36,6 +37,7 @@ const adminApi = {
     return axiosClient.get(url);
   },
   adminRemoveBanner(id) {
+    console.log('id: ', id);
     const url = `/adminRemoveBanner/${id}`;
     return axiosClient.delete(url);
   },

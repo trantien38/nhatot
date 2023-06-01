@@ -42,12 +42,17 @@
   &:hover {
     background-color: #ececec;
   }
+  & input {
+    z-index: 9999;
+    width: 20px;
+    cursor: pointer;
+  }
 }
 .title {
   // white-space: nowrap;
   // text-overflow: ellipsis;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 14px;
   margin: 4px 0;
   max-width: 260px;
   // display: block;
@@ -63,7 +68,7 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   color: #9b9b9b;
-  font-size: 12px;
+  font-size: 14px;
   min-height: 14px;
   margin: 4px 0;
 }
@@ -107,7 +112,7 @@
   background-repeat: no-repeat;
   background-color: transparent;
   border: none;
-  transform: translateY(50%);
+  transform: translateY(38%);
 }
 
 .form {

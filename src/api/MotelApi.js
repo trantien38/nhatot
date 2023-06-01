@@ -54,6 +54,11 @@ const motelApi = {
     return axiosClient.get(url);
   },
 
+  getMotelHomePage() {
+    const url = `/getMotelHomePage`;
+    return axiosClient.get(url);
+  },
+
   add(formData) {
     const url = '/motel';
     return axiosClient.post(url, formData, config);

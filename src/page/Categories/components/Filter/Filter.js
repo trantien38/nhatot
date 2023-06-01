@@ -90,12 +90,12 @@ function Filter({ address, onChangeFilters, filters }) {
           margin: 'auto 0',
           maxWidth: theme.size.browser,
           display: 'flex',
-          fontSize: '16px',
+          fontSize: '14px',
           '& >div': {
             marginLeft: '9px',
           },
           '& button': {
-            fontSize: '16px',
+            fontSize: '14px',
           },
         }}
       >
@@ -106,13 +106,13 @@ function Filter({ address, onChangeFilters, filters }) {
 
         <Box className={styles.filter} onClick={handleClickOpenAddress}>
           <img src={LOCATION_FILTER} alt="" />
-          <span style={{ paddingBottom: '3px' }}>&nbsp;{address || 'Toàn quốc'}</span>
+          <span >&nbsp;{address || 'Toàn quốc'}</span>
           <ArrowDropDown />
         </Box>
         <DialogAddress open={openAddress} Transition={Transition} handleClose={handleCloseAddress} />
         <Box className={styles.filter} onClick={handleClickOpenListMap}>
           <span className={styles.filter_span}></span>
-          <span style={{ paddingBottom: '3px' }}>Tìm quanh đây</span>
+          <span >Tìm quanh đây</span>
           <ArrowDropDown />
         </Box>
         <DialogListMap open={openListMap} Transition={Transition} handleClose={handleCloseListMap} />

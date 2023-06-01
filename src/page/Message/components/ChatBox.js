@@ -5,13 +5,17 @@ import styles from '../Message.module.scss';
 function ChatBox({ chat, IdUser }) {
   var title = `${chat[0]?.day} tháng ${chat[0]?.month} năm ${chat[0]?.year}`;
   console.log(chat);
+  // var element = document.getElementById('chatbox');
+  // element.scrollTop = element.scrollHeight;
+  // document.getElementById('scroll').scrollTop =  document.getElementById('scroll').scrollHeight
+
   return (
     <Box
       sx={{
         overflow: 'hidden',
-        '& ul': { margin: ' 0 0 0 13px', padding: 0, overflow: 'auto', height: '100%', fontSize: '14px' },
+        '& ul': { margin: ' 0 0 0 13px', padding: 0, overflow: 'auto', height: '100%', fontSize: '14px', overflowY: 'scroll' },
         '& p': { textAlign: 'center' },
-        '& ul>p': {
+        '& ul>p, & ul>div>p': {
           fontWeight: 500,
           color: '#a9a9a9',
         },
@@ -19,15 +23,15 @@ function ChatBox({ chat, IdUser }) {
     >
       <ul id="chatbox">
         <p>{chat[0] && title}</p>
-        {chat[0] ? (
-          chat.map((result, index) => {
+        {chat.length > 0 ? (
+          chat?.map((result, index) => {
             if (result.IdUser == IdUser) {
               if (`${result?.day} tháng ${result?.month} năm ${result?.year}` !== title) {
                 title = `${result?.day} tháng ${result?.month} năm ${result?.year}`;
                 return (
-                  <Box key={index}>
+                  <Box key={result.IdMessage}>
                     <p>{`${result.day} tháng ${result.month} năm ${result.year}`}</p>
-                    <li key={result.IdMessage} className={styles.messageRenter}>
+                    <li className={styles.messageRenter}>
                       <Box
                         sx={{
                           display: 'flex',

@@ -10,7 +10,6 @@ import Categories from '~/page/Categories/Categories';
 import Detail from '~/page/Detail/Detail';
 import Home from '~/page/Home/Home';
 import Message from '~/page/Message/Message';
-import Post from '~/page/Post/Post';
 import ManageMotel from '~/page/ManageMotel/ManageMotel';
 import UserProfile from '~/page/UserProfile/UserProfile';
 
@@ -19,6 +18,7 @@ import { STATIC_HOST } from '~/constants';
 import EditMotel from '~/page/ManageMotel/components/EditMotel';
 import Favourite from '~/page/Favourite/Favourite';
 import Dashboard from '~/admin/pages/dashboard/Dashboard';
+import AddMotel from '~/page/ManageMotel/components/AddMotel';
 const socket = io(STATIC_HOST);
 
 let routes = () => [
@@ -59,7 +59,7 @@ let routes = () => [
       { path: 'forget-password', element: <ForgetPassword /> },
       {
         path: '/manage-motel/add',
-        element: <Post socket={socket} />,
+        element: <AddMotel socket={socket} />,
       },
       {
         path: '/manage-motel/:editSlug',

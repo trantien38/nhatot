@@ -116,64 +116,13 @@ function RegisterForm(props) {
                 </Box>
               </Box>
               <Box>
-                <InputField
-                  sx={{
-                    fontSize: 2,
-                    color: 'red',
-                    '& label': {
-                      fontSize: 14,
-                    },
-                    '& svg': {
-                      fontSize: 18,
-                    },
-                  }}
-                  label="Họ và tên"
-                  name="fullName"
-                  type="text"
-                  errors={errors}
-                  required
-                  control={control}
-                />
+                <InputField label="Họ và tên" name="fullName" type="text" errors={errors} required control={control} />
               </Box>
               <Box>
-                <InputField
-                  sx={{
-                    fontSize: 2,
-                    color: 'red',
-                    '& label': {
-                      fontSize: 14,
-                    },
-                    '& svg': {
-                      fontSize: 18,
-                    },
-                  }}
-                  label="Số điện thoại"
-                  name="phoneNumber"
-                  type="text"
-                  errors={errors}
-                  required
-                  control={control}
-                />
+                <InputField label="Số điện thoại" name="phoneNumber" type="text" errors={errors} required control={control} />
               </Box>
               <Box>
-                <InputField
-                  sx={{
-                    fontSize: 2,
-                    color: 'red',
-                    '& label': {
-                      fontSize: 14,
-                    },
-                    '& svg': {
-                      fontSize: 18,
-                    },
-                  }}
-                  label="Mật khẩu"
-                  name="password"
-                  type="password"
-                  errors={errors}
-                  required
-                  control={control}
-                />
+                <InputField label="Mật khẩu" name="password" type="password" errors={errors} required control={control} />
               </Box>
               <Button
                 sx={{
@@ -218,8 +167,10 @@ function RegisterForm(props) {
                 },
               }}
             >
-              Bằng việc đăng ký, bạn đã đồng ý với &nbsp;
-              <Link to={'/'}>Điều khoản sử dụng</Link>&nbsp; của chúng tôi
+              <p>
+                Bằng việc đăng ký, bạn đã đồng ý với &nbsp;
+                <Link to={'/'}>Điều khoản sử dụng</Link>&nbsp; của chúng tôi
+              </p>
             </Box>
             {/* <Box>
               <p

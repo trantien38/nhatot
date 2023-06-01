@@ -13,6 +13,7 @@ import {
   AVATAR_DEFAULT,
   CART,
   CHAT_ICON,
+  DEPOSITS_ICON,
   FURNITURE_ICON,
   GREEN_DOT,
   GREY_DOT,
@@ -41,6 +42,7 @@ import userApi from '~/api/UserApi';
 import { toastMessage } from '~/utils/toast';
 import { isEmpty } from 'lodash';
 import { Toaster } from 'react-hot-toast';
+import images from '~/assets/images';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
@@ -129,9 +131,11 @@ function Detail({ socket }) {
     const messageUserList = await messageApi.add(newMessage);
   };
   const handleSubmitQuestion = async (Content) => {
+    console.log({ IdMotel: IdMotel, IdRenter: user.IdUser, IdHost: motel[0].IdUser });
     if (isEmpty(user)) {
       toastMessage.error('Bạn phải đăng nhập mới nhắn tin được');
     } else {
+      console.log({ IdMotel: IdMotel, IdRenter: user.IdUser, IdHost: motel[0].IdUser });
       const { IdRoom } = await messageApi.createRoom({ IdMotel: IdMotel, IdRenter: user.IdUser, IdHost: motel[0].IdUser });
       console.log(IdRoom);
       const newMessage = {
@@ -250,7 +254,7 @@ function Detail({ socket }) {
               </p>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <DetailItem icon={SHARE_ICON} title="Chia sẻ" />
+              {/* <DetailItem icon={SHARE_ICON} title="Chia sẻ" /> */}
               <span onClick={handleSaveMotel}>
                 <DetailItem sx={{ '&:hover': { cursor: 'pointer' } }} icon={icon} title="Lưu tin" />
               </span>
@@ -309,7 +313,7 @@ function Detail({ socket }) {
           }}
         >
           <h1 className={styles.title}>Đặc điểm bất động sản</h1>
-          <Grid container sx={{ marginTop: '12px' }}>
+          <Grid container sx={{ marginTop: '12px' }} spacing={1}>
             <Grid item md={7}>
               <DetailItem icon={CART} title={'Cho thuê'} />
             </Grid>
@@ -318,6 +322,19 @@ function Detail({ socket }) {
             </Grid>
             <Grid item md={7}>
               <DetailItem icon={FURNITURE_ICON} title={`Tình trạng nội thất: ${motel[0]?.Status}`} />
+            </Grid>
+            <Grid item md={5}>
+              <DetailItem
+                icon={DEPOSITS_ICON}
+                title={
+                  motel[0]?.Deposits >= 1
+                    ? `Số tiền cọc: ${motel[0]?.Deposits} triệu/tháng`
+                    : `Số tiền cọc: ${(motel[0]?.Deposits * 1000000).toLocaleString('vi', {
+                        style: 'currency',
+                        currency: 'VND',
+                      })}/tháng`
+                }
+              />
             </Grid>
           </Grid>
         </Box>
@@ -364,7 +381,7 @@ function Detail({ socket }) {
               <b>{motel[0]?.Name}</b>
               <Link to={`/user/${motel[0]?.IdUser}`} className={styles.profile}>
                 <p>
-                  <p>Xem trang</p>
+                  <p>Trang cá nhân</p>
                   <NavigateNext />
                 </p>
               </Link>
@@ -416,14 +433,14 @@ function Detail({ socket }) {
             </div>
           </Box>
         </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', margin: '12px' }}>
+        {/* <Box sx={{ display: 'flex', justifyContent: 'space-between', margin: '12px' }}>
           <Box>
             <DetailItem icon={HELP_ICON} title={'Cần trợ giúp'} />
           </Box>
           <Box>
             <DetailItem icon={REPORT_ICON} title={'Báo cáo tin đăng này'} />
           </Box>
-        </Box>
+        </Box> */}
       </Grid>
     </Grid>
   );

@@ -21,7 +21,7 @@ function UserToolbar(props) {
   return (
     <GridToolbarContainer>
       <Button color="primary" startIcon={<Add />}>
-        <Link to="/admin/user/add">Thêm user</Link>
+        <Link to="/admin/user/add">Thêm người dùng</Link>
       </Button>
       <DialogEditUser open={openDialog} Transition={Transition} handleClose={handleCloseDialog} />
     </GridToolbarContainer>
