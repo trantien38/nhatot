@@ -17,23 +17,23 @@ import EditToolbar from './UserToolbar';
 export const ListUser = () => {
   const columns = [
     { field: 'IdUser', headerName: 'ID', width: 220 },
-    { field: 'Name', headerName: 'Họ và tên', width: 160 },
+    { field: 'Name', headerName: 'Họ và tên', width: 130 },
     // { field: 'Email', headerName: 'Email', width: 100 },
     {
       field: 'BirthDay',
       headerName: 'Ngày sinh',
-      width: 120,
+      width: 100,
       valueFormatter: (params) => moment(params?.value).format('DD/MM/YYYY'),
     },
     { field: 'PhoneNumber', headerName: 'Số điện thoại', width: 110 },
-    { field: 'Gender', headerName: 'Giới tính', width: 100 },
-    { field: 'Address', headerName: 'Địa chỉ', width: 180 },
+    { field: 'Gender', headerName: 'Giới tính', width: 90 },
+    { field: 'Address', headerName: 'Địa chỉ', width: 120 },
     // { field: 'Active', headerName: 'Trạng thái', width: 180 },
     {
       field: 'actions',
       type: 'actions',
       headerName: 'Hành động',
-      width: 200,
+      width: 160,
       cellClassName: 'actions',
       getActions: (params) => {
         return [
@@ -69,7 +69,6 @@ export const ListUser = () => {
     },
   ];
 
-  const height = window.innerHeight;
   const [users, setUsers] = useState([]);
   const [open, setOpen] = useState(false);
   const [id, setId] = useState(null);
@@ -104,7 +103,7 @@ export const ListUser = () => {
   };
 
   return (
-    <Box sx={{ height: `calc(${height}px - 120px)`, width: '100%' }}>
+    <Box sx={{ height: '100%', width: '100%' }}>
       <Toaster />
       <DataGrid
         getRowId={(users) => users.IdUser}
@@ -124,6 +123,16 @@ export const ListUser = () => {
           fontSize: '14px',
           '& .actions': {
             overflow: 'visible !important',
+          },
+          '& .MuiDataGrid-row': {
+            maxHeight: '80px !important',
+            height: '80px !important',
+          },
+          '& .MuiDataGrid-cell': {
+            maxHeight: 'none !important',
+          },
+          '& .css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar p': {
+            fontSize: '14px',
           },
         }}
       />

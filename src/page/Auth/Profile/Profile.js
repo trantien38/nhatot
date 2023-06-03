@@ -109,7 +109,7 @@ export const Profile = () => {
             <label htmlFor="avatar">
               <Box className={styles.changeAvatar}>
                 <i></i>
-                <input type="file" name="avatar" id="avatar" onChange={handleChangeAvatar} />
+                <input accept="image/*" type="file" name="avatar" id="avatar" onChange={handleChangeAvatar} />
               </Box>
             </label>
           </Box>

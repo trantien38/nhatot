@@ -10,20 +10,24 @@ import QuestionToolbar from './QuestionToolbar';
 
 export const ListQuestion = () => {
   const [open, setOpen] = useState(false);
-  const height = window.innerHeight;
   const [questions, setQuestions] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
   const [idQuestion, setIdQuestion] = useState();
 
   const columns = [
     // { field: 'id', headerName: 'STT', width: 38 },
-    { field: 'IdQuestion', headerName: 'ID', width: 168 },
+    { field: 'IdQuestion', headerName: 'ID', width: 230 },
     { field: 'Content', headerName: 'Question', width: 280 },
-    { field: 'Active', headerName: 'Active', width: 80 },
+    {
+      field: 'Active',
+      headerName: 'Trạng thái',
+      width: 80,
+      renderCell: (params) => <p>{params.value == 1 ? 'Hiển thị' : 'Ẩn'}</p>,
+    },
     {
       field: 'actions',
       type: 'actions',
-      headerName: 'Actions',
+      headerName: 'Hành động',
       width: 100,
       cellClassName: 'actions',
       getActions: ({ id }) => {
@@ -77,26 +81,38 @@ export const ListQuestion = () => {
   };
 
   return (
-    <Box>
+    // <Box>
+    <Box sx={{ height: '100%', width: '100%' }}>
       <Toaster />
-      <Box sx={{ height: `calc(${height}px - 120px)`, width: '100%' }}>
-        <DataGrid
-          getRowId={(questions) => questions.IdQuestion}
-          rows={questions}
-          rowModesModel={rowModesModel}
-          columns={columns}
-          pageSize={5}
-          rowsPerPageOptions={[25]}
-          checkboxSelection
-          slots={{
-            toolbar: QuestionToolbar,
-          }}
-          slotProps={{
-            toolbar: { setQuestions, setRowModesModel },
-          }}
-          sx={{ fontSize: '14px' }}
-        />
-      </Box>
+      <DataGrid
+        getRowId={(questions) => questions.IdQuestion}
+        rows={questions}
+        rowModesModel={rowModesModel}
+        columns={columns}
+        pageSize={5}
+        rowsPerPageOptions={[25]}
+        checkboxSelection
+        slots={{
+          toolbar: QuestionToolbar,
+        }}
+        slotProps={{
+          toolbar: { setQuestions, setRowModesModel },
+        }}
+        sx={{
+          fontSize: '14px',
+          '& .MuiDataGrid-row': {
+            maxHeight: '80px !important',
+            height: '80px !important',
+          },
+          '& .MuiDataGrid-cell': {
+            maxHeight: 'none !important',
+          },
+          '& .css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar p': {
+            fontSize: '14px',
+          },
+        }}
+      />
+      {/* </Box> */}
       <Dialog open={open} onClose={handleClose} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
         <DialogTitle id="alert-dialog-title">{'Xác nhận xóa câu hỏi này?'}</DialogTitle>
         <DialogContent>

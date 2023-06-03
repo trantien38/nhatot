@@ -10,27 +10,35 @@ import { toastMessage } from '~/utils/toast';
 import BannerToolbar from './BannerToolbar';
 
 export const ListBanner = () => {
-  const height = window.innerHeight;
   const [banners, setBanners] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
   const [open, setOpen] = useState(false);
   const [idBanner, setIdBanner] = useState();
 
   const columns = [
-    { field: 'IdBanner', headerName: 'ID', width: 180 },
+    { field: 'IdBanner', headerName: 'ID', width: 220 },
     {
       field: 'srcBanner',
-      headerName: 'Image',
-      width: 230,
-      getActions: ({ id, srcBanner }) => {
-        return [<img src={`${STATIC_HOST}banners/${srcBanner}`} alt="banner" />];
-      },
+      type: 'srcBanner',
+      headerName: 'Banner',
+      width: 250,
+      cellClassName: 'srcBanner',
+      renderCell: (params) => (
+        // <Typography variant="subtitle2" className={classes.bolderText}>
+        <img src={`${STATIC_HOST}banners/${params.value}`} height={70} width={230} alt="banner" />
+        // </Typography>
+      ),
     },
-    { field: 'Active', headerName: 'Active', width: 80 },
+    {
+      field: 'Active',
+      headerName: 'Trạng thái',
+      width: 80,
+      renderCell: (params) => <p>{params.value == 1 ? 'Hiển thị' : 'Ẩn'}</p>,
+    },
     {
       field: 'actions',
       type: 'actions',
-      headerName: 'Actions',
+      headerName: 'Hành động',
       width: 100,
       cellClassName: 'actions',
       getActions: ({ id }) => {
@@ -85,26 +93,37 @@ export const ListBanner = () => {
   };
 
   return (
-    <Box>
+    // <Box sx={{ height: '100%' }}>
+    <Box sx={{ height: '100%', width: '100%' }}>
       <Toaster />
-      <Box sx={{ height: `calc(${height}px - 120px)`, width: '100%' }}>
-        <DataGrid
-          getRowId={(banners) => banners.IdBanner}
-          rows={banners}
-          rowModesModel={rowModesModel}
-          columns={columns}
-          pageSize={5}
-          rowsPerPageOptions={[25]}
-          checkboxSelection
-          slots={{
-            toolbar: BannerToolbar,
-          }}
-          slotProps={{
-            toolbar: { setBanners, setRowModesModel },
-          }}
-          sx={{ fontSize: '14px' }}
-        />
-      </Box>
+      <DataGrid
+        getRowId={(banners) => banners.IdBanner}
+        rows={banners}
+        rowModesModel={rowModesModel}
+        columns={columns}
+        pageSize={5}
+        rowsPerPageOptions={[25]}
+        checkboxSelection
+        slots={{
+          toolbar: BannerToolbar,
+        }}
+        slotProps={{
+          toolbar: { setBanners, setRowModesModel },
+        }}
+        sx={{
+          fontSize: '14px',
+          '& .MuiDataGrid-row': {
+            maxHeight: '80px !important',
+            height: '80px !important',
+          },
+          '& .MuiDataGrid-cell': {
+            maxHeight: 'none !important',
+          },
+          '& .css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar p': {
+            fontSize: '14px',
+          },
+        }}
+      />
       <Dialog open={open} onClose={handleClose} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
         <DialogTitle id="alert-dialog-title">{'Xác nhận xóa banner này?'}</DialogTitle>
         <DialogContent>

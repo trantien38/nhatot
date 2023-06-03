@@ -106,7 +106,7 @@ export default function Message({ socket }) {
   };
   useEffect(() => {
     console.log(IdRoom);
-    if (IdRoom != 'undefined') {
+    if (typeof IdRoom != 'undefined') {
       fetchChat();
     }
   }, [IdRoom]);

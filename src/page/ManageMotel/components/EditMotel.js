@@ -10,12 +10,12 @@ import motelApi from '~/api/MotelApi';
 import AddIcon from '~/components/AddIcon';
 import Button from '~/components/Button/Button';
 import DialogDetailAddress from '~/components/DialogDetailAddress';
+import Editor from '~/components/Editor';
 import InputField from '~/components/HookForm/InputField';
 import { STATIC_HOST } from '~/constants';
 import StorageKeys from '~/constants/storage-keys';
-import Editor from '~/page/Post/components/Editor';
-import UploadItem from '~/page/Post/components/UploadItem';
 import { toastMessage } from '~/utils/toast';
+import UploadItem from './UploadItem';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
