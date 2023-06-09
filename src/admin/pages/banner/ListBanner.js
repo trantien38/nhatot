@@ -16,7 +16,7 @@ export const ListBanner = () => {
   const [idBanner, setIdBanner] = useState();
 
   const columns = [
-    { field: 'IdBanner', headerName: 'ID', width: 220 },
+    { field: 'IdBanner', headerName: 'ID', width: 230 },
     {
       field: 'srcBanner',
       type: 'srcBanner',
@@ -111,6 +111,7 @@ export const ListBanner = () => {
           toolbar: { setBanners, setRowModesModel },
         }}
         sx={{
+          height: '520px',
           fontSize: '14px',
           '& .MuiDataGrid-row': {
             maxHeight: '80px !important',

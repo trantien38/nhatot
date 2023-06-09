@@ -2,6 +2,8 @@
   &:hover {
     opacity: 0.8;
   }
+  border: none;
+
   cursor: pointer;
   color: #fff;
   background-color: #007bff;
@@ -39,6 +41,7 @@
   font-weight: 400;
   font-size: 14px;
   border: none;
+
   width: 100%;
   background-color: #dc3545;
   border-color: #dc3545;

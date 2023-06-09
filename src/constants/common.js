@@ -1,5 +1,4 @@
-export const LOGO_APP = 'https://static.chotot.com/storage/default_images/pty/nhatot-logo.png';
-export const STATIC_HOST = 'http://localhost:8000/';
+export const STATIC_HOST = process.env.REACT_APP_DOMAIN_SERVER || 'http://localhost:8000/';
 // export const STATIC_HOST = 'http://10.0.0.141:8000/';
 // export const STATIC_HOST = 'http://192.168.1.88:8000/';
 export const THUMBNAIL_PLACEHOLDER = 'https://via.placeholder.com/444';

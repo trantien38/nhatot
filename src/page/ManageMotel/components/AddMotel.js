@@ -111,7 +111,7 @@ function AddMotel({ socket }) {
     formData.append('ward', ward);
     formData.append('notifi', `${Name} vừa đăng phòng trọ mới`);
     // if (addressDetail)
-    if (!description) {
+    if (description == '') {
       toastMessage.error('Nhập mô tả chi tiết');
     } else if (!image[0] && !video[0]) {
       toastMessage.error('Tải ảnh hoặc video lên');
@@ -119,9 +119,9 @@ function AddMotel({ socket }) {
       const addMotel = await motelApi.add(formData);
       toastMessage.success(addMotel.msg);
       socket.emit('post-motel', { msg: `${Name} vừa đăng phòng trọ mới`, IdUser });
-      // setTimeout(() => {
-      //   navigate('/cho-thue-phong-tro');
-      // }, 2000);
+      setTimeout(() => {
+        navigate('/cho-thue-phong-tro');
+      }, 2000);
     }
   };
   const handleDeleteImage = (src) => {

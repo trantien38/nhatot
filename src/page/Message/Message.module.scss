@@ -49,13 +49,10 @@
   }
 }
 .title {
-  // white-space: nowrap;
-  // text-overflow: ellipsis;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 13px;
   margin: 4px 0;
   max-width: 260px;
-  // display: block;
   display: -webkit-box;
   -webkit-line-clamp: 1; /* số dòng hiển thị */
   -webkit-box-orient: vertical;

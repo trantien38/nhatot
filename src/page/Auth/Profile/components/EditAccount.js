@@ -79,7 +79,7 @@ export const EditAccount = () => {
             },
           }}
           item
-          md={8}
+          md={8.5}
           container
           spacing={1}
         >

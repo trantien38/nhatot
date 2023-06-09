@@ -8,13 +8,18 @@ import StorageKeys from '~/constants/storage-keys';
 import MotelToolbar from './components/MotelToolbar';
 
 const columns = [
-  { field: 'IdMotel', headerName: 'ID', width: 168 },
+  // { field: 'IdMotel', headerName: 'ID', width: 168 },
   { field: 'Title', headerName: 'Tiêu đề', width: 280 },
   { field: 'Price', headerName: 'Giá thuê', width: 80 },
   { field: 'Acreage', headerName: 'Diện tích', width: 80 },
   { field: 'Address', headerName: 'Địa chỉ', width: 220 },
   { field: 'Deposits', headerName: 'Tiền cọc', width: 80 },
-  // { field: 'Status', headerName: 'Tình trạng', width: 90 },
+  {
+    field: 'Active',
+    headerName: 'Trạng thái',
+    width: 100,
+    renderCell: (params) => <p>{params.value == 1 ? 'Cho thuê' : 'Đã cho thuê'}</p>,
+  },
   // { field: 'Description', headerName: 'Mô tả', width: 90 },
   // { field: 'Price', headerName: 'Price', width: 80 },
 

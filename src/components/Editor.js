@@ -20,10 +20,11 @@ import {
   textStyle,
 } from 'suneditor/src/plugins';
 import 'suneditor/dist/css/suneditor.min.css'; // Import Sun Editor's CSS File
-function Editor({ handleChangeDescription }) {
+function Editor({ handleChangeDescription, content }) {
   return (
     <SunEditor
       onChange={handleChangeDescription}
+      setContents={content}
       setOptions={{
         plugins: [
           align,

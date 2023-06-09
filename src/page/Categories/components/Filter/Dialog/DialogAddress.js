@@ -7,7 +7,6 @@ import { AREA_ICON, BACK_ICON } from '~/constants';
 import District from '../Address/District';
 import Province from '../Address/Province';
 import Ward from '../Address/Ward';
-import styles from './Dialog.module.scss';
 
 function DialogAddress({ open, Transition, handleClose }) {
   const [address, setAddress] = useState([]);
@@ -34,9 +33,14 @@ function DialogAddress({ open, Transition, handleClose }) {
           backgroundColor: '#fff!important',
           boxShadow: 'inset 0 -1px 0 #e8e8e8',
           display: 'flex',
+
+          '& a': {
+            display: 'flex',
+            alignItem: 'center',
+          },
+          '& a>img': { cursor: 'pointer' },
         }}
       >
-        {/* <KeyboardArrowLeft /> */}
         <Link
           to={
             IdWard
@@ -49,7 +53,7 @@ function DialogAddress({ open, Transition, handleClose }) {
           }
           onClick={!IdProvince && handleClose}
         >
-          <img className={styles.btn_back} src={BACK_ICON} />
+          <img src={BACK_ICON} />
         </Link>
         <Box
           sx={{

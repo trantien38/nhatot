@@ -8,15 +8,17 @@ import {
 } from '@mui/icons-material';
 import { Box } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { LOGO_APP } from '~/constants';
+import images from '~/assets/images';
 import styles from './Sidebar.module.scss';
 
 function Sidebar() {
   return (
     <Box className={styles.sidebar}>
-      <Box sx={{ margin: '0 80px', cursor: 'pointer', height: '60px', fontSize: '14px' }}>
-        <img width={'100%'} src={LOGO_APP} />
-      </Box>
+      <Link to="/">
+        <Box sx={{ textAlign: 'center', cursor: 'pointer', height: '60px', fontSize: '14px' }}>
+          <img height={'100%'} src={images.logo_app} />
+        </Box>
+      </Link>
       <Box className={styles.sidebar_scrollbar}>
         <nav>
           <ul>

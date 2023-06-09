@@ -86,8 +86,15 @@ export const AddBanner = () => {
     >
       <Toaster />
       <Grid item md={12} sm={12} xs={12}>
-        <FormControl fullWidth>
-          <IconAddImage title={title} />
+        <FormControl fullWidth sx={{ paddingTop: '10px' }}>
+          <IconAddImage
+            title={title}
+            sx={{
+              '& svg': { width: '26px', height: '20px' },
+              '& b': { top: '-6px !important' },
+              '& span > svg': { width: '13px', height: '10px' },
+            }}
+          />
           <input id="banner" accept={`image/*`} hidden type="file" multiple name="banner" onChange={handleChangeBanner} />
         </FormControl>
       </Grid>

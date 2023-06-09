@@ -15,7 +15,7 @@ export default function Home() {
   useEffect(() => {
     (async () => {
       const listMotel = await motelApi.getMotelHomePage();
-      console.log(listMotel.motel);
+      console.log(listMotel);
       setMotels(listMotel);
     })();
   }, []);

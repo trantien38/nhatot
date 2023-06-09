@@ -52,6 +52,7 @@ export const Profile = () => {
           maxWidth: theme.size.browser,
           margin: 'auto',
           background: '#fff',
+          marginBottom: '10px',
         }}
       >
         <Toaster />

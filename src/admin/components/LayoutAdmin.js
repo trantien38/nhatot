@@ -5,24 +5,14 @@ import Sidebar from './Sidebar/Sidebar';
 
 export default function LayoutAdmin() {
   return (
-    <div>
+    <Box>
       <Sidebar />
-      <div>
+      <Box sx={{ overflow: 'hidden' }}>
         <Navbar />
-        {/* <Box sx={{ marginTop: '86px', marginLeft: '280px', padding: '0 30px' }}> */}
-        <Box
-          sx={{
-            padding: '0 30px',
-            position: 'fixed',
-            right: '0',
-            left: '280px',
-            bottom: '0',
-            top: '86px',
-          }}
-        >
+        <Box sx={{ marginTop: '86px', marginLeft: '260px', padding: '0 30px' }}>
           <Outlet />
         </Box>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }

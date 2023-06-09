@@ -1,4 +1,5 @@
 const images = {
+  logo_app: require('./nhatot-logo.png'),
   facebook: require('./facebook.png'),
   instagram: require('./instagram.jpg'),
   youtube: require('./youtube.png'),

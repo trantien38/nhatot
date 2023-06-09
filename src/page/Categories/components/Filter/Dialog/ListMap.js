@@ -1,15 +1,16 @@
-import { useRef, useState, useEffect } from 'react';
-import { FaLocationArrow, FaTimes } from 'react-icons/fa';
-import { useJsApiLoader, GoogleMap, Marker, Autocomplete, DirectionsRenderer, InfoWindow } from '@react-google-maps/api';
-import { Box, Button, ButtonGroup, Flex, HStack, IconButton, Input, SkeletonText, Text } from '@chakra-ui/react';
-import StorageKeys from '~/constants/storage-keys';
+import { Box, Flex } from '@chakra-ui/react';
+import { Grid, TextField } from '@mui/material';
+import { DirectionsRenderer, GoogleMap, Marker } from '@react-google-maps/api';
+import { useEffect, useRef, useState } from 'react';
 import Geocode from 'react-geocode';
-import iconMarker from '~/assets/images/markerIcon-removebg-preview.png';
 import { Toaster } from 'react-hot-toast';
-import { toastMessage } from '~/utils/toast';
-import { Link } from 'react-router-dom';
-import theme from '~/theme';
+import { FaLocationArrow, FaTimes } from 'react-icons/fa';
 import motelApi from '~/api/MotelApi';
+import Button from '~/components/Button/Button';
+import StorageKeys from '~/constants/storage-keys';
+import theme from '~/theme';
+import { toastMessage } from '~/utils/toast';
+import InfoWindowMotel from './InfoWindowMotel';
 
 // const center = { lat: 16.047199, lng: 108.219955 };
 
@@ -20,7 +21,7 @@ function ListMap() {
   useEffect(() => {
     const fetchAllMotel = async () => {
       const allMotel = await motelApi.getAllMotels();
-      // findLatAndLng(allMotel.motel);
+      findLatAndLng(allMotel.motel);
     };
     fetchAllMotel();
   }, []);
@@ -80,14 +81,10 @@ function ListMap() {
           //   eslint-disable-next-line no-undef
           travelMode: google.maps.TravelMode.DRIVING,
         });
-        const s = results.routes[0].legs[0].distance.text.split(' ');
-        if (s[0].replace(/,/g, '.') * 1 < radius) {
-          // console.log(s[0].replace(/,/g, '.') * 1);
-          // console.log(motel);
+        const distanceList = results.routes[0].legs[0].distance.text.split(' ');
+        console.log(distanceList);
+        if (distanceList[0].replace(/,/g, '.') * 1 < radius) {
           refMotels.current.push(motel);
-          // setMotels([...motels, motel])
-          // console.log([...motels, motel]);
-          // setMotels([...motels, motel])
         }
       });
 
@@ -98,24 +95,27 @@ function ListMap() {
     })();
   }, [radius]);
 
-  // setDestination(address);
   async function calculateRoute() {
-    if (originRef.current.value === '' || destiantionRef.current.value === '') {
-      toastMessage.error('Vui lòng nhập đầy đủ điểm đi và điểm đến');
+    console.log(originRef.current.value);
+    if (originRef.current.value == '') {
+      toastMessage.error('Vui lòng nhập điểm đi');
+    } else if (destiantionRef.current.value === '') {
+      toastMessage.error('Vui lòng nhập điểm đến');
+    } else if (destiantionRef.current.value === '' && originRef.current.value == '') {
+      toastMessage.error('Vui lòng nhập điểm đi và điểm đến');
+    } else {
+      // eslint-disable-next-line no-undef
+      const directionsService = new google.maps.DirectionsService();
+      const results = await directionsService.route({
+        origin,
+        destination,
+        //   eslint-disable-next-line no-undef
+        travelMode: google.maps.TravelMode.DRIVING,
+      });
+      setDirectionsResponse(results);
+      setDistance(results.routes[0].legs[0].distance.text);
+      setDuration(results.routes[0].legs[0].duration.text);
     }
-    // eslint-disable-next-line no-undef
-    const directionsService = new google.maps.DirectionsService();
-    const results = await directionsService.route({
-      // origin: originRef.current.value,
-      // destination: destiantionRef.current.value,
-      origin,
-      destination,
-      //   eslint-disable-next-line no-undef
-      travelMode: google.maps.TravelMode.DRIVING,
-    });
-    setDirectionsResponse(results);
-    setDistance(results.routes[0].legs[0].distance.text);
-    setDuration(results.routes[0].legs[0].duration.text);
   }
 
   function clearRoute() {
@@ -147,36 +147,32 @@ function ListMap() {
     setRadius(e.target.value);
   };
 
-  const handleClickShowInfoMotel = (motel) => {
-    setDestination(`${motel?.Address}, ${motel?.WardName}, ${motel?.DistrictName}, ${motel?.ProvinceName}`);
-    console.log(motel);
-    const infoElement = document.querySelector(`.info-${motel.IdMotel}`);
-    console.log(infoElement);
-    // setMarkerLoaded(true);
+  const findLatAndLng = (listmotels) => {
+    console.log(listmotels);
+    const ListLatAndLng = [];
+    Geocode.setRegion('au');
+    Geocode.setLocationType('ROOFTOP');
+    Geocode.setApiKey(StorageKeys.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
+    listmotels.map((motel) => {
+      Geocode.fromAddress(`${motel?.Address}, ${motel?.WardName}, ${motel?.DistrictName}, ${motel?.ProvinceName}`).then(
+        (response) => {
+          ListLatAndLng.push({ ...motel, latAndLng: response.results[0].geometry.location });
+          console.log(response.results[0].geometry.location);
+        },
+        (error) => {
+          console.error(error);
+        },
+      );
+      console.log(`${motel?.Address}, ${motel?.WardName}, ${motel?.DistrictName}, ${motel?.ProvinceName}`);
+    });
+    console.log(listLatAndLng);
+    setListLatAndLng(ListLatAndLng);
   };
-
-  // const findLatAndLng = (listmotels) => {
-  //   const ListLatAndLng = [];
-  //   Geocode.setRegion('au');
-  //   Geocode.setLocationType('ROOFTOP');
-  //   Geocode.setApiKey(StorageKeys.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
-  //   listmotels.map((motel) => {
-  //     Geocode.fromAddress(`${motel?.Address}, ${motel?.WardName}, ${motel?.DistrictName}, ${motel?.ProvinceName}`).then(
-  //       (response) => {
-  //         ListLatAndLng.push({ ...motel, latAndLng: response.results[0].geometry.location });
-  //         // console.log(response.results[0].geometry.location);
-  //       },
-  //       (error) => {
-  //         console.error(error);
-  //       },
-  //     );
-  //     // console.log(`${motel?.Address}, ${motel?.WardName}, ${motel?.DistrictName}, ${motel?.ProvinceName}`);
-  //   });
-  //   setListLatAndLng(ListLatAndLng);
-  // };
-
+  const onChangeDestination = (value) => {
+    setDestination(value);
+  };
   return (
-    <Flex position="relative" flexDirection="column" alignItems="center" h="600px" w="900px">
+    <Flex position="relative" flexDirection="column" alignItems="center" h="880px" w="1120px">
       <Box position="absolute" left={0} top={0} h="100%" w="100%">
         <GoogleMap
           center={coordinates}
@@ -188,127 +184,132 @@ function ListMap() {
             mapTypeControl: true,
             fullscreenControl: true,
           }}
+          onLoad={(map) => setMap(map)}
         >
-          <Marker position={coordinates} onClick={() => handleClickShowInfoMotel()} />
+          <Marker position={coordinates} />
           {motels?.map((motel) => (
-            <Marker
-              key={motel.IdMotel}
-              position={motel.latAndLng}
-              icon={iconMarker}
-              onClick={() => handleClickShowInfoMotel(motel)}
-            >
-              {markerLoaded && (
-                <InfoWindow>
-                  <Link to={`/detail/${motel.IdMotel}`} className={`info-${motel.IdMotel}`}>
-                    <h4>{motel.Title}</h4>
-                    <p>{`Giá cho thuê: ${motel.Price} triệu/tháng`}</p>
-                    <p>{`Diện tích sử dụng: ${motel.Acreage} m2`}</p>
-                    <p>{`${motel.Address}, ${motel.WardName}, ${motel.DistrictName}, ${motel.ProvinceName}`}</p>
-                  </Link>
-                </InfoWindow>
-              )}
-            </Marker>
+            <InfoWindowMotel motel={motel} onChangeDestination={onChangeDestination} />
           ))}
           {directionsResponse && <DirectionsRenderer directions={directionsResponse} />}
         </GoogleMap>
       </Box>
       <Toaster />
-      <Box
+
+      <Grid
+        container
+        spacing={1}
         sx={{
           backgroundColor: theme.color.measuring,
-          width: '567px',
+          width: '800px',
           fontSize: '16px',
           boxSizing: 'border-box',
           position: 'relative',
-          right: '-68px',
-          '& input': {
-            width: 'calc(100% - 10px)',
-            fontSize: '16px',
-            margin: 0,
-            alignItems: 'center',
-            display: 'flex',
-          },
+          left: '52px',
+
           '& button': {
             fontSize: '16px',
           },
+          padding: '12px',
+          margin: '9px',
+          backgroungColor: 'white',
+          zIndex: '1',
         }}
-        p={8}
-        borderRadius="lg"
-        bgColor="white"
-        shadow="base"
-        minW="container.md"
-        zIndex="1"
       >
-        {/* <HStack spacing={2} justifyContent="space-between">
-          <Box flexGrow={6}>
-            <Autocomplete>
-              <Input type="text" onChange={handleChangeLocation} value={location} placeholder="Nhập vị trí" ref={originRef} />
-            </Autocomplete>
-          </Box>
-        </HStack> */}
-        <HStack spacing={2} mt={8} justifyContent="space-between">
-          <Box flexGrow={6}>
-            <Autocomplete>
-              <Input type="text" onChange={handleChangeOrigin} value={origin} placeholder="Điểm đi" ref={originRef} />
-            </Autocomplete>
-          </Box>
-          <Box sx={{ width: '118px', '& input': { margin: 0 } }}>
-            <Autocomplete>
-              <Input
+        <Grid item md={8}>
+          <TextField
+            type="text"
+            id="outlined-required"
+            label="Điểm đi"
+            onChange={handleChangeOrigin}
+            value={origin}
+            fullWidth
+            inputRef={originRef}
+          />
+        </Grid>
+        <Grid item md={4}>
+          <Grid container>
+            <Grid item md={10}>
+              <p style={{ margin: 0 }}>Khoảng cách: {distance}</p>
+            </Grid>
+            <Grid item md={2}>
+              <Box
+                sx={{
+                  width: '26px',
+                  height: '26px',
+                  '& button': {
+                    height: '100%',
+                    marginTop: 0,
+                    alignItems: 'center',
+                    marginLeft: '8px',
+                    display: 'flex',
+                  },
+                }}
+                onClick={clearRoute}
+              >
+                <Button danger text={<FaTimes />} />
+              </Box>
+            </Grid>
+            <Grid item md={10}>
+              <p>Thời gian ước tính: {duration}</p>
+            </Grid>
+            <Grid item md={2}>
+              <Box
+                sx={{
+                  width: '26px',
+                  height: '26px',
+                  '& button': {
+                    alignItems: 'center',
+                    display: 'flex',
+                    height: '100%',
+                    marginLeft: '8px',
+                    marginTop: '8px',
+                  },
+                }}
+                onClick={() => {
+                  map.panTo(coordinates);
+                  map.setZoom(14);
+                  // setDestination(address);
+                }}
+                isRound
+                aria-label="center back"
+              >
+                <Button primary text={<FaLocationArrow />} />
+              </Box>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item md={8}>
+          <TextField
+            label="Điểm đến"
+            fullWidth
+            id="outlined-required"
+            type="text"
+            onChange={handleChangeDestination}
+            value={destination}
+            inputRef={destiantionRef}
+          />
+        </Grid>
+
+        <Grid item md={4}>
+          <Grid container spacing={1}>
+            <Grid item md={5}>
+              <TextField
+                label="Bán kính"
+                fullWidth
+                id="outlined-required"
                 type="text"
                 onChange={handleChangeRadius}
                 value={radius}
-                placeholder="Bán kính: ? km"
-                // ref={destiantionRef}
               />
-            </Autocomplete>
-          </Box>
-        </HStack>
-        <HStack spacing={2} mt={8} justifyContent="space-between">
-          <Box flexGrow={6}>
-            <Autocomplete>
-              <Input
-                type="text"
-                onChange={handleChangeDestination}
-                value={destination}
-                placeholder="Điểm đến"
-                ref={destiantionRef}
-              />
-            </Autocomplete>
-          </Box>
-          <Box>
-            <ButtonGroup>
-              <Button sx={{ cursor: 'pointer' }} colorScheme="pink" type="submit" onClick={calculateRoute}>
-                Tính đường đi
-              </Button>
-            </ButtonGroup>
-          </Box>
-        </HStack>
-
-        <HStack spacing={4} mt={4} justifyContent="space-between">
-          <Text sx={{ margin: '6px 0' }}>Khoảng cách ước tính: {distance} </Text>
-          <Text>Thời gian ước tính: {duration} </Text>
-          <IconButton
-            aria-label="center back"
-            icon={<FaLocationArrow />}
-            isRound
-            onClick={() => {
-              setOrigin(addressUser);
-              map.panTo(coordinates);
-              map.setZoom(15);
-              //   setDestination(address);
-            }}
-            sx={{ cursor: 'pointer', backgroundColor: theme.color.measuring, border: 'none' }}
-          />
-
-          <IconButton
-            sx={{ cursor: 'pointer', backgroundColor: theme.color.measuring, border: 'none' }}
-            aria-label="center back"
-            icon={<FaTimes />}
-            onClick={clearRoute}
-          />
-        </HStack>
-      </Box>
+            </Grid>
+            <Grid item md={7}>
+              <Box sx={{ display: 'flex', alignItems: 'center', height: '100%', '& button': { padding: '6px', width: '100%' } }}>
+                <Button sx={{ padding: '4px 0' }} primary onClickButton={calculateRoute} text="Tính đường đi" />
+              </Box>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
     </Flex>
   );
 }

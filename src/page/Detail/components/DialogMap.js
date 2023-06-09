@@ -8,7 +8,7 @@ function DialogMap({ open, Transition, handleClose, address }) {
     <Dialog
       sx={{
         '& .MuiPaper-root': {
-          maxWidth: '900px',
+          maxWidth: '1200px',
         },
 
         margin: '0 auto',

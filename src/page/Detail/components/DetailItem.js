@@ -7,7 +7,7 @@ function DetailItem({ icon, title, sdt }) {
         <Box sx={{ display: 'flex', margin: ' 2px 20px 8px 0', cursor: 'pointer' }}>
           {sdt && sdt.includes('**') ? (
             <>
-              <img id="heart" width={'18px'} height={'18px'} src={icon} />
+              <img id="heart" width={'18px'} height={'18px'} src={icon}/>
               <Box
                 sx={{
                   marginLeft: '8px',

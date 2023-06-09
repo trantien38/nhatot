@@ -122,7 +122,7 @@ function UserProfile({ socket }) {
             },
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', margin: '12px 0' }}>
+          {/* <Box sx={{ display: 'flex', alignItems: 'center', margin: '12px 0' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
               <path
                 fill-rule="evenodd"
@@ -131,7 +131,7 @@ function UserProfile({ socket }) {
               ></path>
             </svg>
             <span>phản hồi chat: 82% (Trong 6 giờ)</span>
-          </Box>
+          </Box> */}
           <Box sx={{ display: 'flex', alignItems: 'center', margin: '12px 0', fontSize: '14px' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 25" aria-hidden="true" fill="currentColor">
               <path

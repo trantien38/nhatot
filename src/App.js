@@ -7,6 +7,7 @@ import StorageKeys from './constants/storage-keys';
 import userApi from './api/UserApi';
 
 function App() {
+  console.log('domain server: ', process.env.REACT_APP_DOMAIN_SERVER);
   // const handleBeforeUnload = (event) => {
   //   event.preventDefault();
   //   event.returnValue = '';

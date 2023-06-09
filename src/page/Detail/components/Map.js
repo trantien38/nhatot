@@ -1,13 +1,14 @@
 import { useRef, useState, useEffect } from 'react';
 import { FaLocationArrow, FaTimes } from 'react-icons/fa';
 import { useJsApiLoader, GoogleMap, Marker, Autocomplete, DirectionsRenderer } from '@react-google-maps/api';
-import { Box, Button, ButtonGroup, Flex, HStack, IconButton, Input, SkeletonText, Text } from '@chakra-ui/react';
+import { Box, ButtonGroup, Flex, HStack, IconButton, Input, SkeletonText, Text } from '@chakra-ui/react';
 import StorageKeys from '~/constants/storage-keys';
 import Geocode from 'react-geocode';
-// import iconMarker from './markerMotel.jpg';
-import iconMarker from '~/assets/images/markerIcon.jpg';
 import theme from '~/theme';
-import { Grid } from '@mui/material';
+import { Grid, TextField } from '@mui/material';
+import { toastMessage } from '~/utils/toast';
+import { Toaster } from 'react-hot-toast';
+import Button from '~/components/Button/Button';
 
 const center = { lat: 16.047199, lng: 108.219955 };
 
@@ -30,10 +31,6 @@ function Map({ address }) {
   /** @type React.MutableRefObject<HTMLInputElement> */
   const destiantionRef = useRef();
 
-  // if (!isLoaded) {
-  //   return <SkeletonText />;
-  // }
-
   // convert address to lat, lng
   const [coordinates, setCoordinates] = useState(null);
   Geocode.setRegion('au');
@@ -52,31 +49,28 @@ function Map({ address }) {
     );
   }, [address]);
 
-  // };
-
-  // useEffect(() => {
-  //   findLatAndLng();
-  // }, [address]);
-  // convert address to lat, lng
-
-  // setDestination(address);
   async function calculateRoute() {
-    // if (originRef.current.value === '' || destiantionRef.current.value === '') {
-    //   return;
-    // }
-    console.log('tinhs tians');
-    // eslint-disable-next-line no-undef
-    const directionsService = new google.maps.DirectionsService();
-    const results = await directionsService.route({
-      origin: originRef.current.value,
-      destination: destiantionRef.current.value,
-      //   eslint-disable-next-line no-undef
-      travelMode: google.maps.TravelMode.DRIVING,
-    });
-    console.log(123, results);
-    setDirectionsResponse(results);
-    setDistance(results.routes[0].legs[0].distance.text);
-    setDuration(results.routes[0].legs[0].duration.text);
+    console.log(originRef.current.value);
+    if (originRef.current.value == '') {
+      toastMessage.error('Vui lòng nhập điểm đi');
+    } else if (destiantionRef.current.value === '') {
+      toastMessage.error('Vui lòng nhập điểm đến');
+    } else if (destiantionRef.current.value === '' && originRef.current.value == '') {
+      toastMessage.error('Vui lòng nhập điểm đi và điểm đến');
+    } else {
+      // eslint-disable-next-line no-undef
+      const directionsService = new google.maps.DirectionsService();
+      const results = await directionsService.route({
+        origin: originRef.current.value,
+        destination: destiantionRef.current.value,
+        //   eslint-disable-next-line no-undef
+        travelMode: google.maps.TravelMode.DRIVING,
+      });
+      console.log(123, results);
+      setDirectionsResponse(results);
+      setDistance(results.routes[0].legs[0].distance.text);
+      setDuration(results.routes[0].legs[0].duration.text);
+    }
   }
 
   function clearRoute() {
@@ -88,6 +82,7 @@ function Map({ address }) {
   }
 
   const handleChangeOrigin = (e) => {
+    console.log(e.target.value);
     setOrigin(e.target.value);
   };
 
@@ -95,10 +90,9 @@ function Map({ address }) {
     setDestination(e.target.value);
   };
 
-  const handleClick = () => {};
-
   return (
-    <Flex position="relative" flexDirection="column" alignItems="center" h="600px" w="900px">
+    <Flex position="relative" flexDirection="column" alignItems="center" h="880px" w="1120px">
+      <Toaster />
       <Box position="absolute" left={0} top={0} h="100%" w="100%">
         <GoogleMap
           center={coordinates}
@@ -117,85 +111,98 @@ function Map({ address }) {
           {directionsResponse && <DirectionsRenderer directions={directionsResponse} />}
         </GoogleMap>
       </Box>
-      <Box
+
+      <Grid
+        container
+        spacing={1}
         sx={{
           backgroundColor: theme.color.measuring,
-          width: '567px',
+          width: '800px',
           fontSize: '16px',
           boxSizing: 'border-box',
           position: 'relative',
-          right: '-68px',
-          '& input': {
-            width: 'calc(100% - 10px)',
-            fontSize: '16px',
-            margin: 0,
-            alignItems: 'center',
-            display: 'flex',
-          },
+          left: '52px',
+
           '& button': {
             fontSize: '16px',
           },
+          padding: '12px',
+          margin: '9px',
+          backgroungColor: 'white',
+          zIndex: '1',
         }}
-        p={4}
-        borderRadius="lg"
-        m={4}
-        bgColor="white"
-        shadow="base"
-        minW="container.md"
-        zIndex="1"
       >
-        <HStack spacing={4} justifyContent="space-between">
-          <Box flexGrow={12}>
-            <Autocomplete>
-              <Input type="text" onChange={handleChangeOrigin} value={origin} placeholder="Điểm đi" ref={originRef} />
-            </Autocomplete>
-          </Box>
-          <Box sx={{ width: '118px', display: 'flex', justifyContent: 'space-between' }}>
-            <IconButton sx={{ cursor: 'pointer' }} aria-label="center back" icon={<FaTimes />} onClick={clearRoute} />
-            <IconButton
-              aria-label="center back"
-              icon={<FaLocationArrow />}
-              isRound
+        <Grid item md={9}>
+          <TextField
+            type="text"
+            id="outlined-required"
+            label="Điểm đi"
+            onChange={handleChangeOrigin}
+            value={origin}
+            fullWidth
+            inputRef={originRef}
+          />
+        </Grid>
+        <Grid item md={3}>
+          <p style={{ margin: 0 }}>Khoảng cách: {distance}</p>
+          <p>Thời gian ước tính: {duration}</p>
+        </Grid>
+        <Grid item md={9}>
+          <TextField
+            label="Điểm đến"
+            fullWidth
+            id="outlined-required"
+            type="text"
+            onChange={handleChangeDestination}
+            value={destination}
+            inputRef={destiantionRef}
+          />
+        </Grid>
+
+        <Grid item md={3}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '100%' }}>
+            <Box
+              sx={{
+                width: '30px',
+                height: '30px',
+                '& button': {
+                  height: '100%',
+                  marginTop: 0,
+                  alignItems: 'center',
+                  display: 'flex',
+                },
+              }}
+              onClick={clearRoute}
+            >
+              <Button danger text={<FaTimes />} />
+            </Box>
+            <Box sx={{ '& button': { padding: '6px' } }}>
+              <Button sx={{ padding: '4px 0' }} primary onClickButton={calculateRoute} text="Tính đường đi" />
+            </Box>
+
+            <Box
+              sx={{
+                width: '30px',
+                height: '30px',
+                '& button': {
+                  alignItems: 'center',
+                  display: 'flex',
+                  height: '100%',
+                },
+              }}
               onClick={() => {
                 map.panTo(coordinates);
-                map.setZoom(15);
+                map.setZoom(14);
                 setDestination(address);
               }}
-              sx={{ cursor: 'pointer' }}
-            />
+              isRound
+              aria-label="center back"
+            >
+              <Button primary text={<FaLocationArrow />} />
+            </Box>
           </Box>
-        </HStack>
-        <HStack spacing={4} mt={8} justifyContent="space-between">
-          <Box flexGrow={6}>
-            <Autocomplete>
-              <Input
-                type="text"
-                onChange={handleChangeDestination}
-                value={destination}
-                placeholder="Điểm đến"
-                ref={destiantionRef}
-              />
-            </Autocomplete>
-          </Box>
-          <Box>
-            <ButtonGroup>
-              <Button sx={{ cursor: 'pointer' }} colorScheme="pink" type="submit" onClick={calculateRoute}>
-                Tính đường đi
-              </Button>
-            </ButtonGroup>
-          </Box>
-        </HStack>
-        <HStack spacing={4} mt={4} justifyContent="space-between">
-          <Grid container sx={{ '& p': { margin: '6px 0' } }}>
-            <Grid item md={6}>
-              <Text>Khoảng cách: {distance} </Text>
-            </Grid>
-            <Grid item md={6}>
-              <Text>Thời gian ước tính: {duration} </Text>
-            </Grid>
-          </Grid>
-        </HStack>
-      </Box>
+        </Grid>
+      </Grid>
     </Flex>
   );
 }

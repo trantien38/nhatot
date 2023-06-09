@@ -21,7 +21,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
 });
 function EditMotel({ socket }) {
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState(null);
   const { editSlug } = useParams();
   const [name, id] = editSlug.split('-');
   const [loading, setLoading] = useState(true);
@@ -65,7 +65,9 @@ function EditMotel({ socket }) {
           console.log(
             `${motelItem?.motel[0]?.Address}, ${motelItem?.motel[0]?.WardPrefix} ${motelItem?.motel[0]?.WardName}, ${motelItem?.motel[0]?.DistrictPrefix} ${motelItem?.motel[0]?.DistrictName}, Tp.${motelItem?.motel[0]?.ProvinceName}`,
           );
-          setStatus(motelItem?.motel[0]?.activeStatus);
+          console.log(motelItem?.motel[0]);
+          setStatus(motelItem?.motel[0]?.Active);
+          setDescription(motelItem?.motel[0]?.Description);
           setImage(images);
           setTitleImage(`Tải lên ${images.length} hình ảnh`);
           setTitleVideo(`Tải lên ${videos.length} video`);
@@ -132,7 +134,10 @@ function EditMotel({ socket }) {
     setVideo(datas);
     setTitleVideo(`Tải lên ${datas.length} video`);
   };
-  const handleChangeStatus = () => {};
+  const handleChangeStatus = (e) => {
+    console.log(e.target.value);
+    setStatus(e.target.value);
+  };
   const handleChangeDescription = (values) => {
     setDescription(values);
   };
@@ -170,6 +175,7 @@ function EditMotel({ socket }) {
     formData.append('title', values.title);
     formData.append('ward', ward);
     formData.append('IdMotel', id);
+    formData.append('status', status);
     formData.append('notifi', `${Name} vừa đăng phòng trọ mới`);
     console.log('delete media: ', refMedia.current);
     const addMotel = await motelApi.update(formData);
@@ -365,7 +371,7 @@ function EditMotel({ socket }) {
                 onChange={handleChangeStatus}
               >
                 <MenuItem value={'1'}>Cho thuê</MenuItem>
-                <MenuItem value={'0'}>Đang cho thuê</MenuItem>
+                <MenuItem value={'0'}>Đã cho thuê</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -399,7 +405,7 @@ function EditMotel({ socket }) {
             callbackParent={handleChangAddress}
           />
           <Grid item md={12} sm={12} xs={12}>
-            <Editor handleChangeDescription={handleChangeDescription} />
+            <Editor handleChangeDescription={handleChangeDescription} content={description} />
           </Grid>
           <Grid item md={12} sm={12} xs={12} sx={{ marginTop: '16px' }}>
             <Button type="submit" orange text={'Lưu thay đổi'} />

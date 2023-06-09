@@ -99,6 +99,7 @@ export const ListQuestion = () => {
           toolbar: { setQuestions, setRowModesModel },
         }}
         sx={{
+          height: '520px',
           fontSize: '14px',
           '& .MuiDataGrid-row': {
             maxHeight: '80px !important',

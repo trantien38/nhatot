@@ -12,13 +12,10 @@ import { toastMessage } from '~/utils/toast';
 import ToolTip from './ToolTip';
 import EditToolbar from './UserToolbar';
 
-// const handleChangeActive = (data) => {};
-
 export const ListUser = () => {
   const columns = [
     { field: 'IdUser', headerName: 'ID', width: 220 },
     { field: 'Name', headerName: 'Họ và tên', width: 130 },
-    // { field: 'Email', headerName: 'Email', width: 100 },
     {
       field: 'BirthDay',
       headerName: 'Ngày sinh',
@@ -28,7 +25,6 @@ export const ListUser = () => {
     { field: 'PhoneNumber', headerName: 'Số điện thoại', width: 110 },
     { field: 'Gender', headerName: 'Giới tính', width: 90 },
     { field: 'Address', headerName: 'Địa chỉ', width: 120 },
-    // { field: 'Active', headerName: 'Trạng thái', width: 180 },
     {
       field: 'actions',
       type: 'actions',
@@ -120,6 +116,7 @@ export const ListUser = () => {
           toolbar: { setUsers, setRowModesModel },
         }}
         sx={{
+          height: '520px',
           fontSize: '14px',
           '& .actions': {
             overflow: 'visible !important',

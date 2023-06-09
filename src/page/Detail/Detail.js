@@ -38,11 +38,10 @@ import DialogMap from './components/DialogMap';
 import ImageItem from './components/ImageItem';
 import styles from './Detail.module.scss';
 import messageApi from '~/api/MessageApi';
-import userApi from '~/api/UserApi';
 import { toastMessage } from '~/utils/toast';
 import { isEmpty } from 'lodash';
 import { Toaster } from 'react-hot-toast';
-import images from '~/assets/images';
+import userApi from '~/api/UserApi';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
@@ -50,7 +49,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 function Detail({ socket }) {
   const navigate = useNavigate();
-  const [phoneNumber, setPhoneNumber] = useState('09********');
+  const [phoneNumber, setPhoneNumber] = useState('0*********');
   const [motel, setMotel] = useState([]);
   const [media, setMedia] = useState([]);
   const [openMap, setOpenMap] = useState(false);
@@ -154,14 +153,12 @@ function Detail({ socket }) {
     if (isEmpty(user)) {
       toastMessage.error('Hãy đăng nhập để lưu tin');
     } else {
-      console.log(e.target);
-      if (e.target.src === SAVEAD_ICON) {
-        console.log({ IdMotel, IdUser: user.IdUser });
+      if (e.target.src == SAVEAD_ICON) {
         const addFavourite = await userApi.addFavourite({ IdMotel, IdUser: user.IdUser });
-        console.log(addFavourite);
         toastMessage.success(addFavourite.msg);
         setIcon(RED_HEART);
-      } else {
+      }
+      if (e.target.src == RED_HEART) {
         const deleteFavourite = await userApi.deleteFavourite({ IdMotel, IdUser: user.IdUser });
         toastMessage.success(deleteFavourite.msg);
         setIcon(SAVEAD_ICON);
@@ -253,7 +250,7 @@ function Detail({ socket }) {
                 </span>
               </p>
             </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', '& span': { cursor: 'default' } }}>
               {/* <DetailItem icon={SHARE_ICON} title="Chia sẻ" /> */}
               <span onClick={handleSaveMotel}>
                 <DetailItem sx={{ '&:hover': { cursor: 'pointer' } }} icon={icon} title="Lưu tin" />
@@ -277,9 +274,9 @@ function Detail({ socket }) {
                   handleClose={handleCloseMap}
                   address={address}
                 />
-                <p>
+                {/* <p> */}
                   <NavigateNext />
-                </p>
+                {/* </p> */}
               </Link>
             </Box>
           </Box>
@@ -354,7 +351,7 @@ function Detail({ socket }) {
         <Box
           sx={{
             backgroundColor: '#fff',
-            marginBottom: '8px',
+            margin: '8px 0',
             padding: '12px',
             display: '-webkit-box',
           }}

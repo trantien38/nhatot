@@ -141,12 +141,12 @@ export const EditProfile = () => {
             },
           }}
           item
-          md={8}
+          md={8.5}
           container
           spacing={1}
         >
           <Grid item md={12} sm={12} xs={12}>
-            <h3>Hồ sơ cá nhân</h3>
+            <h3>Chỉnh sửa trang cá nhân</h3>
           </Grid>
           <Grid item md={12} sm={12} xs={12}>
             <InputField label="Họ và tên" name="name" type="text" errors={errors} required control={control} />

@@ -5,10 +5,10 @@ import styles from '../Profile.module.scss';
 
 function Sidebar() {
   return (
-    <Grid item md={4}>
+    <Grid item md={3.5}>
       <ul className={styles.sidebar}>
         <li>
-          <Link to="/settings/profile">Thông tin cá nhân</Link>
+          <Link to="/settings/profile">Chỉnh sửa trang cá nhân</Link>
         </li>
         {/* <li>
           <Link to="/settings/social">Liên kết mạng xã hội</Link>
