@@ -12,7 +12,7 @@ function DialogListMap({ open, Transition, handleClose, listMotel }) {
       onClose={handleClose}
       //   aria-describedby="alert-dialog-slide-description"
       sx={{
-        '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': {
+        '& .MuiPaper-root': {
           maxWidth: '1200px',
           margin: 0,
         },
